@@ -162,11 +162,23 @@
         const MIN_TRADE_INTERVAL = 15000;
         const $ = id => document.getElementById(id);
 
+        // ================================================================
+        //  CHECK LOGIN + EXPIRY
+        // ================================================================
         window.addEventListener('load', () => {
             const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
-            if (!user) { alert('❌ Please login first!'); window.location.href = 'signin.html'; return; }
+            if (!user) {
+                alert('❌ Please login first!');
+                window.location.replace('signin.html');
+                return;
+            }
+
             const today = new Date().toISOString().split('T')[0];
-            if (user.subscriptionEnd < today) { alert('⚠️ Subscription expired! Please renew.'); localStorage.removeItem('nexiCurrentUser'); window.location.href = 'renewal.html'; return; }
+            if (user.subscriptionEnd < today) {
+                alert('⚠️ Subscription expired! Please renew.');
+                window.location.replace('renewal.html');
+                return;
+            }
 
             $('navUserName').innerText = user.fullName;
             $('welcomeName').innerText = user.fullName;
@@ -180,14 +192,26 @@
             $('capitalInput').value = user.startingCapital;
         });
 
+        // ================================================================
+        //  START ROBOT
+        // ================================================================
         function startRobot() {
             const capital = parseFloat($('capitalInput').value);
-            if (isNaN(capital) || capital < 100) { alert('❌ Minimum $100!'); return; }
-            baseBalance = capital; tradeCounter = 0; priceHistory = []; tradeHistory = [];
-            isTradeOpen = false; currentTrade = null; isSupportSet = false;
+            if (isNaN(capital) || capital < 100) {
+                alert('❌ Minimum $100!');
+                return;
+            }
+            baseBalance = capital;
+            tradeCounter = 0;
+            priceHistory = [];
+            tradeHistory = [];
+            isTradeOpen = false;
+            currentTrade = null;
+            isSupportSet = false;
             $('historyBody').innerHTML = '<tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
             isRobotRunning = true;
-            $('btnStart').disabled = true; $('btnStop').disabled = false;
+            $('btnStart').disabled = true;
+            $('btnStop').disabled = false;
             $('robotStatusBadge').className = 'robot-status running';
             $('robotStatusBadge').innerHTML = '🟢 RUNNING';
             $('capitalInput').disabled = true;
@@ -195,26 +219,37 @@
             robotInterval = setInterval(getLivePrice, 1000);
         }
 
+        // ================================================================
+        //  STOP ROBOT
+        // ================================================================
         function stopRobot() {
             isRobotRunning = false;
             if (robotInterval) clearInterval(robotInterval);
             if (isTradeOpen && currentTrade) closeTrade(currentPrice);
-            $('btnStart').disabled = false; $('btnStop').disabled = true;
+            $('btnStart').disabled = false;
+            $('btnStop').disabled = true;
             $('robotStatusBadge').className = 'robot-status stopped';
             $('robotStatusBadge').innerHTML = '⏹️ STOPPED';
             $('capitalInput').disabled = false;
         }
 
+        // ================================================================
+        //  LIVE PRICE
+        // ================================================================
         async function getLivePrice() {
             if (!isRobotRunning) return;
             try {
                 const resp = await fetch('https://api.gold-api.com/price/XAU');
                 const data = await resp.json();
                 currentPrice = data.price ? parseFloat(data.price) : 4400 + (Math.random() - 0.5) * 6;
-            } catch (e) { currentPrice = 4400 + (Math.random() - 0.5) * 6; }
+            } catch (e) {
+                currentPrice = 4400 + (Math.random() - 0.5) * 6;
+            }
             $('livePrice').innerText = '$' + currentPrice.toFixed(2);
             if (!isSupportSet) {
-                FIXED_SUPPORT = currentPrice - 5; FIXED_RESISTANCE = currentPrice + 5; isSupportSet = true;
+                FIXED_SUPPORT = currentPrice - 5;
+                FIXED_RESISTANCE = currentPrice + 5;
+                isSupportSet = true;
                 $('fixedSupport').innerText = FIXED_SUPPORT.toFixed(2);
                 $('fixedResistance').innerText = FIXED_RESISTANCE.toFixed(2);
             }
@@ -227,62 +262,134 @@
             updateLiveTable();
         }
 
+        // ================================================================
+        //  STRATEGY ENGINE
+        // ================================================================
         function analyzeStrategy(rsi) {
             if (!isRobotRunning || !isSupportSet) return;
-            if (isTradeOpen) { checkTradeClose(); return; }
+            if (isTradeOpen) {
+                checkTradeClose();
+                return;
+            }
             if (Date.now() - lastTradeTime < MIN_TRADE_INTERVAL) return;
 
-            if (currentPrice > FIXED_RESISTANCE && rsi > 45) { $('activeStrategy').innerText = 'Breakout BUY'; openTrade('BUY', currentPrice); return; }
-            if (currentPrice < FIXED_SUPPORT && rsi < 55) { $('activeStrategy').innerText = 'Breakdown SELL'; openTrade('SELL', currentPrice); return; }
-            if (currentPrice < FIXED_SUPPORT + 1.5 && rsi < 40) { $('activeStrategy').innerText = 'Bounce BUY'; openTrade('BUY', currentPrice); return; }
-            if (currentPrice > FIXED_RESISTANCE - 1.5 && rsi > 60) { $('activeStrategy').innerText = 'Bounce SELL'; openTrade('SELL', currentPrice); return; }
+            if (currentPrice > FIXED_RESISTANCE && rsi > 45) {
+                $('activeStrategy').innerText = 'Breakout BUY';
+                openTrade('BUY', currentPrice);
+                return;
+            }
+            if (currentPrice < FIXED_SUPPORT && rsi < 55) {
+                $('activeStrategy').innerText = 'Breakdown SELL';
+                openTrade('SELL', currentPrice);
+                return;
+            }
+            if (currentPrice < FIXED_SUPPORT + 1.5 && rsi < 40) {
+                $('activeStrategy').innerText = 'Bounce BUY';
+                openTrade('BUY', currentPrice);
+                return;
+            }
+            if (currentPrice > FIXED_RESISTANCE - 1.5 && rsi > 60) {
+                $('activeStrategy').innerText = 'Bounce SELL';
+                openTrade('SELL', currentPrice);
+                return;
+            }
 
             const elapsed = (Date.now() - rangeStartTime) / 1000;
             if (elapsed > 90 && !isTradeOpen) {
                 const middle = (FIXED_SUPPORT + FIXED_RESISTANCE) / 2;
-                if (currentPrice < middle && rsi < 50) { $('activeStrategy').innerText = 'Range BUY'; openTrade('BUY', currentPrice); rangeStartTime = Date.now(); return; }
-                if (currentPrice > middle && rsi > 50) { $('activeStrategy').innerText = 'Range SELL'; openTrade('SELL', currentPrice); rangeStartTime = Date.now(); return; }
+                if (currentPrice < middle && rsi < 50) {
+                    $('activeStrategy').innerText = 'Range BUY';
+                    openTrade('BUY', currentPrice);
+                    rangeStartTime = Date.now();
+                    return;
+                }
+                if (currentPrice > middle && rsi > 50) {
+                    $('activeStrategy').innerText = 'Range SELL';
+                    openTrade('SELL', currentPrice);
+                    rangeStartTime = Date.now();
+                    return;
+                }
             }
 
-            $('activeStrategy').innerText = 'Waiting'; $('aiSignal').innerText = 'Waiting'; $('aiStatus').innerText = '⏳ Waiting';
+            $('activeStrategy').innerText = 'Waiting';
+            $('aiSignal').innerText = 'Waiting';
+            $('aiStatus').innerText = '⏳ Waiting';
         }
 
+        // ================================================================
+        //  OPEN TRADE
+        // ================================================================
         function openTrade(type, price) {
             if (isTradeOpen) return;
-            isTradeOpen = true; tradeCounter++; lastTradeTime = Date.now(); rangeStartTime = Date.now();
+            isTradeOpen = true;
+            tradeCounter++;
+            lastTradeTime = Date.now();
+            rangeStartTime = Date.now();
             let sl, tp;
-            if (type === 'BUY') { sl = price * 0.997; tp = price * 1.008; }
-            else { sl = price * 1.003; tp = price * 0.992; }
-            currentTrade = { id: tradeCounter, type, entry: price, sl, tp };
+            if (type === 'BUY') {
+                sl = price * 0.997;
+                tp = price * 1.008;
+            } else {
+                sl = price * 1.003;
+                tp = price * 0.992;
+            }
+            currentTrade = { id: tradeCounter, type: type, entry: price, sl: sl, tp: tp };
             $('aiStatus').innerText = '🟢 Trade Open: ' + type;
             $('aiSignal').innerText = type + ' Signal';
-            updateBalance(); updateLiveTable();
+            updateBalance();
+            updateLiveTable();
         }
 
+        // ================================================================
+        //  CHECK TRADE CLOSE
+        // ================================================================
         function checkTradeClose() {
             if (!currentTrade) return;
             let hit = false;
-            if (currentTrade.type === 'BUY') { if (currentPrice >= currentTrade.tp || currentPrice <= currentTrade.sl) hit = true; }
-            else { if (currentPrice <= currentTrade.tp || currentPrice >= currentTrade.sl) hit = true; }
+            if (currentTrade.type === 'BUY') {
+                if (currentPrice >= currentTrade.tp || currentPrice <= currentTrade.sl) hit = true;
+            } else {
+                if (currentPrice <= currentTrade.tp || currentPrice >= currentTrade.sl) hit = true;
+            }
             if (hit) closeTrade(currentPrice);
         }
 
+        // ================================================================
+        //  CLOSE TRADE
+        // ================================================================
         function closeTrade(exitPrice) {
             const lotSize = 0.01;
-            let profit = currentTrade.type === 'BUY' ? (exitPrice - currentTrade.entry) * lotSize * 100 : (currentTrade.entry - exitPrice) * lotSize * 100;
+            let profit = currentTrade.type === 'BUY' ?
+                (exitPrice - currentTrade.entry) * lotSize * 100 :
+                (currentTrade.entry - exitPrice) * lotSize * 100;
             baseBalance += profit;
-            tradeHistory.push({ id: currentTrade.id, type: currentTrade.type, entry: currentTrade.entry, exit: exitPrice, profit, balance: baseBalance, date: new Date().toISOString().split('T')[0] });
+            tradeHistory.push({
+                id: currentTrade.id,
+                type: currentTrade.type,
+                entry: currentTrade.entry,
+                exit: exitPrice,
+                profit: profit,
+                balance: baseBalance,
+                date: new Date().toISOString().split('T')[0]
+            });
             renderHistory();
             alert((profit >= 0 ? '🎯 Profit: +$' : '🛑 Loss: -$') + Math.abs(profit).toFixed(2) + '\nBalance: $' + baseBalance.toFixed(2));
-            isTradeOpen = false; currentTrade = null;
+            isTradeOpen = false;
+            currentTrade = null;
             $('aiStatus').innerText = '⏳ Idle';
-            updateBalance(); updateLiveTable();
+            updateBalance();
+            updateLiveTable();
         }
 
+        // ================================================================
+        //  UPDATE BALANCE
+        // ================================================================
         function updateBalance() {
             let floatingPL = 0;
             if (isTradeOpen && currentTrade) {
-                floatingPL = currentTrade.type === 'BUY' ? (currentPrice - currentTrade.entry) * 0.01 * 100 : (currentTrade.entry - currentPrice) * 0.01 * 100;
+                floatingPL = currentTrade.type === 'BUY' ?
+                    (currentPrice - currentTrade.entry) * 0.01 * 100 :
+                    (currentTrade.entry - currentPrice) * 0.01 * 100;
             }
             $('baseBalance').innerText = '$' + baseBalance.toFixed(2);
             $('floatingPL').innerText = (floatingPL >= 0 ? '+' : '') + '$' + floatingPL.toFixed(2);
@@ -290,6 +397,9 @@
             $('effectiveBalance').innerText = '$' + (baseBalance + floatingPL).toFixed(2);
         }
 
+        // ================================================================
+        //  UPDATE LIVE TABLE
+        // ================================================================
         function updateLiveTable() {
             const tbody = $('liveTableBody');
             if (!isTradeOpen || !currentTrade) {
@@ -297,7 +407,9 @@
                 $('progressContainer').innerHTML = '';
                 return;
             }
-            const floatingPL = currentTrade.type === 'BUY' ? (currentPrice - currentTrade.entry) * 0.01 * 100 : (currentTrade.entry - currentPrice) * 0.01 * 100;
+            const floatingPL = currentTrade.type === 'BUY' ?
+                (currentPrice - currentTrade.entry) * 0.01 * 100 :
+                (currentTrade.entry - currentPrice) * 0.01 * 100;
             const isProfit = floatingPL >= 0;
             tbody.innerHTML = `<tr>
                 <td>#${currentTrade.id}</td>
@@ -308,15 +420,27 @@
                 <td>$${currentTrade.tp.toFixed(2)}</td>
                 <td style="font-weight:bold;color:${isProfit ? '#10b981' : '#ef4444'};">${floatingPL >= 0 ? '+' : ''}$${floatingPL.toFixed(2)}</td>
             </tr>`;
-            const min = Math.min(currentTrade.sl, currentTrade.tp), max = Math.max(currentTrade.sl, currentTrade.tp);
+            const min = Math.min(currentTrade.sl, currentTrade.tp);
+            const max = Math.max(currentTrade.sl, currentTrade.tp);
             let pos = ((currentPrice - min) / (max - min)) * 100;
             pos = Math.max(0, Math.min(100, pos));
-            $('progressContainer').innerHTML = `<div class="progress-wrap"><div class="progress-track"><div class="progress-fill" style="width:${pos}%;"></div></div></div>`;
+            $('progressContainer').innerHTML = `
+                <div class="progress-wrap">
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width:${pos}%;"></div>
+                    </div>
+                </div>`;
         }
 
+        // ================================================================
+        //  RENDER HISTORY
+        // ================================================================
         function renderHistory() {
             const tbody = $('historyBody');
-            if (tradeHistory.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr>'; return; }
+            if (tradeHistory.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
+                return;
+            }
             tbody.innerHTML = [...tradeHistory].reverse().map(t => `<tr>
                 <td>#${t.id}</td>
                 <td style="font-size:0.8rem;color:#94a3b8;">${t.date}</td>
@@ -328,8 +452,16 @@
             </tr>`).join('');
         }
 
+        // ================================================================
+        //  LOGOUT (FIXED)
+        // ================================================================
         function logout() {
-            if (confirm('Logout?')) { localStorage.removeItem('nexiCurrentUser'); window.location.href = 'index.html'; }
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear only user session
+                localStorage.removeItem('nexiCurrentUser');
+                // Force redirect to home page
+                window.location.replace('index.html');
+            }
         }
     </script>
 </body>
