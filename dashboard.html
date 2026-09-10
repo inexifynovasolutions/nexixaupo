@@ -453,13 +453,19 @@
         }
 
         // ================================================================
-        //  LOGOUT (FIXED)
+        //  LOGOUT — history clear + replace (back button kaam na kare)
         // ================================================================
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                // Clear only user session
                 localStorage.removeItem('nexiCurrentUser');
-                // Force redirect to home page
+
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, '', window.location.href);
+                    window.onpopstate = function() {
+                        window.history.go(1);
+                    };
+                }
+
                 window.location.replace('index.html');
             }
         }

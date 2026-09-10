@@ -45,6 +45,7 @@
         .badge.new { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
         .btn-action { padding: 6px 14px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.75rem; margin: 0 2px; }
         .btn-verify { background: #10b981; color: #fff; }
+        .btn-unverify { background: #f59e0b; color: #fff; }
         .btn-reject { background: #ef4444; color: #fff; }
         .btn-view { background: #60a5fa; color: #fff; }
         .empty-state { text-align: center; padding: 40px; color: #64748b; }
@@ -123,6 +124,26 @@
         const ADMIN_PASSWORD = 'nexi2026';
         let allUsers = [], allPayments = [];
 
+        // ✅ ENTER key support — admin login
+        document.getElementById('adminUsername').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const pwd = document.getElementById('adminPassword');
+                if (pwd.value.trim() === '') {
+                    pwd.focus();
+                } else {
+                    adminLogin();
+                }
+            }
+        });
+
+        document.getElementById('adminPassword').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                adminLogin();
+            }
+        });
+
         function adminLogin() {
             const u = document.getElementById('adminUsername').value;
             const p = document.getElementById('adminPassword').value;
@@ -137,7 +158,20 @@
         }
 
         function adminLogout() {
-            if (confirm('Logout?')) { localStorage.removeItem('nexiAdmin'); location.reload(); }
+            if (confirm('Logout from admin?')) {
+                localStorage.removeItem('nexiAdmin');
+
+                // ✅ History clear taake back button kaam na kare
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, '', window.location.href);
+                    window.onpopstate = function() {
+                        window.history.go(1);
+                    };
+                }
+
+                // ✅ replace use karein, href nahi
+                window.location.replace('index.html');
+            }
         }
 
         window.addEventListener('load', () => {
@@ -185,6 +219,10 @@
                     ${p.status === 'pending' ? `
                         <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
                         <button class="btn-action btn-reject" onclick="rejectPayment(${i})">✗</button>
+                    ` : p.status === 'verified' ? `
+                        <button class="btn-action btn-unverify" onclick="unverifyPayment(${i})">↺ Unverify</button>
+                    ` : p.status === 'rejected' ? `
+                        <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
                     ` : '--'}
                 </td>
             </tr>`).join('');
@@ -201,6 +239,8 @@
                 <div>💰 Amount: <strong style="color:#10b981;">$${(p.amount || 0).toFixed(2)}</strong></div>
                 <div>🆔 Binance UID: <strong style="color:#d4af37; font-family:monospace;">${p.payerUID || '--'}</strong></div>
                 <div>📅 Date: ${new Date(p.paymentDate).toLocaleString()}</div>
+                <div>📊 Type: <strong>${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New Registration'}</strong></div>
+                <div>📌 Status: <strong style="color:${p.status === 'verified' ? '#10b981' : p.status === 'rejected' ? '#ef4444' : '#fbbf24'};">${p.status.toUpperCase()}</strong></div>
             `;
             document.getElementById('screenshotModal').style.display = 'flex';
         }
@@ -209,9 +249,12 @@
             document.getElementById('screenshotModal').style.display = 'none';
         }
 
+        // ================================================================
+        // ✅ VERIFY PAYMENT — baar baar verify/unverify ho sakta hai
+        // ================================================================
         function verifyPayment(index) {
             const p = allPayments[index];
-            if (!p || !confirm(`Verify ${p.type === 'renewal' ? 'RENEWAL' : 'NEW'} payment for ${p.fullName}?\n\nAmount: $${p.amount}`)) return;
+            if (!p) return;
 
             const today = new Date();
             let newExpiry;
@@ -226,20 +269,27 @@
                 newExpiry.setMonth(newExpiry.getMonth() + 1);
             }
 
-            const emailPart = (p.email || 'USER').substring(0, 4).toUpperCase();
-            const phonePart = (p.phone || '0000').slice(-4);
-            const random = Math.floor(1000 + Math.random() * 9000);
-            const secretKey = emailPart + phonePart + random;
-
             const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
             const existing = users.find(u => u.email === p.email);
 
             if (existing) {
+                // User already exists — subscription update, KEEP existing secret key
                 existing.subscriptionEnd = newExpiry.toISOString().split('T')[0];
                 existing.status = 'active';
-                if (!existing.secretKey) existing.secretKey = secretKey;
+                if (!existing.secretKey) {
+                    const emailPart = (p.email || 'USER').substring(0, 4).toUpperCase();
+                    const phonePart = (p.phone || '0000').slice(-4);
+                    const random = Math.floor(1000 + Math.random() * 9000);
+                    existing.secretKey = emailPart + phonePart + random;
+                }
+                p.secretKey = existing.secretKey;
             } else {
-                users.push({
+                // New user
+                const emailPart = (p.email || 'USER').substring(0, 4).toUpperCase();
+                const phonePart = (p.phone || '0000').slice(-4);
+                const random = Math.floor(1000 + Math.random() * 9000);
+                const secretKey = emailPart + phonePart + random;
+                const newUser = {
                     id: 'user_' + Date.now(),
                     fullName: p.fullName,
                     email: p.email,
@@ -250,16 +300,50 @@
                     subscriptionStart: today.toISOString().split('T')[0],
                     subscriptionEnd: newExpiry.toISOString().split('T')[0],
                     status: 'active'
-                });
+                };
+                users.push(newUser);
+                p.secretKey = secretKey;
             }
 
             localStorage.setItem('nexiUsers', JSON.stringify(users));
+
+            // Toggle status
             p.status = 'verified';
             p.verifiedAt = new Date().toISOString();
+            p.lastAction = 'verify_' + Date.now();
             localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
 
             const action = p.type === 'renewal' ? 'RENEWED' : 'VERIFIED';
-            alert(`✅ ${action}!\n\nUser: ${p.fullName}\nNew Expiry: ${newExpiry.toISOString().split('T')[0]}\nSecret Key: ${existing ? existing.secretKey : secretKey}`);
+            alert(`✅ ${action}!\n\nUser: ${p.fullName}\nNew Expiry: ${newExpiry.toISOString().split('T')[0]}\nSecret Key: ${p.secretKey}\n\nAap isko baar baar Verify/Unverify kar sakte hain.`);
+            loadData();
+        }
+
+        // ================================================================
+        // ✅ UNVERIFY PAYMENT — user ko expired mark karein, delete nahi
+        // ================================================================
+        function unverifyPayment(index) {
+            const p = allPayments[index];
+            if (!p) return;
+            if (!confirm(`Unverify payment for ${p.fullName}?\n\nThis will mark them as expired (but you can re-verify anytime).`)) return;
+
+            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
+            const existing = users.find(u => u.email === p.email);
+
+            if (existing) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                existing.subscriptionEnd = yesterday.toISOString().split('T')[0];
+                existing.status = 'expired';
+                localStorage.setItem('nexiUsers', JSON.stringify(users));
+            }
+
+            // Status toggle: verified → pending
+            p.status = 'pending';
+            p.unverifiedAt = new Date().toISOString();
+            p.lastAction = 'unverify_' + Date.now();
+            localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
+
+            alert(`↺ Payment UNVERIFIED!\n\nUser: ${p.fullName}\nAb aap dobara Verify ya Reject kar sakte hain.`);
             loadData();
         }
 

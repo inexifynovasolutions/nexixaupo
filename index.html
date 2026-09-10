@@ -125,12 +125,12 @@
             <a onclick="scrollToSection('features')">Features</a>
             <a onclick="scrollToSection('pricing')">Pricing</a>
         </div>
-        <div class="nav-buttons">
+        <div class="nav-buttons" id="navButtons">
             <a href="admin.html" class="btn-admin" title="Admin Panel">
                 <i class="fas fa-user-shield"></i> Admin
             </a>
-            <button class="btn-outline" onclick="goToSignIn()">Sign In</button>
-            <button class="btn-primary" onclick="goToRegister()">Get Started</button>
+            <button class="btn-outline" id="navSignInBtn" onclick="goToSignIn()">Sign In</button>
+            <button class="btn-primary" id="navGetStartedBtn" onclick="goToRegister()">Get Started</button>
         </div>
     </nav>
 
@@ -351,6 +351,37 @@
                 el.innerText = (current + Math.floor(Math.random() * 10) - 3).toLocaleString();
             }
         }, 5000);
+
+        // ✅ Logged-in user detection — Dashboard/Logout buttons show karein
+        window.addEventListener('load', () => {
+            const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
+            if (user) {
+                const signInBtn = document.getElementById('navSignInBtn');
+                const getStartedBtn = document.getElementById('navGetStartedBtn');
+
+                if (signInBtn) {
+                    signInBtn.innerText = '📊 Dashboard';
+                    signInBtn.onclick = () => window.location.href = 'dashboard.html';
+                }
+                if (getStartedBtn) {
+                    getStartedBtn.innerText = '🚪 Logout';
+                    getStartedBtn.onclick = () => {
+                        if (confirm('Logout?')) {
+                            localStorage.removeItem('nexiCurrentUser');
+
+                            if (window.history && window.history.pushState) {
+                                window.history.pushState(null, '', window.location.href);
+                                window.onpopstate = function() {
+                                    window.history.go(1);
+                                };
+                            }
+
+                            window.location.replace('index.html');
+                        }
+                    };
+                }
+            }
+        });
     </script>
 </body>
 </html>

@@ -253,7 +253,7 @@
 
             <div class="message" id="messageBox"></div>
 
-            <form onsubmit="handleRenewal(event)">
+            <form onsubmit="handleRenewal(event)" id="renewalForm">
                 <div class="form-group">
                     <label>Screenshot (Transfer Proof) *</label>
                     <input type="file" id="screenshot" accept="image/*" required style="padding: 10px;" />
@@ -281,7 +281,7 @@
             const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
             if (!user) {
                 alert('❌ Please login first!');
-                window.location.href = 'signin.html';
+                window.location.replace('signin.html');
                 return;
             }
 
@@ -290,7 +290,7 @@
             const today = new Date().toISOString().split('T')[0];
             if (user.subscriptionEnd >= today) {
                 alert('✅ Your subscription is still active!');
-                window.location.href = 'dashboard.html';
+                window.location.replace('dashboard.html');
             }
         });
 
@@ -339,7 +339,7 @@
 
                 setTimeout(() => {
                     localStorage.removeItem('nexiCurrentUser');
-                    window.location.href = 'index.html';
+                    window.location.replace('index.html');
                 }, 3000);
             };
             reader.readAsDataURL(screenshot);
@@ -358,12 +358,29 @@
             });
         }
 
+        // ✅ LOGOUT — history clear + replace
         function logout() {
             if (confirm('Logout?')) {
                 localStorage.removeItem('nexiCurrentUser');
-                window.location.href = 'index.html';
+
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, '', window.location.href);
+                    window.onpopstate = function() {
+                        window.history.go(1);
+                    };
+                }
+
+                window.location.replace('index.html');
             }
         }
+
+        // ✅ ENTER key support — renewal form
+        document.getElementById('renewalForm').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.type !== 'file') {
+                e.preventDefault();
+                document.getElementById('renewalForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+        });
     </script>
 </body>
 </html>
