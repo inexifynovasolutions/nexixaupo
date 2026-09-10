@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Register | NexiRocket-XAU Pro Max</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; min-height: 100vh; }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: #111827;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #d4af37;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .logo span { color: #fff; }
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover { color: #d4af37; }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 8px 22px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-outline:hover { background: #d4af37; color: #111827; }
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37, #f0d060);
+            color: #111827;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover { transform: scale(1.03); }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* ===== HEADER ===== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1e293b;
+            border: 2px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #94a3b8;
+            transition: all 0.3s;
+        }
+        .step.active .step-circle {
+            background: #d4af37;
+            border-color: #d4af37;
+            color: #111827;
+        }
+        .step.completed .step-circle {
+            background: #10b981;
+            border-color: #10b981;
+            color: #fff;
+        }
+        .step-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .step.active .step-label { color: #d4af37; }
+        .step-line {
+            width: 60px;
+            height: 2px;
+            background: #334155;
+            margin: 0 10px;
+        }
+
+        /* ===== FORM CARD ===== */
+        .form-card {
+            background: #111827;
+            border: 2px solid #334155;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .form-card h2 {
+            color: #d4af37;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .form-card .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        /* ===== FORM GROUPS ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .form-group label .required {
+            color: #ef4444;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #d4af37;
+            background: #0f1729;
+        }
+        .form-group input::placeholder {
+            color: #64748b;
+        }
+        .form-group .hint {
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        /* ===== ROW ===== */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* ===== PASSWORD TOGGLE ===== */
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #64748b;
+            background: none;
+            border: none;
+            font-size: 1rem;
+        }
+        .password-toggle:hover { color: #d4af37; }
+
+        /* ===== SUBMIT BUTTON ===== */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #d4af37, #f0d060);
+            color: #111827;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== MESSAGE ===== */
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            display: block;
+        }
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            display: block;
+        }
+        .message.info {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid #60a5fa;
+            color: #60a5fa;
+            display: block;
+        }
+
+        /* ===== LOGIN LINK ===== */
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .login-link a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .login-link a:hover { text-decoration: underline; }
+
+        /* ===== INFO BOX ===== */
+        .info-box {
+            background: #1e293b;
+            border-left: 4px solid #d4af37;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .info-box p {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .info-box strong { color: #d4af37; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
+            .nav-links { display: none; }
+            .page-header h1 { font-size: 1.8rem; }
+            .form-card { padding: 25px 20px; }
+            .form-row { grid-template-columns: 1fr; }
+            .progress-steps { font-size: 0.8rem; }
+            .step-line { width: 30px; }
+            .step-label { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            🚀 Nexi<span>Rocket-XAU</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#demo">Live Demo</a>
+            <a href="index.html#pricing">Pricing</a>
+        </div>
+        <div class="nav-buttons">
+            <a href="signin.html" class="btn-outline">Sign In</a>
+        </div>
+    </nav>
+
+    <!-- ===== CONTAINER ===== -->
+    <div class="container">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Create Your Account</h1>
+            <p>Join thousands of traders using AI-powered gold trading</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="step active" id="step1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Account</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Payment</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Verification</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Activation</div>
+            </div>
+        </div>
+
+        <!-- ===== STEP 1: ACCOUNT FORM ===== -->
+        <div class="form-card" id="accountForm">
+            <h2>📝 Account Details</h2>
+            <p class="subtitle">Fill in your information to get started</p>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <p>
+                    💰 <strong>First Month Offer: $3</strong> (Regular: $5/month)<br>
+                    🎁 Register now and get unlimited trading access!
+                </p>
+            </div>
+
+            <!-- Message -->
+            <div class="message" id="messageBox"></div>
+
+            <!-- Form -->
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label>Full Name <span class="required">*</span></label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required />
+                </div>
+
+                <!-- Email & Phone -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" id="email" placeholder="your@email.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="phone" placeholder="+92 3XX XXXXXXX" required />
+                    </div>
+                </div>
+
+                <!-- Password & Confirm -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Password <span class="required">*</span></label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" placeholder="Min 6 characters" minlength="6" required />
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password <span class="required">*</span></label>
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmPassword" placeholder="Re-enter password" minlength="6" required />
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Starting Capital -->
+                <div class="form-group">
+                    <label>Starting Capital ($) <span class="required">*</span></label>
+                    <input type="number" id="startingCapital" placeholder="Minimum $100" min="100" value="100" required />
+                    <div class="hint">💡 Recommended: $100 or more for better results</div>
+                </div>
+
+                <!-- Referral (Optional) -->
+                <div class="form-group">
+                    <label>Referral Code (Optional)</label>
+                    <input type="text" id="referralCode" placeholder="Enter referral code if you have one" />
+                </div>
+
+                <!-- Terms -->
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="terms" required style="width: auto;" />
+                        <span style="color: #cbd5e1; font-size: 0.9rem;">
+                            I agree to the <a href="#" style="color: #d4af37;">Terms & Conditions</a> and <a href="#" style="color: #d4af37;">Privacy Policy</a>
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-arrow-right"></i> Continue to Payment
+                </button>
+
+                <!-- Login Link -->
+                <div class="login-link">
+                    Already have an account? <a href="signin.html">Sign In</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- ===== STEP 2: PAYMENT (Hidden by default) ===== -->
+        <div class="form-card" id="paymentForm" style="display: none;">
+            <h2>💰 Payment Details</h2>
+            <p class="subtitle">Send payment via Binance to activate your account</p>
+
+            <!-- Payment Info -->
+            <div class="info-box">
+                <p>
+                    <strong>Amount:</strong> $3.00 (First Month Offer)<br>
+                    <strong>Method:</strong> Binance (USDT/BUSD)<br>
+                    <strong>Network:</strong> BEP20 (BSC)
+                </p>
+            </div>
+
+            <!-- Binance Details -->
+            <div style="background: #0f1729; border: 2px dashed #d4af37; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <h3 style="color: #d4af37; margin-bottom: 15px; font-size: 1.1rem;">📋 Binance Payment Info</h3>
+                
+                <div style="margin-bottom: 12px;">
+                    <div style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 5px;">Binance UID</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px 15px; border-radius: 8px;">
+                        <span id="binanceUID" style="color: #fff; font-weight: 700; font-family: monospace;">968525536</span>
+                        <button onclick="copyToClipboard('968525536')" style="background: #d4af37; color: #111827; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.8rem;">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 12px;">
+                    <div style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 5px;">Binance Nickname</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px 15px; border-radius: 8px;">
+                        <span id="binanceNickname" style="color: #fff; font-weight: 700;">NexiProduct</span>
+                        <button onclick="copyToClipboard('NexiProduct')" style="background: #d4af37; color: #111827; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.8rem;">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 5px;">Amount</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px 15px; border-radius: 8px;">
+                        <span style="color: #10b981; font-weight: 700; font-size: 1.2rem;">$3.00</span>
+                        <button onclick="copyToClipboard('3')" style="background: #d4af37; color: #111827; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.8rem;">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div style="background: #1e293b; padding: 15px 20px; border-radius: 10px; margin-bottom: 25px;">
+                <h4 style="color: #d4af37; margin-bottom: 10px; font-size: 0.95rem;">📌 Instructions:</h4>
+                <ol style="color: #cbd5e1; font-size: 0.85rem; line-height: 1.8; padding-left: 20px;">
+                    <li>Open Binance app</li>
+                    <li>Go to "Pay" → "Send"</li>
+                    <li>Enter UID: <strong style="color: #d4af37;">968525536</strong></li>
+                    <li>Enter amount: <strong style="color: #10b981;">$3.00</strong></li>
+                    <li>Complete payment & take screenshot</li>
+                    <li>Upload screenshot below</li>
+                </ol>
+            </div>
+
+            <!-- Screenshot Upload -->
+            <form id="paymentForm2" onsubmit="handlePayment(event)">
+                <div class="form-group">
+                    <label>Screenshot (Transfer Proof) <span class="required">*</span></label>
+                    <input type="file" id="screenshot" accept="image/*" required style="padding: 10px;" />
+                    <div class="hint">📸 Upload clear screenshot of your Binance transfer</div>
+                </div>
+
+                <!-- Binance UID Confirm -->
+                <div class="form-group">
+                    <label>Your Binance UID (from which you paid) <span class="required">*</span></label>
+                    <input type="text" id="payerUID" placeholder="Enter your Binance UID" required />
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn-submit" id="paymentBtn">
+                    <i class="fas fa-paper-plane"></i> Submit Payment
+                </button>
+
+                <div class="login-link">
+                    <a href="#" onclick="backToAccount(); return false;">← Back to Account</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- ===== STEP 3: VERIFICATION (Hidden by default) ===== -->
+        <div class="form-card" id="verificationForm" style="display: none;">
+            <h2>🔐 Verify Your Account</h2>
+            <p class="subtitle">Your payment is being verified</p>
+
+            <div class="info-box">
+                <p>
+                    ✅ <strong>Payment Submitted Successfully!</strong><br>
+                    Our admin will verify your payment within 5-30 minutes.<br>
+                    You will receive your <strong>Secret Key</strong> via email.
+                </p>
+            </div>
+
+            <!-- Verification Status -->
+            <div style="background: #0f1729; border: 2px dashed #60a5fa; border-radius: 12px; padding: 25px; text-align: center; margin-bottom: 25px;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">⏳</div>
+                <h3 style="color: #60a5fa; margin-bottom: 10px;">Waiting for Admin Verification</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem;">This usually takes 5-30 minutes</p>
+                <div style="margin-top: 20px;">
+                    <div style="background: #1e293b; height: 8px; border-radius: 10px; overflow: hidden;">
+                        <div style="width: 60%; height: 100%; background: linear-gradient(90deg, #60a5fa, #d4af37); border-radius: 10px; animation: progress 2s infinite;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secret Key Input -->
+            <div style="background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+                <h4 style="color: #d4af37; margin-bottom: 15px;">🔑 Have a Secret Key?</h4>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 15px;">
+                    Enter the secret key sent to your email to activate your account
+                </p>
+                <div class="form-group">
+                    <input type="text" id="secretKeyInput" placeholder="Enter 8-digit secret key" maxlength="12" style="text-transform: uppercase; letter-spacing: 2px; font-family: monospace;" />
+                </div>
+                <button class="btn-submit" onclick="verifySecretKey()" style="margin-top: 10px;">
+                    <i class="fas fa-check-circle"></i> Verify & Activate
+                </button>
+            </div>
+
+            <div class="login-link">
+                <a href="index.html">← Back to Home</a>
+            </div>
+        </div>
+
+        <!-- ===== STEP 4: SUCCESS (Hidden by default) ===== -->
+        <div class="form-card" id="successForm" style="display: none;">
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="font-size: 5rem; margin-bottom: 20px;">🎉</div>
+                <h2 style="color: #10b981; font-size: 2rem; margin-bottom: 15px;">Account Activated!</h2>
+                <p style="color: #cbd5e1; margin-bottom: 25px;">
+                    Welcome to NexiRocket-XAU Pro Max!<br>
+                    Your unlimited trading access is now active.
+                </p>
+
+                <div style="background: #0f1729; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: left;">
+                    <h4 style="color: #10b981; margin-bottom: 15px;">✅ Your Account:</h4>
+                    <div style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.8;">
+                        <div>📧 Email: <strong id="successEmail" style="color: #fff;">--</strong></div>
+                        <div>📱 Phone: <strong id="successPhone" style="color: #fff;">--</strong></div>
+                        <div>💰 Starting Capital: <strong id="successCapital" style="color: #d4af37;">$100.00</strong></div>
+                        <div>🔑 Secret Key: <strong id="successKey" style="color: #d4af37; font-family: monospace;">--</strong></div>
+                        <div>📅 Valid Until: <strong id="successExpiry" style="color: #10b981;">--</strong></div>
+                    </div>
+                </div>
+
+                <a href="dashboard.html" class="btn-primary" style="display: inline-block; padding: 15px 40px; font-size: 1.1rem; text-decoration: none;">
+                    <i class="fas fa-rocket"></i> Start Trading Now
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ================================================================
+        //  STATE
+        // ================================================================
+        let currentUser = null;
+        let registrationData = {};
+
+        // ================================================================
+        //  PASSWORD TOGGLE
+        // ================================================================
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const type = field.type === 'password' ? 'text' : 'password';
+            field.type = type;
+        }
+
+        // ================================================================
+        //  COPY TO CLIPBOARD
+        // ================================================================
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showMessage('✅ Copied to clipboard!', 'success');
+                setTimeout(() => hideMessage(), 2000);
+            });
+        }
+
+        // ================================================================
+        //  MESSAGE
+        // ================================================================
+        function showMessage(text, type = 'info') {
+            const box = document.getElementById('messageBox');
+            box.className = 'message ' + type;
+            box.innerText = text;
+            box.style.display = 'block';
+        }
+
+        function hideMessage() {
+            const box = document.getElementById('messageBox');
+            box.style.display = 'none';
+        }
+
+        // ================================================================
+        //  HANDLE REGISTRATION
+        // ================================================================
+        function handleRegister(event) {
+            event.preventDefault();
+            hideMessage();
+
+            // Get values
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const startingCapital = parseFloat(document.getElementById('startingCapital').value);
+            const referralCode = document.getElementById('referralCode').value.trim();
+            const terms = document.getElementById('terms').checked;
+
+            // Validation
+            if (!fullName || fullName.length < 3) {
+                showMessage('❌ Please enter a valid full name', 'error');
+                return;
+            }
+
+            if (!email || !email.includes('@')) {
+                showMessage('❌ Please enter a valid email address', 'error');
+                return;
+            }
+
+            if (!phone || phone.length < 10) {
+                showMessage('❌ Please enter a valid phone number', 'error');
+                return;
+            }
+
+            if (!password || password.length < 6) {
+                showMessage('❌ Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('❌ Passwords do not match!', 'error');
+                return;
+            }
+
+            if (isNaN(startingCapital) || startingCapital < 100) {
+                showMessage('❌ Minimum starting capital is $100', 'error');
+                return;
+            }
+
+            if (!terms) {
+                showMessage('❌ Please accept Terms & Conditions', 'error');
+                return;
+            }
+
+            // Save data
+            registrationData = {
+                fullName, email, phone, password, startingCapital, referralCode
+            };
+
+            // Check if user already exists (localStorage for demo)
+            const existingUsers = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
+            const exists = existingUsers.find(u => u.email === email || u.phone === phone);
+
+            if (exists) {
+                showMessage('❌ User with this email or phone already exists!', 'error');
+                return;
+            }
+
+            // Save user temporarily
+            registrationData.tempId = 'user_' + Date.now();
+            localStorage.setItem('tempRegistration', JSON.stringify(registrationData));
+
+            // Show success
+            showMessage('✅ Account details saved! Redirecting to payment...', 'success');
+            
+            // Move to Step 2
+            setTimeout(() => {
+                document.getElementById('accountForm').style.display = 'none';
+                document.getElementById('paymentForm').style.display = 'block';
+                updateProgress(2);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 1000);
+        }
+
+        // ================================================================
+        //  HANDLE PAYMENT
+        // ================================================================
+        function handlePayment(event) {
+            event.preventDefault();
+
+            const screenshot = document.getElementById('screenshot').files[0];
+            const payerUID = document.getElementById('payerUID').value.trim();
+
+            if (!screenshot) {
+                alert('❌ Please upload payment screenshot!');
+                return;
+            }
+
+            if (!payerUID) {
+                alert('❌ Please enter your Binance UID!');
+                return;
+            }
+
+            // Convert screenshot to base64 (for demo storage)
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const screenshotData = e.target.result;
+
+                // Save payment info
+                const paymentData = {
+                    ...registrationData,
+                    screenshot: screenshotData,
+                    payerUID: payerUID,
+                    amount: 3.00,
+                    paymentDate: new Date().toISOString(),
+                    status: 'pending'
+                };
+
+                // Save to localStorage (for demo - in production use Supabase)
+                const pendingPayments = JSON.parse(localStorage.getItem('nexiPendingPayments') || '[]');
+                pendingPayments.push(paymentData);
+                localStorage.setItem('nexiPendingPayments', JSON.stringify(pendingPayments));
+
+                // Move to Step 3
+                document.getElementById('paymentForm').style.display = 'none';
+                document.getElementById('verificationForm').style.display = 'block';
+                updateProgress(3);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                // Auto-generate secret key (for demo - in production admin does this)
+                setTimeout(() => {
+                    generateDemoSecretKey();
+                }, 3000);
+            };
+            reader.readAsDataURL(screenshot);
+        }
+
+        // ================================================================
+        //  GENERATE SECRET KEY (DEMO)
+        // ================================================================
+        function generateDemoSecretKey() {
+            const reg = JSON.parse(localStorage.getItem('tempRegistration'));
+            if (!reg) return;
+
+            // Generate key from email + phone
+            const emailPart = reg.email.substring(0, 4).toUpperCase();
+            const phonePart = reg.phone.slice(-4);
+            const random = Math.floor(1000 + Math.random() * 9000);
+            const secretKey = `${emailPart}${phonePart}${random}`;
+
+            // Save secret key
+            reg.secretKey = secretKey;
+            reg.subscriptionStart = new Date().toISOString().split('T')[0];
+            const expiry = new Date();
+            expiry.setMonth(expiry.getMonth() + 1);
+            reg.subscriptionEnd = expiry.toISOString().split('T')[0];
+            reg.status = 'active';
+
+            localStorage.setItem('tempRegistration', JSON.stringify(reg));
+
+            // Show secret key to user (in production, send via email)
+            alert(`🔑 YOUR SECRET KEY: ${secretKey}\n\n(In production, this will be sent to your email)\n\nPlease enter it below to activate your account.`);
+        }
+
+        // ================================================================
+        //  VERIFY SECRET KEY
+        // ================================================================
+        function verifySecretKey() {
+            const input = document.getElementById('secretKeyInput').value.trim().toUpperCase();
+            const reg = JSON.parse(localStorage.getItem('tempRegistration'));
+
+            if (!reg || !reg.secretKey) {
+                alert('❌ No pending registration found!');
+                return;
+            }
+
+            if (input !== reg.secretKey) {
+                alert('❌ Invalid secret key! Please check and try again.');
+                return;
+            }
+
+            // Save user to users list
+            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
+            users.push({
+                id: reg.tempId,
+                fullName: reg.fullName,
+                email: reg.email,
+                phone: reg.phone,
+                password: reg.password,
+                startingCapital: reg.startingCapital,
+                secretKey: reg.secretKey,
+                subscriptionStart: reg.subscriptionStart,
+                subscriptionEnd: reg.subscriptionEnd,
+                status: 'active',
+                createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('nexiUsers', JSON.stringify(users));
+
+            // Clear temp
+            localStorage.removeItem('tempRegistration');
+
+            // Show success
+            document.getElementById('verificationForm').style.display = 'none';
+            document.getElementById('successForm').style.display = 'block';
+            updateProgress(4);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Show user info
+            document.getElementById('successEmail').innerText = reg.email;
+            document.getElementById('successPhone').innerText = reg.phone;
+            document.getElementById('successCapital').innerText = '$' + reg.startingCapital.toFixed(2);
+            document.getElementById('successKey').innerText = reg.secretKey;
+            document.getElementById('successExpiry').innerText = reg.subscriptionEnd;
+        }
+
+        // ================================================================
+        //  UPDATE PROGRESS
+        // ================================================================
+        function updateProgress(step) {
+            for (let i = 1; i <= 4; i++) {
+                const el = document.getElementById('step' + i);
+                el.classList.remove('active', 'completed');
+                if (i < step) el.classList.add('completed');
+                if (i === step) el.classList.add('active');
+            }
+        }
+
+        // ================================================================
+        //  BACK TO ACCOUNT
+        // ================================================================
+        function backToAccount() {
+            document.getElementById('paymentForm').style.display = 'none';
+            document.getElementById('accountForm').style.display = 'block';
+            updateProgress(1);
+        }
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+        window.addEventListener('load', () => {
+            updateProgress(1);
+        });
+    </script>
+</body>
+</html>
