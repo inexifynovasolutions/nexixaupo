@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Sign In | NexiRocket-XAU Pro Max</title>
+    <title>Register | NexiRocket-XAU Pro Max</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -44,8 +44,6 @@
         .container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 70px);
             padding: 40px 20px;
         }
 
@@ -54,13 +52,13 @@
             border: 2px solid #334155;
             border-radius: 20px;
             padding: 40px;
-            max-width: 450px;
+            max-width: 500px;
             width: 100%;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
         .form-card h2 {
             color: #d4af37;
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 10px;
             text-align: center;
         }
@@ -90,6 +88,12 @@
             transition: all 0.3s;
         }
         .form-group input:focus { border-color: #d4af37; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
 
         .btn-submit {
             width: 100%;
@@ -126,35 +130,21 @@
             display: block;
         }
 
-        .register-link {
+        .login-link {
             text-align: center;
             margin-top: 20px;
             color: #94a3b8;
             font-size: 0.9rem;
         }
-        .register-link a {
+        .login-link a {
             color: #d4af37;
             text-decoration: none;
             font-weight: 700;
         }
 
-        .debug-info {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            background: #1e293b;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            color: #64748b;
-        }
-        .debug-info button {
-            background: #334155;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.7rem;
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+            .form-card { padding: 25px 20px; }
         }
     </style>
 </head>
@@ -163,110 +153,162 @@
     <nav class="navbar">
         <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
         <div class="nav-buttons">
-            <a href="register.html" class="btn-outline">Register</a>
+            <a href="signin.html" class="btn-outline">Sign In</a>
         </div>
     </nav>
 
     <div class="container">
         <div class="form-card">
-            <h2>Sign In</h2>
-            <p class="subtitle">Welcome back!</p>
+            <h2>Create Account</h2>
+            <p class="subtitle">Join NexiRocket-XAU today</p>
 
             <div class="message" id="messageBox"></div>
 
-            <form onsubmit="handleSignIn(event)">
+            <form id="registerForm" onsubmit="handleRegister(event)">
                 <div class="form-group">
-                    <label>Email or Phone</label>
-                    <input type="text" id="loginInput" placeholder="Enter email or phone" required />
+                    <label>Full Name *</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required />
                 </div>
 
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter password" required />
+                    <label>Email Address *</label>
+                    <input type="email" id="email" placeholder="your@email.com" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="phone" placeholder="+92 3XX XXXXXXX" required />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" id="password" placeholder="Min 6 chars" minlength="6" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password *</label>
+                        <input type="password" id="confirmPassword" placeholder="Re-enter" minlength="6" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Starting Capital ($) *</label>
+                    <input type="number" id="startingCapital" placeholder="Min $100" min="100" value="100" required />
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="terms" required style="width: auto;" />
+                        <span style="color: #cbd5e1; font-size: 0.85rem;">I agree to Terms & Conditions</span>
+                    </label>
                 </div>
 
                 <button type="submit" class="btn-submit">
-                    <i class="fas fa-sign-in-alt"></i> Sign In
+                    <i class="fas fa-user-plus"></i> Register Now
                 </button>
 
-                <div class="register-link">
-                    Don't have an account? <a href="register.html">Register</a>
+                <div class="login-link">
+                    Already have an account? <a href="signin.html">Sign In</a>
                 </div>
             </form>
-
-            <!-- Debug Info -->
-            <div class="debug-info">
-                <span id="userCount">Registered Users: 0</span>
-                <button onclick="clearAllUsers()" style="margin-left: 10px;">Clear All</button>
-            </div>
         </div>
     </div>
 
     <script>
         // ================================================================
-        //  SIGN IN HANDLER - FIXED
+        //  REGISTER HANDLER - FIXED
         // ================================================================
-        function handleSignIn(event) {
+        function handleRegister(event) {
             event.preventDefault();
-
-            const input = document.getElementById('loginInput').value.trim().toLowerCase();
-            const password = document.getElementById('loginPassword').value;
+            
             const messageBox = document.getElementById('messageBox');
+            
+            // Get values
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const startingCapital = parseFloat(document.getElementById('startingCapital').value);
 
-            // Get users from localStorage
+            // Validation
+            if (password !== confirmPassword) {
+                showMessage('❌ Passwords do not match!', 'error');
+                return;
+            }
+
+            if (startingCapital < 100) {
+                showMessage('❌ Minimum starting capital is $100', 'error');
+                return;
+            }
+
+            // Get existing users
             const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-
-            // Debug
-            console.log('Total users:', users.length);
-            console.log('Looking for:', input, password);
-
-            if (users.length === 0) {
-                messageBox.className = 'message error';
-                messageBox.innerHTML = '❌ No users registered yet!<br>Please <a href="register.html" style="color:#d4af37;">Register first</a>.';
+            
+            // Check if user already exists
+            const existingUser = users.find(u => u.email === email || u.phone === phone);
+            
+            if (existingUser) {
+                showMessage('❌ User with this email or phone already exists! Please Sign In.', 'error');
                 return;
             }
 
-            // Find user
-            const user = users.find(u => 
-                (u.email === input || u.phone === input) && u.password === password
-            );
+            // Generate secret key
+            const emailPart = email.substring(0, 4).toUpperCase();
+            const phonePart = phone.slice(-4);
+            const random = Math.floor(1000 + Math.random() * 9000);
+            const secretKey = `${emailPart}${phonePart}${random}`;
 
-            if (!user) {
-                messageBox.className = 'message error';
-                messageBox.innerText = '❌ Invalid credentials! Please check your email/phone and password.';
-                return;
-            }
+            // Subscription dates
+            const today = new Date();
+            const expiry = new Date();
+            expiry.setMonth(expiry.getMonth() + 1);
 
-            // Save session
-            localStorage.setItem('nexiCurrentUser', JSON.stringify(user));
+            // Create user object
+            const newUser = {
+                id: 'user_' + Date.now(),
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                password: password,
+                startingCapital: startingCapital,
+                secretKey: secretKey,
+                subscriptionStart: today.toISOString().split('T')[0],
+                subscriptionEnd: expiry.toISOString().split('T')[0],
+                status: 'active',
+                createdAt: new Date().toISOString()
+            };
 
-            messageBox.className = 'message success';
-            messageBox.innerHTML = '✅ Login successful!<br>Welcome back, ' + user.fullName + '!<br>Redirecting...';
+            // Save to localStorage
+            users.push(newUser);
+            localStorage.setItem('nexiUsers', JSON.stringify(users));
 
+            // Show success
+            showMessage('✅ Registration successful!<br>Your Secret Key: <strong style="color:#d4af37;">' + secretKey + '</strong><br>Redirecting to Sign In...', 'success');
+
+            // Auto redirect after 3 seconds
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1500);
+                window.location.href = 'signin.html';
+            }, 3000);
+        }
+
+        function showMessage(text, type) {
+            const box = document.getElementById('messageBox');
+            box.className = 'message ' + type;
+            box.innerHTML = text;
+            box.style.display = 'block';
         }
 
         // ================================================================
-        //  SHOW REGISTERED USERS COUNT
+        //  DEBUG: Clear all users (temporary - remove in production)
         // ================================================================
-        window.addEventListener('load', () => {
-            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-            document.getElementById('userCount').innerText = 'Registered Users: ' + users.length;
-        });
-
-        // ================================================================
-        //  DEBUG: Clear all users
-        // ================================================================
-        function clearAllUsers() {
+        window.clearAllUsers = function() {
             if (confirm('Clear all registered users? (Debug only)')) {
                 localStorage.removeItem('nexiUsers');
                 localStorage.removeItem('nexiCurrentUser');
-                document.getElementById('userCount').innerText = 'Registered Users: 0';
-                alert('✅ All users cleared! You can now register fresh.');
+                alert('✅ All users cleared!');
             }
-        }
+        };
     </script>
 </body>
 </html>
