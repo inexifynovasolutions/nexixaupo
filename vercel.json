@@ -1,4 +1,7 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false
+  "rewrites": [
+    { "source": "/register", "destination": "/register.html" },
+    { "source": "/signin", "destination": "/signin.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" }
+  ]
 }
