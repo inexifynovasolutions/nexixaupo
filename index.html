@@ -15,10 +15,24 @@
         .nav-links { display: flex; gap: 25px; align-items: center; }
         .nav-links a { color: #94a3b8; text-decoration: none; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
         .nav-links a:hover { color: #d4af37; }
-        .nav-buttons { display: flex; gap: 12px; }
+        .nav-buttons { display: flex; gap: 12px; align-items: center; }
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 8px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
         .btn-outline:hover { background: #d4af37; color: #111827; }
         .btn-primary { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; padding: 10px 25px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+        /* ADMIN BUTTON */
+        .btn-admin {
+            background: transparent;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        .btn-admin:hover { background: #ef4444; color: #fff; }
 
         .hero { padding: 80px 40px; text-align: center; background: radial-gradient(circle at center, #1a2332 0%, #0a0e17 100%); }
         .hero h1 { font-size: 3.5rem; font-weight: 900; color: #d4af37; margin-bottom: 15px; line-height: 1.2; }
@@ -97,11 +111,13 @@
             .hero p { font-size: 1rem; }
             .demo-section, .features, .pricing { padding: 40px 20px; }
             .price-card.featured { transform: scale(1); }
+            .btn-admin { padding: 6px 12px; font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- NAVBAR WITH ADMIN LINK -->
     <nav class="navbar">
         <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
         <div class="nav-links">
@@ -110,6 +126,9 @@
             <a onclick="scrollToSection('pricing')">Pricing</a>
         </div>
         <div class="nav-buttons">
+            <a href="admin.html" class="btn-admin" title="Admin Panel">
+                <i class="fas fa-user-shield"></i> Admin
+            </a>
             <button class="btn-outline" onclick="goToSignIn()">Sign In</button>
             <button class="btn-primary" onclick="goToRegister()">Get Started</button>
         </div>
