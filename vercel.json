@@ -3,5 +3,6 @@
     { "source": "/register", "destination": "/register.html" },
     { "source": "/signin", "destination": "/signin.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" }
-  ]
+  ],
+  "trailingSlash": false
 }
