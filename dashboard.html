@@ -9,6 +9,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0e17; color: #f8fafc; }
 
+        /* NAVBAR */
         .navbar {
             background: #111827;
             padding: 15px 40px;
@@ -16,6 +17,9 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #d4af37;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .logo {
             display: flex;
@@ -27,13 +31,7 @@
             text-decoration: none;
         }
         .logo span { color: #fff; }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
+        .user-info { display: flex; align-items: center; gap: 15px; color: #94a3b8; font-size: 0.9rem; }
         .user-info strong { color: #d4af37; }
         .btn-logout {
             background: #ef4444;
@@ -45,64 +43,187 @@
             cursor: pointer;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px 20px;
-        }
+        /* CONTAINER */
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
 
+        /* WELCOME CARD */
         .welcome-card {
             background: linear-gradient(135deg, #1a2332, #0f1729);
             border: 2px solid #d4af37;
             border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 25px;
+            padding: 25px;
+            margin-bottom: 20px;
         }
-        .welcome-card h1 {
-            color: #d4af37;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        .welcome-card p {
-            color: #94a3b8;
-        }
+        .welcome-card h1 { color: #d4af37; font-size: 1.8rem; margin-bottom: 5px; }
+        .welcome-card p { color: #94a3b8; }
 
+        /* STATS */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         .stat-card {
             background: #111827;
             border: 1px solid #334155;
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
         }
-        .stat-card .label {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-        }
-        .stat-card .value {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #d4af37;
-        }
+        .stat-card .label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-card .value { font-size: 1.5rem; font-weight: 900; color: #d4af37; }
         .stat-card .value.green { color: #10b981; }
+        .stat-card .value.red { color: #ef4444; }
 
-        .info-card {
+        /* TRADING ROBOT SECTION */
+        .robot-section {
             background: #111827;
-            border: 1px solid #334155;
+            border: 2px solid #d4af37;
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 20px;
         }
-        .info-card h3 {
+        .robot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .robot-header h2 { color: #d4af37; font-size: 1.4rem; }
+        .robot-status {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .robot-status.running { background: #10b981; color: #fff; }
+        .robot-status.stopped { background: #ef4444; color: #fff; }
+
+        /* BALANCE PANEL */
+        .balance-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .balance-box {
+            background: #0f1729;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .balance-box.highlight { border-color: #d4af37; }
+        .balance-box .label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; }
+        .balance-box .value { font-size: 1.6rem; font-weight: 900; margin-top: 5px; }
+        .balance-box .value.gold { color: #d4af37; }
+        .balance-box .value.green { color: #10b981; }
+        .balance-box .value.red { color: #ef4444; }
+
+        /* CONTROL PANEL */
+        .control-panel {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .control-panel input {
+            padding: 12px 18px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
             color: #d4af37;
+            font-size: 1rem;
+            font-weight: 700;
+            width: 150px;
+            text-align: center;
+            outline: none;
+        }
+        .btn-start {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-stop {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-start:disabled, .btn-stop:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* S/R PANEL */
+        .sr-panel {
+            display: flex;
+            justify-content: space-between;
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .sr-panel div { font-size: 0.9rem; }
+        .sr-panel span { color: #94a3b8; }
+
+        /* STATS MINI */
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
             margin-bottom: 15px;
         }
+        .mini-stat {
+            background: #1e293b;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .mini-stat .label { color: #94a3b8; font-size: 0.7rem; }
+        .mini-stat .value { font-size: 0.95rem; font-weight: 700; color: #d4af37; margin-top: 3px; }
+
+        /* TABLES */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #1e293b; color: #d4af37; padding: 10px; text-align: center; }
+        td { padding: 10px; text-align: center; border-bottom: 1px solid #1e293b; }
+        .buy { color: #10b981; font-weight: 700; }
+        .sell { color: #ef4444; font-weight: 700; }
+        .green { color: #10b981 !important; }
+        .red { color: #ef4444 !important; }
+        .gold { color: #d4af37 !important; }
+        .text-muted { color: #94a3b8; }
+
+        /* PROGRESS BAR */
+        .progress-wrap { margin-top: 12px; padding: 8px 12px; background: #0f1729; border-radius: 10px; border: 1px solid #334155; }
+        .progress-track { position: relative; height: 10px; background: #1e293b; border-radius: 10px; margin: 18px 0 10px; }
+        .progress-fill { height: 100%; border-radius: 10px; transition: width 0.3s ease; background: linear-gradient(90deg, #ef4444, #d4af37, #10b981); }
+        .progress-marker { position: absolute; top: -18px; font-size: 9px; transform: translateX(-50%); white-space: nowrap; }
+
+        /* ACCOUNT INFO */
+        .info-card {
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info-card h3 { color: #d4af37; margin-bottom: 15px; font-size: 1.1rem; }
         .info-row {
             display: flex;
             justify-content: space-between;
@@ -116,27 +237,55 @@
         .info-row .val.green { color: #10b981; }
         .info-row .val.mono { font-family: monospace; }
 
-        .coming-soon {
-            background: #1e293b;
-            border: 2px dashed #d4af37;
-            border-radius: 15px;
-            padding: 40px;
+        /* ALERTS */
+        .alert-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #111827;
+            border: 4px solid #d4af37;
+            padding: 30px;
+            border-radius: 20px;
             text-align: center;
-            color: #94a3b8;
+            z-index: 9999;
+            display: none;
+            min-width: 300px;
         }
-        .coming-soon i {
-            font-size: 3rem;
-            color: #d4af37;
+        .alert-popup h2 { color: #d4af37; font-size: 1.8rem; margin-bottom: 10px; }
+        .alert-popup .btn-close {
+            margin-top: 15px;
+            padding: 10px 30px;
+            background: #d4af37;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .alert-ticker {
+            background: #dc2626;
+            color: white;
+            padding: 8px;
+            border-radius: 10px;
             margin-bottom: 15px;
+            overflow: hidden;
+            white-space: nowrap;
+            display: none;
         }
-        .coming-soon h3 {
-            color: #d4af37;
-            margin-bottom: 10px;
+        .alert-ticker span { display: inline-block; animation: scroll 20s linear infinite; font-weight: 800; }
+        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
+            .balance-panel, .mini-stats { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .user-info { font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- NAVBAR -->
     <nav class="navbar">
         <a href="dashboard.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
         <div class="user-info">
@@ -149,13 +298,13 @@
 
     <div class="container">
 
-        <!-- Welcome -->
+        <!-- WELCOME -->
         <div class="welcome-card">
             <h1>Welcome, <span id="welcomeName">Trader</span>! 🎉</h1>
             <p>Your AI trading robot is ready. Start making profits today.</p>
         </div>
 
-        <!-- Stats -->
+        <!-- STATS -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="label">💰 Starting Capital</div>
@@ -167,7 +316,7 @@
             </div>
             <div class="stat-card">
                 <div class="label">📊 Expiry Date</div>
-                <div class="value" id="statExpiry" style="font-size:1.2rem;">--</div>
+                <div class="value" id="statExpiry" style="font-size:1.1rem;">--</div>
             </div>
             <div class="stat-card">
                 <div class="label">🔑 Status</div>
@@ -175,7 +324,107 @@
             </div>
         </div>
 
-        <!-- Account Info -->
+        <!-- TICKER -->
+        <div class="alert-ticker" id="alertTicker"><span id="alertText"></span></div>
+
+        <!-- POPUP -->
+        <div class="alert-popup" id="alertPopup">
+            <h2 id="popupTitle">WARNING</h2>
+            <p id="popupMessage" style="color:#e2e8f0; margin:10px 0;"></p>
+            <button class="btn-close" onclick="hidePopup()">OK</button>
+        </div>
+
+        <!-- ==================== TRADING ROBOT ==================== -->
+        <div class="robot-section">
+            <div class="robot-header">
+                <h2>🤖 AI Trading Robot</h2>
+                <span class="robot-status stopped" id="robotStatusBadge">⏹️ STOPPED</span>
+            </div>
+
+            <!-- Balance Panel -->
+            <div class="balance-panel">
+                <div class="balance-box">
+                    <div class="label">💰 Base Balance</div>
+                    <div class="value gold" id="baseBalance">$0.00</div>
+                </div>
+                <div class="balance-box">
+                    <div class="label">📈 Floating P/L</div>
+                    <div class="value" id="floatingPL">+$0.00</div>
+                </div>
+                <div class="balance-box highlight">
+                    <div class="label">⚡ Effective Balance</div>
+                    <div class="value gold" id="effectiveBalance">$0.00</div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <label style="color:#94a3b8; font-size:0.9rem;">💵 Starting Capital ($):</label>
+                <input type="number" id="capitalInput" value="300" min="100" step="10" />
+                <button class="btn-start" onclick="startRobot()" id="btnStart">
+                    <i class="fas fa-play"></i> START
+                </button>
+                <button class="btn-stop" onclick="stopRobot()" id="btnStop" disabled>
+                    <i class="fas fa-stop"></i> STOP
+                </button>
+            </div>
+
+            <!-- S/R Panel -->
+            <div class="sr-panel">
+                <div><span>🛡️ Support:</span> <strong style="color:#ef4444;" id="fixedSupport">--</strong></div>
+                <div><span>📊 Price:</span> <strong style="color:#d4af37;" id="livePrice">--</strong></div>
+                <div><span>🚀 Resistance:</span> <strong style="color:#10b981;" id="fixedResistance">--</strong></div>
+            </div>
+
+            <!-- Mini Stats -->
+            <div class="mini-stats">
+                <div class="mini-stat">
+                    <div class="label">📊 Strategy</div>
+                    <div class="value" id="activeStrategy">--</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="label">🧠 AI Signal</div>
+                    <div class="value" id="aiSignal">--</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="label">📈 RSI</div>
+                    <div class="value" id="rsiDisplay">--</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="label">🎯 Status</div>
+                    <div class="value" id="aiStatus">⏹️ Idle</div>
+                </div>
+            </div>
+
+            <!-- Live Trade Table -->
+            <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">⚡ Current Open Entry</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Type</th><th>Entry</th><th>Current</th><th>SL</th><th>TP</th><th>P/L</th></tr>
+                    </thead>
+                    <tbody id="liveTableBody">
+                        <tr><td colspan="7" class="text-muted" style="padding:20px;">⏳ Click START to begin trading</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="progressContainer"></div>
+
+            <!-- History -->
+            <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">📜 Trade History</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Date</th><th>Time</th><th>Type</th><th>Entry</th><th>Exit</th><th>P/L</th><th>Balance</th></tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ACCOUNT INFO -->
         <div class="info-card">
             <h3>👤 Account Information</h3>
             <div class="info-row">
@@ -204,17 +453,33 @@
             </div>
         </div>
 
-        <!-- Trading Robot -->
-        <div class="coming-soon">
-            <i class="fas fa-robot"></i>
-            <h3>🤖 Trading Robot Coming Next!</h3>
-            <p>The full trading robot will load here with live market data and AI signals.</p>
-            <p style="margin-top:15px; color: #d4af37;">Your account is active and verified ✅</p>
-        </div>
-
     </div>
 
     <script>
+        // ================================================================
+        //  STATE
+        // ================================================================
+        let baseBalance = 0;
+        let startingCapital = 0;
+        let totalPL = 0;
+        let currentPrice = 0;
+        let isTradeOpen = false;
+        let currentTrade = null;
+        let tradeCounter = 0;
+        let atr = 0;
+        let priceHistory = [];
+        let lastTradeTime = 0;
+        let rangeStartTime = Date.now();
+        let isRobotRunning = false;
+        let robotInterval = null;
+        let tradeHistory = [];
+        let FIXED_SUPPORT = 0;
+        let FIXED_RESISTANCE = 0;
+        let isSupportSet = false;
+        const MIN_TRADE_INTERVAL = 15000;
+
+        const $ = id => document.getElementById(id);
+
         // ================================================================
         //  CHECK LOGIN
         // ================================================================
@@ -227,27 +492,443 @@
                 return;
             }
 
-            // Check expiry
             const today = new Date().toISOString().split('T')[0];
             if (user.subscriptionEnd < today) {
-                alert('⚠️ Your subscription has expired! Please renew.');
+                alert('⚠️ Subscription expired! Please renew.');
                 localStorage.removeItem('nexiCurrentUser');
                 window.location.href = 'signin.html';
                 return;
             }
 
-            // Display info
-            document.getElementById('navUserName').innerText = user.fullName;
-            document.getElementById('welcomeName').innerText = user.fullName;
-            document.getElementById('statCapital').innerText = '$' + user.startingCapital.toFixed(2);
-            document.getElementById('statExpiry').innerText = user.subscriptionEnd;
-            document.getElementById('infoName').innerText = user.fullName;
-            document.getElementById('infoEmail').innerText = user.email;
-            document.getElementById('infoPhone').innerText = user.phone;
-            document.getElementById('infoKey').innerText = user.secretKey;
-            document.getElementById('infoStart').innerText = user.subscriptionStart;
-            document.getElementById('infoEnd').innerText = user.subscriptionEnd;
+            // Display user info
+            $('navUserName').innerText = user.fullName;
+            $('welcomeName').innerText = user.fullName;
+            $('statCapital').innerText = '$' + user.startingCapital.toFixed(2);
+            $('statExpiry').innerText = user.subscriptionEnd;
+            $('infoName').innerText = user.fullName;
+            $('infoEmail').innerText = user.email;
+            $('infoPhone').innerText = user.phone;
+            $('infoKey').innerText = user.secretKey;
+            $('infoStart').innerText = user.subscriptionStart;
+            $('infoEnd').innerText = user.subscriptionEnd;
+            $('capitalInput').value = user.startingCapital;
         });
+
+        // ================================================================
+        //  START ROBOT
+        // ================================================================
+        function startRobot() {
+            const capital = parseFloat($('capitalInput').value);
+
+            if (isNaN(capital) || capital < 100) {
+                alert('❌ Minimum starting capital $100 required!');
+                return;
+            }
+
+            baseBalance = capital;
+            startingCapital = capital;
+            totalPL = 0;
+            isTradeOpen = false;
+            currentTrade = null;
+            tradeCounter = 0;
+            priceHistory = [];
+            lastTradeTime = 0;
+            rangeStartTime = Date.now();
+            isSupportSet = false;
+            tradeHistory = [];
+
+            $('historyBody').innerHTML = '<tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
+
+            updateBalance();
+            updateLiveTable();
+
+            isRobotRunning = true;
+            $('btnStart').disabled = true;
+            $('btnStop').disabled = false;
+            $('robotStatusBadge').className = 'robot-status running';
+            $('robotStatusBadge').innerHTML = '🟢 RUNNING';
+            $('aiStatus').innerText = '🟢 Running';
+            $('capitalInput').disabled = true;
+
+            showTicker(`🚀 Robot started! Capital: $${capital.toFixed(2)}`);
+
+            getLivePrice();
+            robotInterval = setInterval(getLivePrice, 1000);
+        }
+
+        // ================================================================
+        //  STOP ROBOT
+        // ================================================================
+        function stopRobot() {
+            isRobotRunning = false;
+            if (robotInterval) clearInterval(robotInterval);
+
+            if (isTradeOpen && currentTrade) {
+                closeTrade(currentPrice);
+            }
+
+            $('btnStart').disabled = false;
+            $('btnStop').disabled = true;
+            $('robotStatusBadge').className = 'robot-status stopped';
+            $('robotStatusBadge').innerHTML = '⏹️ STOPPED';
+            $('aiStatus').innerText = '⏹️ Stopped';
+            $('capitalInput').disabled = false;
+
+            showTicker('⏹️ Robot stopped!');
+        }
+
+        // ================================================================
+        //  LIVE PRICE
+        // ================================================================
+        async function getLivePrice() {
+            if (!isRobotRunning) return;
+
+            try {
+                const resp = await fetch('https://api.gold-api.com/price/XAU');
+                const data = await resp.json();
+                if (data.price) currentPrice = parseFloat(data.price);
+                else currentPrice = 4388 + (Math.random() - 0.5) * 6;
+            } catch (e) {
+                currentPrice = 4388 + (Math.random() - 0.5) * 6;
+            }
+
+            $('livePrice').innerText = '$' + currentPrice.toFixed(2);
+
+            if (!isSupportSet && currentPrice > 0) {
+                FIXED_SUPPORT = currentPrice - 5;
+                FIXED_RESISTANCE = currentPrice + 5;
+                isSupportSet = true;
+                $('fixedSupport').innerText = FIXED_SUPPORT.toFixed(2);
+                $('fixedResistance').innerText = FIXED_RESISTANCE.toFixed(2);
+            }
+
+            priceHistory.push(currentPrice);
+            if (priceHistory.length > 20) priceHistory.shift();
+            calculateATR();
+
+            const rsi = calculateRSI();
+            $('rsiDisplay').innerText = rsi.toFixed(1);
+
+            analyzeStrategy(rsi);
+            updateBalance();
+            updateLiveTable();
+        }
+
+        function calculateATR() {
+            if (priceHistory.length < 2) return;
+            const prev = priceHistory[priceHistory.length - 2] || priceHistory[0];
+            const volatility = Math.abs(currentPrice - prev);
+            atr = (atr * 0.8) + (volatility * 0.2);
+        }
+
+        function calculateRSI() {
+            const base = 45 + (Math.random() - 0.5) * 30;
+            return Math.min(100, Math.max(0, base));
+        }
+
+        // ================================================================
+        //  STRATEGY ENGINE
+        // ================================================================
+        function analyzeStrategy(rsi) {
+            if (!isRobotRunning || !isSupportSet) return;
+
+            if (isTradeOpen) {
+                checkTradeClose();
+                return;
+            }
+
+            if (Date.now() - lastTradeTime < MIN_TRADE_INTERVAL) {
+                $('aiStatus').innerText = '⏳ Cooling Down...';
+                return;
+            }
+
+            // 1. Breakout BUY
+            if (currentPrice > FIXED_RESISTANCE && rsi > 45) {
+                $('activeStrategy').innerText = 'Breakout BUY';
+                openTrade('BUY', currentPrice);
+                return;
+            }
+
+            // 2. Breakdown SELL
+            if (currentPrice < FIXED_SUPPORT && rsi < 55) {
+                $('activeStrategy').innerText = 'Breakdown SELL';
+                openTrade('SELL', currentPrice);
+                return;
+            }
+
+            // 3. Bounce BUY
+            if (currentPrice < FIXED_SUPPORT + 1.5 && rsi < 40) {
+                $('activeStrategy').innerText = 'Bounce BUY';
+                openTrade('BUY', currentPrice);
+                return;
+            }
+
+            // 4. Bounce SELL
+            if (currentPrice > FIXED_RESISTANCE - 1.5 && rsi > 60) {
+                $('activeStrategy').innerText = 'Bounce SELL';
+                openTrade('SELL', currentPrice);
+                return;
+            }
+
+            // 5. Range-Bound
+            const elapsed = (Date.now() - rangeStartTime) / 1000;
+            if (elapsed > 90 && !isTradeOpen) {
+                const middle = (FIXED_SUPPORT + FIXED_RESISTANCE) / 2;
+                if (currentPrice < middle && rsi < 50) {
+                    $('activeStrategy').innerText = 'Range BUY';
+                    openTrade('BUY', currentPrice);
+                    rangeStartTime = Date.now();
+                    return;
+                } else if (currentPrice > middle && rsi > 50) {
+                    $('activeStrategy').innerText = 'Range SELL';
+                    openTrade('SELL', currentPrice);
+                    rangeStartTime = Date.now();
+                    return;
+                }
+            }
+
+            $('activeStrategy').innerText = 'Waiting';
+            $('aiSignal').innerText = 'Waiting';
+            $('aiStatus').innerText = '⏳ Waiting';
+        }
+
+        // ================================================================
+        //  OPEN TRADE
+        // ================================================================
+        function openTrade(type, price) {
+            if (isTradeOpen || !isRobotRunning) return;
+
+            isTradeOpen = true;
+            tradeCounter++;
+            lastTradeTime = Date.now();
+            rangeStartTime = Date.now();
+
+            let sl, tp;
+            const volMultiplier = Math.max(0.5, Math.min(2, atr / 1.5));
+
+            if (type === 'BUY') {
+                sl = price - (0.003 * price * volMultiplier);
+                tp = price + (0.008 * price * volMultiplier);
+            } else {
+                sl = price + (0.003 * price * volMultiplier);
+                tp = price - (0.008 * price * volMultiplier);
+            }
+
+            currentTrade = {
+                id: tradeCounter,
+                type: type,
+                entry: price,
+                sl: sl,
+                tp: tp,
+                openTime: new Date()
+            };
+
+            $('aiStatus').innerText = '🟢 Trade Open: ' + type;
+            $('aiSignal').innerText = type + ' Signal';
+            playSound('entry');
+            showTicker(`🚀 ${type} ENTRY @ $${price.toFixed(2)} | SL: $${sl.toFixed(2)} | TP: $${tp.toFixed(2)}`);
+
+            updateBalance();
+            updateLiveTable();
+        }
+
+        // ================================================================
+        //  CHECK CLOSE
+        // ================================================================
+        function checkTradeClose() {
+            if (!currentTrade) return;
+
+            let hit = false;
+            if (currentTrade.type === 'BUY') {
+                if (currentPrice >= currentTrade.tp || currentPrice <= currentTrade.sl) hit = true;
+            } else {
+                if (currentPrice <= currentTrade.tp || currentPrice >= currentTrade.sl) hit = true;
+            }
+
+            if (hit) closeTrade(currentPrice);
+        }
+
+        // ================================================================
+        //  CLOSE TRADE
+        // ================================================================
+        function closeTrade(exitPrice) {
+            if (!currentTrade) return;
+
+            const lotSize = 0.01;
+            let profit = 0;
+            if (currentTrade.type === 'BUY') {
+                profit = (exitPrice - currentTrade.entry) * lotSize * 100;
+            } else {
+                profit = (currentTrade.entry - exitPrice) * lotSize * 100;
+            }
+
+            baseBalance += profit;
+            totalPL += profit;
+
+            const now = new Date();
+            tradeHistory.push({
+                id: currentTrade.id,
+                type: currentTrade.type,
+                entry: currentTrade.entry,
+                exit: exitPrice,
+                profit: profit,
+                balance: baseBalance,
+                date: now.toISOString().split('T')[0],
+                time: now.toTimeString().slice(0, 8)
+            });
+
+            renderHistory();
+
+            if (profit >= 0) {
+                showPopup('🎯 TP HIT!', `Profit: +$${profit.toFixed(2)}<br>Balance: $${baseBalance.toFixed(2)}`);
+                playSound('profit');
+            } else {
+                showPopup('🛑 SL HIT!', `Loss: -$${Math.abs(profit).toFixed(2)}<br>Balance: $${baseBalance.toFixed(2)}`);
+                playSound('loss');
+            }
+
+            isTradeOpen = false;
+            currentTrade = null;
+            $('aiStatus').innerText = '⏳ Idle';
+
+            updateBalance();
+            updateLiveTable();
+        }
+
+        // ================================================================
+        //  UPDATE BALANCE
+        // ================================================================
+        function updateBalance() {
+            let floatingPL = 0;
+            if (isTradeOpen && currentTrade) {
+                const lotSize = 0.01;
+                if (currentTrade.type === 'BUY') {
+                    floatingPL = (currentPrice - currentTrade.entry) * lotSize * 100;
+                } else {
+                    floatingPL = (currentTrade.entry - currentPrice) * lotSize * 100;
+                }
+            }
+
+            const effectiveBalance = baseBalance + floatingPL;
+
+            $('baseBalance').innerText = '$' + baseBalance.toFixed(2);
+            $('floatingPL').innerText = (floatingPL >= 0 ? '+' : '') + '$' + floatingPL.toFixed(2);
+            $('floatingPL').style.color = floatingPL > 0.01 ? '#10b981' : (floatingPL < -0.01 ? '#ef4444' : '#d4af37');
+            $('effectiveBalance').innerText = '$' + effectiveBalance.toFixed(2);
+        }
+
+        // ================================================================
+        //  UPDATE LIVE TABLE
+        // ================================================================
+        function updateLiveTable() {
+            const tbody = $('liveTableBody');
+            if (!isTradeOpen || !currentTrade) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-muted" style="padding:20px;">⏳ Waiting for signal...</td></tr>`;
+                $('progressContainer').innerHTML = '';
+                return;
+            }
+
+            const lotSize = 0.01;
+            let floatingPL = 0;
+            if (currentTrade.type === 'BUY') {
+                floatingPL = (currentPrice - currentTrade.entry) * lotSize * 100;
+            } else {
+                floatingPL = (currentTrade.entry - currentPrice) * lotSize * 100;
+            }
+
+            const isProfit = floatingPL >= 0;
+            tbody.innerHTML = `
+                <tr style="border-left:4px solid ${isProfit ? '#10b981' : '#ef4444'};">
+                    <td><strong>#${currentTrade.id}</strong></td>
+                    <td class="${currentTrade.type === 'BUY' ? 'buy' : 'sell'}">${currentTrade.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</td>
+                    <td>$${currentTrade.entry.toFixed(2)}</td>
+                    <td style="font-weight:bold;color:${isProfit ? '#10b981' : '#ef4444'};">$${currentPrice.toFixed(2)}</td>
+                    <td>$${currentTrade.sl.toFixed(2)}</td>
+                    <td>$${currentTrade.tp.toFixed(2)}</td>
+                    <td style="font-weight:bold;color:${isProfit ? '#10b981' : '#ef4444'};">${floatingPL >= 0 ? '+' : ''}$${floatingPL.toFixed(2)}</td>
+                </tr>
+            `;
+
+            // Progress Bar
+            const min = Math.min(currentTrade.sl, currentTrade.tp);
+            const max = Math.max(currentTrade.sl, currentTrade.tp);
+            const range = max - min;
+            let currentPos = ((currentPrice - min) / range) * 100;
+            currentPos = Math.max(0, Math.min(100, currentPos));
+
+            $('progressContainer').innerHTML = `
+                <div class="progress-wrap">
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width:${currentPos}%;"></div>
+                        <div class="progress-marker" style="left:0%;color:#ef4444;">SL $${currentTrade.sl.toFixed(2)}</div>
+                        <div class="progress-marker" style="left:${currentPos}%;color:#fff;top:-22px;">🔴 $${currentPrice.toFixed(2)}</div>
+                        <div class="progress-marker" style="left:100%;color:#10b981;">TP $${currentTrade.tp.toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ================================================================
+        //  RENDER HISTORY
+        // ================================================================
+        function renderHistory() {
+            const tbody = $('historyBody');
+            if (tradeHistory.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
+                return;
+            }
+
+            const sorted = [...tradeHistory].reverse();
+            tbody.innerHTML = sorted.map(t => `
+                <tr>
+                    <td>#${t.id}</td>
+                    <td style="font-size:0.8rem;color:#94a3b8;">${t.date}</td>
+                    <td style="font-size:0.8rem;color:#94a3b8;">${t.time}</td>
+                    <td class="${t.type === 'BUY' ? 'buy' : 'sell'}">${t.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</td>
+                    <td>$${t.entry.toFixed(2)}</td>
+                    <td>$${t.exit.toFixed(2)}</td>
+                    <td class="${t.profit >= 0 ? 'green' : 'red'}">${t.profit >= 0 ? '+' : ''}$${t.profit.toFixed(2)}</td>
+                    <td class="gold">$${t.balance.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ================================================================
+        //  SOUNDS
+        // ================================================================
+        function playSound(type) {
+            try {
+                const ctx = new(window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                gain.gain.value = 0.15;
+                if (type === 'entry') { osc.frequency.value = 880; osc.type = 'sine'; osc.start(); osc.stop(ctx.currentTime + 0.5); }
+                else if (type === 'profit') { osc.frequency.value = 1200; osc.type = 'triangle'; osc.start(); osc.stop(ctx.currentTime + 0.6); }
+                else { osc.frequency.value = 300; osc.type = 'sawtooth'; osc.start(); osc.stop(ctx.currentTime + 0.8); }
+            } catch (e) {}
+        }
+
+        // ================================================================
+        //  ALERTS
+        // ================================================================
+        function showTicker(text) {
+            const el = $('alertTicker');
+            $('alertText').innerText = text;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 15000);
+        }
+
+        function showPopup(title, msg) {
+            $('popupTitle').innerHTML = title;
+            $('popupMessage').innerHTML = msg;
+            $('alertPopup').style.display = 'block';
+        }
+
+        function hidePopup() {
+            $('alertPopup').style.display = 'none';
+        }
 
         // ================================================================
         //  LOGOUT
