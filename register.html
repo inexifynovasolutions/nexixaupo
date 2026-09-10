@@ -27,7 +27,6 @@
             text-decoration: none;
         }
         .logo span { color: #fff; }
-        .nav-buttons { display: flex; gap: 12px; }
         .btn-outline {
             background: transparent;
             border: 2px solid #d4af37;
@@ -37,114 +36,151 @@
             font-weight: 700;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.3s;
         }
-        .btn-outline:hover { background: #d4af37; color: #111827; }
 
-        .container {
+        .container { max-width: 700px; margin: 0 auto; padding: 30px 20px; }
+
+        /* PROGRESS */
+        .progress-steps {
             display: flex;
             justify-content: center;
-            padding: 40px 20px;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
+        .step { display: flex; align-items: center; gap: 8px; }
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1e293b;
+            border: 2px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .step.active .step-circle { background: #d4af37; color: #111827; border-color: #d4af37; }
+        .step.completed .step-circle { background: #10b981; color: #fff; border-color: #10b981; }
+        .step-label { color: #94a3b8; font-size: 0.8rem; font-weight: 600; }
+        .step.active .step-label { color: #d4af37; }
+        .step-line { width: 40px; height: 2px; background: #334155; }
 
+        /* FORM CARD */
         .form-card {
             background: #111827;
             border: 2px solid #334155;
             border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
+            padding: 35px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
-        .form-card h2 {
-            color: #d4af37;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .form-card .subtitle {
-            color: #94a3b8;
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        .form-card h2 { color: #d4af37; font-size: 1.6rem; margin-bottom: 10px; text-align: center; }
+        .form-card .subtitle { color: #94a3b8; text-align: center; margin-bottom: 25px; font-size: 0.9rem; }
 
-        .form-group { margin-bottom: 20px; }
+        .info-box {
+            background: #1e293b;
+            border-left: 4px solid #d4af37;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .info-box p { color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; }
+        .info-box strong { color: #d4af37; }
+
+        .form-group { margin-bottom: 18px; }
         .form-group label {
             display: block;
             color: #94a3b8;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 14px 18px;
+            padding: 13px 16px;
             background: #1e293b;
             border: 2px solid #334155;
             border-radius: 10px;
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
             transition: all 0.3s;
         }
         .form-group input:focus { border-color: #d4af37; }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
         .btn-submit {
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             background: linear-gradient(135deg, #d4af37, #f0d060);
             color: #111827;
             border: none;
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
             margin-top: 10px;
+            transition: all 0.3s;
         }
         .btn-submit:hover { transform: translateY(-2px); }
 
-        .message {
-            padding: 15px;
-            border-radius: 10px;
+        .message { padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; font-size: 0.9rem; }
+        .message.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; display: block; }
+        .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
+
+        .login-link { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; }
+        .login-link a { color: #d4af37; text-decoration: none; font-weight: 700; }
+
+        /* BINANCE PAYMENT SECTION */
+        .binance-box {
+            background: #0f1729;
+            border: 2px dashed #d4af37;
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 20px;
-            display: none;
-            font-size: 0.9rem;
         }
-        .message.error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            display: block;
+        .binance-box h3 { color: #d4af37; margin-bottom: 15px; font-size: 1rem; }
+        .binance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e293b;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
-        .message.success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid #10b981;
-            color: #10b981;
-            display: block;
+        .binance-row .label { color: #94a3b8; font-size: 0.8rem; }
+        .binance-row .value { color: #fff; font-weight: 700; font-family: monospace; font-size: 1rem; }
+        .binance-row .value.green { color: #10b981; }
+        .copy-btn {
+            background: #d4af37;
+            color: #111827;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.75rem;
         }
 
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #94a3b8;
-            font-size: 0.9rem;
+        .instructions {
+            background: #1e293b;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
-        .login-link a {
-            color: #d4af37;
-            text-decoration: none;
-            font-weight: 700;
-        }
+        .instructions h4 { color: #d4af37; margin-bottom: 10px; font-size: 0.9rem; }
+        .instructions ol { color: #cbd5e1; font-size: 0.85rem; line-height: 1.8; padding-left: 20px; }
 
         @media (max-width: 600px) {
             .form-row { grid-template-columns: 1fr; }
             .form-card { padding: 25px 20px; }
+            .step-label { display: none; }
+            .step-line { width: 20px; }
         }
     </style>
 </head>
@@ -152,32 +188,63 @@
 
     <nav class="navbar">
         <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
-        <div class="nav-buttons">
-            <a href="signin.html" class="btn-outline">Sign In</a>
-        </div>
+        <a href="signin.html" class="btn-outline">Sign In</a>
     </nav>
 
     <div class="container">
-        <div class="form-card">
-            <h2>Create Account</h2>
-            <p class="subtitle">Join NexiRocket-XAU today</p>
+
+        <!-- PROGRESS -->
+        <div class="progress-steps">
+            <div class="step active" id="step1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Account</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Payment</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Verify</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Done</div>
+            </div>
+        </div>
+
+        <!-- STEP 1: ACCOUNT FORM -->
+        <div class="form-card" id="accountForm">
+            <h2>📝 Account Details</h2>
+            <p class="subtitle">Fill in your information to get started</p>
+
+            <div class="info-box">
+                <p>
+                    💰 <strong>First Month: $3</strong> (Regular: $5/month)<br>
+                    🎁 Register now and get unlimited trading access!
+                </p>
+            </div>
 
             <div class="message" id="messageBox"></div>
 
-            <form id="registerForm" onsubmit="handleRegister(event)">
+            <form onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>Full Name *</label>
                     <input type="text" id="fullName" placeholder="Enter your full name" required />
                 </div>
 
-                <div class="form-group">
-                    <label>Email Address *</label>
-                    <input type="email" id="email" placeholder="your@email.com" required />
-                </div>
-
-                <div class="form-group">
-                    <label>Phone Number *</label>
-                    <input type="tel" id="phone" placeholder="+92 3XX XXXXXXX" required />
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="email" placeholder="your@email.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone *</label>
+                        <input type="tel" id="phone" placeholder="+92 3XX XXXXXXX" required />
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -204,7 +271,7 @@
                 </div>
 
                 <button type="submit" class="btn-submit">
-                    <i class="fas fa-user-plus"></i> Register Now
+                    <i class="fas fa-arrow-right"></i> Continue to Payment
                 </button>
 
                 <div class="login-link">
@@ -212,18 +279,121 @@
                 </div>
             </form>
         </div>
+
+        <!-- STEP 2: PAYMENT -->
+        <div class="form-card" id="paymentForm" style="display: none;">
+            <h2>💰 Payment</h2>
+            <p class="subtitle">Send payment via Binance to activate</p>
+
+            <div class="info-box">
+                <p>
+                    <strong>Amount:</strong> $3.00 (First Month Offer)<br>
+                    <strong>Method:</strong> Binance Pay
+                </p>
+            </div>
+
+            <!-- BINANCE DETAILS -->
+            <div class="binance-box">
+                <h3>📋 Binance Payment Info</h3>
+
+                <div class="binance-row">
+                    <div>
+                        <div class="label">Binance UID</div>
+                        <div class="value">968525536</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('968525536')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+
+                <div class="binance-row">
+                    <div>
+                        <div class="label">Binance Nickname</div>
+                        <div class="value">NexiProduct</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('NexiProduct')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+
+                <div class="binance-row">
+                    <div>
+                        <div class="label">Amount</div>
+                        <div class="value green">$3.00</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('3')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+
+            <!-- INSTRUCTIONS -->
+            <div class="instructions">
+                <h4>📌 Steps:</h4>
+                <ol>
+                    <li>Open Binance App</li>
+                    <li>Go to "Pay" → "Send"</li>
+                    <li>Enter UID: <strong>968525536</strong></li>
+                    <li>Send <strong>$3.00</strong></li>
+                    <li>Take screenshot of transaction</li>
+                    <li>Upload below</li>
+                </ol>
+            </div>
+
+            <form onsubmit="handlePayment(event)">
+                <div class="form-group">
+                    <label>Screenshot (Transfer Proof) *</label>
+                    <input type="file" id="screenshot" accept="image/*" required style="padding: 10px;" />
+                </div>
+
+                <div class="form-group">
+                    <label>Your Binance UID (from which you sent) *</label>
+                    <input type="text" id="payerUID" placeholder="Your Binance UID" required />
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Submit Payment
+                </button>
+
+                <div class="login-link">
+                    <a href="#" onclick="backToAccount(); return false;">← Back to Account</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- STEP 3: SUCCESS -->
+        <div class="form-card" id="successForm" style="display: none; text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 15px;">⏳</div>
+            <h2 style="color: #10b981;">Payment Submitted!</h2>
+            <p class="subtitle">Your payment is being verified by admin</p>
+
+            <div class="info-box" style="text-align: left;">
+                <p>
+                    ✅ <strong>Submitted successfully!</strong><br><br>
+                    Our admin will verify your payment within <strong>5-30 minutes</strong>.<br><br>
+                    You will receive your <strong>Secret Key</strong> via email.
+                </p>
+            </div>
+
+            <div style="background: #1e293b; padding: 20px; border-radius: 12px; margin-top: 20px;">
+                <h4 style="color: #d4af37; margin-bottom: 10px;">🔑 Already have a Secret Key?</h4>
+                <input type="text" id="secretKeyInput" placeholder="Enter Secret Key" style="width: 100%; padding: 12px; background: #0f1729; border: 2px solid #334155; border-radius: 8px; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; font-size: 1rem; text-align: center; margin-bottom: 10px;" />
+                <button onclick="verifySecretKey()" class="btn-submit" style="margin-top: 0;">
+                    <i class="fas fa-check-circle"></i> Verify & Activate
+                </button>
+            </div>
+
+            <div class="login-link" style="margin-top: 20px;">
+                <a href="index.html">← Back to Home</a>
+            </div>
+        </div>
+
     </div>
 
     <script>
+        let registrationData = {};
+
         // ================================================================
-        //  REGISTER HANDLER - FIXED
+        //  REGISTER
         // ================================================================
         function handleRegister(event) {
             event.preventDefault();
-            
             const messageBox = document.getElementById('messageBox');
-            
-            // Get values
+
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim().toLowerCase();
             const phone = document.getElementById('phone').value.trim();
@@ -231,67 +401,97 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             const startingCapital = parseFloat(document.getElementById('startingCapital').value);
 
-            // Validation
             if (password !== confirmPassword) {
                 showMessage('❌ Passwords do not match!', 'error');
                 return;
             }
 
             if (startingCapital < 100) {
-                showMessage('❌ Minimum starting capital is $100', 'error');
+                showMessage('❌ Minimum capital is $100', 'error');
                 return;
             }
 
-            // Get existing users
             const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-            
-            // Check if user already exists
             const existingUser = users.find(u => u.email === email || u.phone === phone);
-            
+
             if (existingUser) {
-                showMessage('❌ User with this email or phone already exists! Please Sign In.', 'error');
+                showMessage('❌ User already exists! Please <a href="signin.html" style="color:#d4af37;">Sign In</a>.', 'error');
                 return;
             }
 
-            // Generate secret key
-            const emailPart = email.substring(0, 4).toUpperCase();
-            const phonePart = phone.slice(-4);
-            const random = Math.floor(1000 + Math.random() * 9000);
-            const secretKey = `${emailPart}${phonePart}${random}`;
+            registrationData = { fullName, email, phone, password, startingCapital };
+            showMessage('✅ Details saved! Redirecting to payment...', 'success');
 
-            // Subscription dates
-            const today = new Date();
-            const expiry = new Date();
-            expiry.setMonth(expiry.getMonth() + 1);
-
-            // Create user object
-            const newUser = {
-                id: 'user_' + Date.now(),
-                fullName: fullName,
-                email: email,
-                phone: phone,
-                password: password,
-                startingCapital: startingCapital,
-                secretKey: secretKey,
-                subscriptionStart: today.toISOString().split('T')[0],
-                subscriptionEnd: expiry.toISOString().split('T')[0],
-                status: 'active',
-                createdAt: new Date().toISOString()
-            };
-
-            // Save to localStorage
-            users.push(newUser);
-            localStorage.setItem('nexiUsers', JSON.stringify(users));
-
-            // Show success
-            showMessage('✅ Registration successful!<br>Your Secret Key: <strong style="color:#d4af37;">' + secretKey + '</strong><br>Redirecting to Sign In...', 'success');
-
-            // Auto redirect after 3 seconds
             setTimeout(() => {
-                window.location.href = 'signin.html';
-            }, 3000);
+                document.getElementById('accountForm').style.display = 'none';
+                document.getElementById('paymentForm').style.display = 'block';
+                updateProgress(2);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 1000);
         }
 
+        // ================================================================
+        //  PAYMENT
+        // ================================================================
+        function handlePayment(event) {
+            event.preventDefault();
+            const screenshot = document.getElementById('screenshot').files[0];
+            const payerUID = document.getElementById('payerUID').value.trim();
+
+            if (!screenshot) { alert('❌ Please upload screenshot!'); return; }
+            if (!payerUID) { alert('❌ Please enter Binance UID!'); return; }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const paymentData = {
+                    ...registrationData,
+                    id: 'payment_' + Date.now(),
+                    screenshot: e.target.result,
+                    payerUID: payerUID,
+                    amount: 3.00,
+                    paymentDate: new Date().toISOString(),
+                    status: 'pending'
+                };
+
+                const payments = JSON.parse(localStorage.getItem('nexiPendingPayments') || '[]');
+                payments.push(paymentData);
+                localStorage.setItem('nexiPendingPayments', JSON.stringify(payments));
+
+                document.getElementById('paymentForm').style.display = 'none';
+                document.getElementById('successForm').style.display = 'block';
+                updateProgress(3);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+            reader.readAsDataURL(screenshot);
+        }
+
+        // ================================================================
+        //  VERIFY SECRET KEY
+        // ================================================================
+        function verifySecretKey() {
+            const input = document.getElementById('secretKeyInput').value.trim().toUpperCase();
+
+            if (!input) { alert('❌ Please enter secret key!'); return; }
+
+            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
+            const user = users.find(u => u.secretKey === input);
+
+            if (!user) {
+                alert('❌ Invalid secret key! Please check your email or contact support.');
+                return;
+            }
+
+            localStorage.setItem('nexiCurrentUser', JSON.stringify(user));
+            alert('✅ Account Activated!\n\nWelcome ' + user.fullName + '!\nRedirecting to dashboard...');
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        }
+
+        // ================================================================
+        //  HELPERS
+        // ================================================================
         function showMessage(text, type) {
             const box = document.getElementById('messageBox');
             box.className = 'message ' + type;
@@ -299,16 +499,28 @@
             box.style.display = 'block';
         }
 
-        // ================================================================
-        //  DEBUG: Clear all users (temporary - remove in production)
-        // ================================================================
-        window.clearAllUsers = function() {
-            if (confirm('Clear all registered users? (Debug only)')) {
-                localStorage.removeItem('nexiUsers');
-                localStorage.removeItem('nexiCurrentUser');
-                alert('✅ All users cleared!');
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Copied: ' + text);
+            });
+        }
+
+        function backToAccount() {
+            document.getElementById('paymentForm').style.display = 'none';
+            document.getElementById('accountForm').style.display = 'block';
+            updateProgress(1);
+        }
+
+        function updateProgress(step) {
+            for (let i = 1; i <= 4; i++) {
+                const el = document.getElementById('step' + i);
+                el.classList.remove('active', 'completed');
+                if (i < step) el.classList.add('completed');
+                if (i === step) el.classList.add('active');
             }
-        };
+        }
+
+        window.addEventListener('load', () => updateProgress(1));
     </script>
 </body>
 </html>
