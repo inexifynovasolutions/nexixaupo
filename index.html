@@ -28,6 +28,7 @@
             font-size: 1.5rem;
             font-weight: 900;
             color: #d4af37;
+            text-decoration: none;
         }
         .logo span { color: #fff; }
         .nav-links {
@@ -41,6 +42,7 @@
             font-weight: 600;
             transition: color 0.3s;
             font-size: 0.9rem;
+            cursor: pointer;
         }
         .nav-links a:hover { color: #d4af37; }
         .nav-buttons {
@@ -56,6 +58,8 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn-outline:hover { background: #d4af37; color: #111827; }
         .btn-primary {
@@ -75,7 +79,6 @@
             padding: 80px 40px;
             text-align: center;
             background: radial-gradient(circle at center, #1a2332 0%, #0a0e17 100%);
-            position: relative;
         }
         .hero h1 {
             font-size: 3.5rem;
@@ -108,9 +111,7 @@
             margin-top: 50px;
             flex-wrap: wrap;
         }
-        .hero-stat {
-            text-align: center;
-        }
+        .hero-stat { text-align: center; }
         .hero-stat .num {
             font-size: 2.5rem;
             font-weight: 900;
@@ -121,7 +122,7 @@
             font-size: 0.9rem;
         }
 
-        /* ===== LIVE DEMO ROBOT ===== */
+        /* ===== DEMO SECTION ===== */
         .demo-section {
             padding: 40px;
             max-width: 1400px;
@@ -135,10 +136,7 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-        .demo-header h2 {
-            font-size: 2rem;
-            color: #d4af37;
-        }
+        .demo-header h2 { font-size: 2rem; color: #d4af37; }
         .free-badge {
             background: #10b981;
             color: #fff;
@@ -152,7 +150,7 @@
             50% { opacity: 0.7; }
         }
 
-        /* ===== UPGRADE BANNER ===== */
+        /* Upgrade Banner */
         .upgrade-banner {
             background: linear-gradient(135deg, #1a2332, #0f1729);
             border: 2px solid #d4af37;
@@ -169,15 +167,13 @@
             font-size: 1.1rem;
             color: #f8fafc;
         }
-        .upgrade-banner .text strong {
-            color: #d4af37;
-        }
+        .upgrade-banner .text strong { color: #d4af37; }
         .upgrade-banner .btn-primary {
             padding: 12px 35px;
             font-size: 1rem;
         }
 
-        /* ===== DEMO DASHBOARD ===== */
+        /* Demo Dashboard */
         .demo-dashboard {
             background: #111827;
             border: 2px solid #d4af37;
@@ -221,12 +217,8 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .demo-sr-panel div {
-            font-size: 0.9rem;
-        }
-        .demo-sr-panel span {
-            color: #94a3b8;
-        }
+        .demo-sr-panel div { font-size: 0.9rem; }
+        .demo-sr-panel span { color: #94a3b8; }
 
         .demo-controls {
             display: flex;
@@ -322,16 +314,12 @@
             position: relative;
             transition: all 0.3s;
         }
-        .price-card:hover {
-            transform: translateY(-5px);
-        }
+        .price-card:hover { transform: translateY(-5px); }
         .price-card.featured {
             border-color: #d4af37;
             transform: scale(1.05);
         }
-        .price-card.featured:hover {
-            transform: scale(1.08);
-        }
+        .price-card.featured:hover { transform: scale(1.08); }
         .price-card.featured::before {
             content: "POPULAR";
             position: absolute;
@@ -451,7 +439,7 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .navbar { padding: 12px 20px; }
+            .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
             .nav-links { display: none; }
             .hero { padding: 50px 20px; }
             .hero h1 { font-size: 2rem; }
@@ -462,6 +450,7 @@
             .price-card.featured:hover { transform: scale(1.02); }
             .nav-buttons { gap: 8px; }
             .btn-outline, .btn-primary { padding: 8px 15px; font-size: 0.85rem; }
+            .upgrade-banner { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
@@ -469,18 +458,18 @@
 
     <!-- ===== NAVBAR ===== -->
     <nav class="navbar">
-        <div class="logo">
+        <a href="index.html" class="logo">
             🚀 Nexi<span>Rocket-XAU</span>
-        </div>
+        </a>
         <div class="nav-links">
-            <a href="#demo">Live Demo</a>
-            <a href="#features">Features</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#how">How It Works</a>
+            <a onclick="scrollToSection('demo')">Live Demo</a>
+            <a onclick="scrollToSection('features')">Features</a>
+            <a onclick="scrollToSection('pricing')">Pricing</a>
+            <a onclick="scrollToSection('how')">How It Works</a>
         </div>
         <div class="nav-buttons">
-            <button class="btn-outline" onclick="showSignIn()">Sign In</button>
-            <button class="btn-primary" onclick="showRegister()">Get Started</button>
+            <button class="btn-outline" onclick="goToSignIn()">Sign In</button>
+            <button class="btn-primary" onclick="goToRegister()">Get Started</button>
         </div>
     </nav>
 
@@ -492,7 +481,7 @@
         </div>
         <h1>AI-Powered <span>Gold Trading</span> Robot</h1>
         <p>Watch our AI trade gold in real-time. Start with just $100. No experience needed.</p>
-        <button class="btn-primary" onclick="scrollToDemo()" style="font-size:1.2rem; padding:15px 40px;">
+        <button class="btn-primary" onclick="scrollToSection('demo')" style="font-size:1.2rem; padding:15px 40px;">
             <i class="fas fa-play"></i> Try Free Demo (3 Trades)
         </button>
 
@@ -526,7 +515,7 @@
             <div class="text">
                 ⚠️ <strong>Free users get only 3 trades per day.</strong> Want unlimited?
             </div>
-            <button class="btn-primary" onclick="showRegister()">
+            <button class="btn-primary" onclick="goToRegister()">
                 <i class="fas fa-crown"></i> Register for $3 (First Month)
             </button>
         </div>
@@ -640,7 +629,7 @@
                     <li><i class="fas fa-check"></i> Basic signals</li>
                     <li><i class="fas fa-times" style="color:#ef4444;"></i> No history</li>
                 </ul>
-                <button class="btn-outline" style="width:100%;" onclick="scrollToDemo()">Try Free</button>
+                <button class="btn-outline" style="width:100%;" onclick="scrollToSection('demo')">Try Free</button>
             </div>
 
             <div class="price-card featured">
@@ -653,7 +642,7 @@
                     <li><i class="fas fa-check"></i> WhatsApp support</li>
                     <li><i class="fas fa-check"></i> Custom starting capital</li>
                 </ul>
-                <button class="btn-primary" style="width:100%;" onclick="showRegister()">Register Now</button>
+                <button class="btn-primary" style="width:100%;" onclick="goToRegister()">Register Now</button>
             </div>
 
             <div class="price-card">
@@ -665,7 +654,7 @@
                     <li><i class="fas fa-check"></i> Monthly reports</li>
                     <li><i class="fas fa-check"></i> Early access features</li>
                 </ul>
-                <button class="btn-outline" style="width:100%;" onclick="showRegister()">Subscribe</button>
+                <button class="btn-outline" style="width:100%;" onclick="goToRegister()">Subscribe</button>
             </div>
         </div>
     </section>
@@ -710,13 +699,29 @@
             <p>You have used all 3 free trades for today.</p>
             <p class="highlight">Register for just $3 to get unlimited trading!</p>
             <div class="modal-buttons">
-                <button class="btn-primary" onclick="showRegister(); closeModal();">Register Now ($3)</button>
+                <button class="btn-primary" onclick="goToRegister()">Register Now ($3)</button>
                 <button class="btn-outline" onclick="closeModal()">Maybe Later</button>
             </div>
         </div>
     </div>
 
     <script>
+        // ================================================================
+        //  NAVIGATION FUNCTIONS (FIXED - Now redirects properly)
+        // ================================================================
+        function goToRegister() {
+            window.location.href = 'register.html';
+        }
+
+        function goToSignIn() {
+            window.location.href = 'signin.html';
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
         // ================================================================
         //  DEMO MODE (GUEST) - 3 FREE TRADES
         // ================================================================
@@ -728,10 +733,6 @@
         let demoTrade = null;
         let demoInterval = null;
         let demoTradeCounter = 0;
-
-        function scrollToDemo() {
-            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
-        }
 
         async function getDemoPrice() {
             try {
@@ -891,18 +892,6 @@
 
         function closeModal() {
             document.getElementById('freeTradesModal').style.display = 'none';
-        }
-
-        function showRegister() {
-            alert('📝 Registration form will open here.\n\n(Next step: Full registration with Binance payment)');
-            // TODO: Redirect to registration page
-            // window.location.href = 'register.html';
-        }
-
-        function showSignIn() {
-            alert('🔑 Sign In form will open here.');
-            // TODO: Redirect to signin page
-            // window.location.href = 'signin.html';
         }
 
         // Live users counter animation

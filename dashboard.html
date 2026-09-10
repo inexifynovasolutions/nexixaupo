@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dashboard | NexiRocket-XAU Pro Max</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; }
+
+        .navbar {
+            background: #111827;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #d4af37;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-decoration: none;
+        }
+        .logo span { color: #fff; }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .user-info strong { color: #d4af37; }
+        .btn-logout {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #1a2332, #0f1729);
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        .welcome-card h1 {
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .welcome-card p {
+            color: #94a3b8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-card .label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #d4af37;
+        }
+        .stat-card .value.green { color: #10b981; }
+
+        .info-card {
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .info-card h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-row .key { color: #94a3b8; }
+        .info-row .val { color: #fff; font-weight: 600; }
+        .info-row .val.gold { color: #d4af37; }
+        .info-row .val.green { color: #10b981; }
+        .info-row .val.mono { font-family: monospace; }
+
+        .coming-soon {
+            background: #1e293b;
+            border: 2px dashed #d4af37;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            color: #94a3b8;
+        }
+        .coming-soon i {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+        .coming-soon h3 {
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="dashboard.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
+        <div class="user-info">
+            <span>👤 <strong id="navUserName">User</strong></span>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Welcome -->
+        <div class="welcome-card">
+            <h1>Welcome, <span id="welcomeName">Trader</span>! 🎉</h1>
+            <p>Your AI trading robot is ready. Start making profits today.</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">💰 Starting Capital</div>
+                <div class="value" id="statCapital">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">📅 Subscription</div>
+                <div class="value green" id="statSubscription">Active</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">📊 Expiry Date</div>
+                <div class="value" id="statExpiry" style="font-size:1.2rem;">--</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">🔑 Status</div>
+                <div class="value green">✅ Verified</div>
+            </div>
+        </div>
+
+        <!-- Account Info -->
+        <div class="info-card">
+            <h3>👤 Account Information</h3>
+            <div class="info-row">
+                <span class="key">Full Name</span>
+                <span class="val" id="infoName">--</span>
+            </div>
+            <div class="info-row">
+                <span class="key">Email</span>
+                <span class="val" id="infoEmail">--</span>
+            </div>
+            <div class="info-row">
+                <span class="key">Phone</span>
+                <span class="val" id="infoPhone">--</span>
+            </div>
+            <div class="info-row">
+                <span class="key">Secret Key</span>
+                <span class="val gold mono" id="infoKey">--</span>
+            </div>
+            <div class="info-row">
+                <span class="key">Subscription Start</span>
+                <span class="val" id="infoStart">--</span>
+            </div>
+            <div class="info-row">
+                <span class="key">Subscription End</span>
+                <span class="val green" id="infoEnd">--</span>
+            </div>
+        </div>
+
+        <!-- Trading Robot -->
+        <div class="coming-soon">
+            <i class="fas fa-robot"></i>
+            <h3>🤖 Trading Robot Coming Next!</h3>
+            <p>The full trading robot will load here with live market data and AI signals.</p>
+            <p style="margin-top:15px; color: #d4af37;">Your account is active and verified ✅</p>
+        </div>
+
+    </div>
+
+    <script>
+        // ================================================================
+        //  CHECK LOGIN
+        // ================================================================
+        window.addEventListener('load', () => {
+            const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
+
+            if (!user) {
+                alert('❌ Please login first!');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            // Check expiry
+            const today = new Date().toISOString().split('T')[0];
+            if (user.subscriptionEnd < today) {
+                alert('⚠️ Your subscription has expired! Please renew.');
+                localStorage.removeItem('nexiCurrentUser');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            // Display info
+            document.getElementById('navUserName').innerText = user.fullName;
+            document.getElementById('welcomeName').innerText = user.fullName;
+            document.getElementById('statCapital').innerText = '$' + user.startingCapital.toFixed(2);
+            document.getElementById('statExpiry').innerText = user.subscriptionEnd;
+            document.getElementById('infoName').innerText = user.fullName;
+            document.getElementById('infoEmail').innerText = user.email;
+            document.getElementById('infoPhone').innerText = user.phone;
+            document.getElementById('infoKey').innerText = user.secretKey;
+            document.getElementById('infoStart').innerText = user.subscriptionStart;
+            document.getElementById('infoEnd').innerText = user.subscriptionEnd;
+        });
+
+        // ================================================================
+        //  LOGOUT
+        // ================================================================
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('nexiCurrentUser');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
