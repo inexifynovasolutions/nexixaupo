@@ -2,32 +2,234 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Panel - nexiXAUPO</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin | NexiRocket-XAU</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; }
+        .login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0e17; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .login-card { background: #111827; border: 2px solid #d4af37; border-radius: 20px; padding: 40px; max-width: 400px; width: 100%; text-align: center; }
+        .login-card h1 { color: #d4af37; margin-bottom: 10px; }
+        .login-card p { color: #94a3b8; margin-bottom: 25px; font-size: 0.9rem; }
+        .login-card input { width: 100%; padding: 14px 18px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 1rem; margin-bottom: 15px; outline: none; }
+        .login-card input:focus { border-color: #d4af37; }
+        .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .login-error { color: #ef4444; margin-top: 10px; font-size: 0.85rem; display: none; }
+        .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
+        .logo span { color: #fff; }
+        .admin-badge { background: #dc2626; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-left: 10px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .admin-stat { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 20px; text-align: center; }
+        .admin-stat .icon { font-size: 2rem; margin-bottom: 10px; }
+        .admin-stat .label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; }
+        .admin-stat .value { font-size: 2rem; font-weight: 900; color: #d4af37; margin-top: 5px; }
+        .admin-stat .value.green { color: #10b981; }
+        .admin-stat .value.red { color: #ef4444; }
+        .section { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .section h2 { color: #d4af37; font-size: 1.3rem; margin-bottom: 20px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #1e293b; color: #d4af37; padding: 12px; text-align: center; }
+        td { padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .badge.pending { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+        .badge.verified { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge.expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .btn-action { padding: 6px 14px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.75rem; margin: 0 2px; }
+        .btn-verify { background: #10b981; color: #fff; }
+        .btn-reject { background: #ef4444; color: #fff; }
+        .empty-state { text-align: center; padding: 40px; color: #64748b; }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">🚀 nexiXAUPO</a>
-            <div class="nav-links">
-                <a href="admin.html" class="active">Admin Panel</a>
+
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <h1>🔐 Admin Panel</h1>
+            <p>Enter admin credentials</p>
+            <input type="text" id="adminUsername" placeholder="Username" />
+            <input type="password" id="adminPassword" placeholder="Password" />
+            <button onclick="adminLogin()">Login</button>
+            <div class="login-error" id="loginError">❌ Invalid credentials!</div>
+        </div>
+    </div>
+
+    <div id="adminDashboard" style="display: none;">
+        <nav class="navbar">
+            <a href="#" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
+            <div style="display: flex; align-items: center;">
+                <span class="admin-badge">🔐 ADMIN</span>
+                <button class="btn-logout" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="admin-stats">
+                <div class="admin-stat"><div class="icon">👥</div><div class="label">Total Users</div><div class="value" id="totalUsers">0</div></div>
+                <div class="admin-stat"><div class="icon">✅</div><div class="label">Active</div><div class="value green" id="activeUsers">0</div></div>
+                <div class="admin-stat"><div class="icon">⏳</div><div class="label">Pending</div><div class="value red" id="pendingPayments">0</div></div>
+                <div class="admin-stat"><div class="icon">💰</div><div class="label">Revenue</div><div class="value" id="totalRevenue">$0</div></div>
+            </div>
+
+            <div class="section">
+                <h2>💳 Pending Payments</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>UID</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="paymentsBody"><tr><td colspan="8" class="empty-state">No pending payments</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>👥 Users</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Secret Key</th><th>Capital</th><th>Expiry</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="usersBody"><tr><td colspan="9" class="empty-state">No users</td></tr></tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <section class="admin-section">
-        <div class="admin-container">
-            <h2>📊 Admin Dashboard</h2>
+    <script>
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'nexi2026';
+        let allUsers = [], allPayments = [];
 
-            <div id="adminMessage" class="message"></div>
+        function adminLogin() {
+            const u = document.getElementById('adminUsername').value;
+            const p = document.getElementById('adminPassword').value;
+            if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+                localStorage.setItem('nexiAdmin', 'true');
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadData();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
 
-            <div id="clientsList">
-                <p>Loading clients...</p>
-            </div>
-        </div>
-    </section>
+        function adminLogout() {
+            if (confirm('Logout?')) { localStorage.removeItem('nexiAdmin'); location.reload(); }
+        }
 
-    <script src="js/app.js"></script>
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('nexiAdmin') === 'true') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadData();
+            }
+        });
+
+        function loadData() {
+            allUsers = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
+            allPayments = JSON.parse(localStorage.getItem('nexiPendingPayments') || '[]');
+            updateStats();
+            renderPayments();
+            renderUsers();
+        }
+
+        function updateStats() {
+            document.getElementById('totalUsers').innerText = allUsers.length;
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('activeUsers').innerText = allUsers.filter(u => u.subscriptionEnd >= today).length;
+            document.getElementById('pendingPayments').innerText = allPayments.filter(p => p.status === 'pending').length;
+            const rev = allPayments.filter(p => p.status === 'verified').reduce((s, p) => s + (p.amount || 0), 0);
+            document.getElementById('totalRevenue').innerText = '$' + rev.toFixed(2);
+        }
+
+        function renderPayments() {
+            const tbody = document.getElementById('paymentsBody');
+            if (allPayments.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No payments</td></tr>'; return; }
+            tbody.innerHTML = allPayments.map((p, i) => `<tr>
+                <td>#${i + 1}</td>
+                <td>${p.fullName || '--'}</td>
+                <td style="font-size:0.8rem;">${p.email || '--'}</td>
+                <td style="font-size:0.8rem;">${p.phone || '--'}</td>
+                <td style="font-family:monospace;">${p.payerUID || '--'}</td>
+                <td class="gold">$${(p.amount || 0).toFixed(2)}</td>
+                <td><span class="badge ${p.status}">${p.status}</span></td>
+                <td>
+                    ${p.status === 'pending' ? `
+                        <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
+                        <button class="btn-action btn-reject" onclick="rejectPayment(${i})">✗</button>
+                    ` : '--'}
+                </td>
+            </tr>`).join('');
+        }
+
+        function verifyPayment(index) {
+            const p = allPayments[index];
+            if (!p || !confirm(`Verify payment for ${p.fullName}?`)) return;
+            const emailPart = (p.email || 'USER').substring(0, 4).toUpperCase();
+            const phonePart = (p.phone || '0000').slice(-4);
+            const random = Math.floor(1000 + Math.random() * 9000);
+            const secretKey = emailPart + phonePart + random;
+            const today = new Date();
+            const expiry = new Date(); expiry.setMonth(expiry.getMonth() + 1);
+
+            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
+            const existing = users.find(u => u.email === p.email);
+            if (existing) {
+                existing.secretKey = secretKey;
+                existing.subscriptionEnd = expiry.toISOString().split('T')[0];
+                existing.status = 'active';
+            } else {
+                users.push({
+                    id: 'user_' + Date.now(),
+                    fullName: p.fullName, email: p.email, phone: p.phone,
+                    password: p.password || '123456', startingCapital: p.startingCapital || 100,
+                    secretKey, subscriptionStart: today.toISOString().split('T')[0],
+                    subscriptionEnd: expiry.toISOString().split('T')[0], status: 'active'
+                });
+            }
+            localStorage.setItem('nexiUsers', JSON.stringify(users));
+            p.status = 'verified';
+            localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
+            alert(`✅ Verified!\nSecret Key: ${secretKey}`);
+            loadData();
+        }
+
+        function rejectPayment(index) {
+            if (!confirm('Reject?')) return;
+            allPayments[index].status = 'rejected';
+            localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
+            loadData();
+        }
+
+        function renderUsers() {
+            const tbody = document.getElementById('usersBody');
+            const today = new Date().toISOString().split('T')[0];
+            if (allUsers.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No users</td></tr>'; return; }
+            tbody.innerHTML = allUsers.map((u, i) => {
+                const isActive = u.subscriptionEnd >= today;
+                return `<tr>
+                    <td>#${i + 1}</td>
+                    <td>${u.fullName}</td>
+                    <td style="font-size:0.8rem;">${u.email}</td>
+                    <td style="font-size:0.8rem;">${u.phone}</td>
+                    <td style="font-family:monospace; color:#d4af37;">${u.secretKey}</td>
+                    <td class="gold">$${u.startingCapital.toFixed(2)}</td>
+                    <td style="font-size:0.8rem;">${u.subscriptionEnd}</td>
+                    <td><span class="badge ${isActive ? 'active' : 'expired'}">${isActive ? 'Active' : 'Expired'}</span></td>
+                    <td><button class="btn-action btn-reject" onclick="deleteUser(${i})">🗑</button></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function deleteUser(index) {
+            if (!confirm(`Delete ${allUsers[index].fullName}?`)) return;
+            allUsers.splice(index, 1);
+            localStorage.setItem('nexiUsers', JSON.stringify(allUsers));
+            loadData();
+        }
+    </script>
 </body>
 </html>

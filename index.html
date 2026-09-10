@@ -9,463 +9,105 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0e17; color: #f8fafc; overflow-x: hidden; }
 
-        /* ===== NAVBAR ===== */
-        .navbar {
-            background: #111827;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #d4af37;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: #d4af37;
-            text-decoration: none;
-        }
+        .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
         .logo span { color: #fff; }
-        .nav-links {
-            display: flex;
-            gap: 25px;
-            align-items: center;
-        }
-        .nav-links a {
-            color: #94a3b8;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a { color: #94a3b8; text-decoration: none; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
         .nav-links a:hover { color: #d4af37; }
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #d4af37;
-            color: #d4af37;
-            padding: 8px 22px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
+        .nav-buttons { display: flex; gap: 12px; }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 8px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
         .btn-outline:hover { background: #d4af37; color: #111827; }
-        .btn-primary {
-            background: linear-gradient(135deg, #d4af37, #f0d060);
-            color: #111827;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .btn-primary:hover { transform: scale(1.03); }
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; padding: 10px 25px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
 
-        /* ===== HERO SECTION ===== */
-        .hero {
-            padding: 80px 40px;
-            text-align: center;
-            background: radial-gradient(circle at center, #1a2332 0%, #0a0e17 100%);
-        }
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #d4af37;
-            margin-bottom: 15px;
-            line-height: 1.2;
-        }
+        .hero { padding: 80px 40px; text-align: center; background: radial-gradient(circle at center, #1a2332 0%, #0a0e17 100%); }
+        .hero h1 { font-size: 3.5rem; font-weight: 900; color: #d4af37; margin-bottom: 15px; line-height: 1.2; }
         .hero h1 span { color: #fff; }
-        .hero p {
-            font-size: 1.3rem;
-            color: #94a3b8;
-            max-width: 700px;
-            margin: 0 auto 30px;
-        }
-        .hero-badge {
-            display: inline-block;
-            background: #1e293b;
-            padding: 8px 20px;
-            border-radius: 30px;
-            color: #10b981;
-            font-weight: 700;
-            margin-bottom: 20px;
-            border: 1px solid #10b981;
-        }
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 50px;
-            flex-wrap: wrap;
-        }
+        .hero p { font-size: 1.3rem; color: #94a3b8; max-width: 700px; margin: 0 auto 30px; }
+        .hero-badge { display: inline-block; background: #1e293b; padding: 8px 20px; border-radius: 30px; color: #10b981; font-weight: 700; margin-bottom: 20px; border: 1px solid #10b981; }
+        .hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 50px; flex-wrap: wrap; }
         .hero-stat { text-align: center; }
-        .hero-stat .num {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #d4af37;
-        }
-        .hero-stat .label {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
+        .hero-stat .num { font-size: 2.5rem; font-weight: 900; color: #d4af37; }
+        .hero-stat .label { color: #94a3b8; font-size: 0.9rem; }
 
-        /* ===== DEMO SECTION ===== */
-        .demo-section {
-            padding: 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .demo-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+        .demo-section { padding: 40px; max-width: 1400px; margin: 0 auto; }
+        .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .demo-header h2 { font-size: 2rem; color: #d4af37; }
-        .free-badge {
-            background: #10b981;
-            color: #fff;
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
+        .free-badge { background: #10b981; color: #fff; padding: 8px 20px; border-radius: 30px; font-weight: 700; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
-        /* Upgrade Banner */
-        .upgrade-banner {
-            background: linear-gradient(135deg, #1a2332, #0f1729);
-            border: 2px solid #d4af37;
-            border-radius: 15px;
-            padding: 20px 30px;
-            margin: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .upgrade-banner .text {
-            font-size: 1.1rem;
-            color: #f8fafc;
-        }
+        .upgrade-banner { background: linear-gradient(135deg, #1a2332, #0f1729); border: 2px solid #d4af37; border-radius: 15px; padding: 20px 30px; margin: 20px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .upgrade-banner .text { font-size: 1.1rem; color: #f8fafc; }
         .upgrade-banner .text strong { color: #d4af37; }
-        .upgrade-banner .btn-primary {
-            padding: 12px 35px;
-            font-size: 1rem;
-        }
 
-        /* Demo Dashboard */
-        .demo-dashboard {
-            background: #111827;
-            border: 2px solid #d4af37;
-            border-radius: 15px;
-            padding: 25px;
-        }
-        .demo-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .demo-stat {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid #334155;
-        }
-        .demo-stat .label {
-            color: #94a3b8;
-            font-size: 0.8rem;
-            margin-bottom: 5px;
-        }
-        .demo-stat .value {
-            font-size: 1.8rem;
-            font-weight: 900;
-        }
+        .demo-dashboard { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; }
+        .demo-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .demo-stat { background: #1e293b; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #334155; }
+        .demo-stat .label { color: #94a3b8; font-size: 0.8rem; margin-bottom: 5px; }
+        .demo-stat .value { font-size: 1.8rem; font-weight: 900; }
         .demo-stat .value.gold { color: #d4af37; }
         .demo-stat .value.green { color: #10b981; }
         .demo-stat .value.yellow { color: #fbbf24; }
-        .demo-stat .value.red { color: #ef4444; }
 
-        .demo-sr-panel {
-            display: flex;
-            justify-content: space-between;
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+        .demo-sr-panel { display: flex; justify-content: space-between; background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .demo-sr-panel div { font-size: 0.9rem; }
         .demo-sr-panel span { color: #94a3b8; }
+        .demo-controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .demo-table { width: 100%; border-collapse: collapse; }
+        .demo-table th { background: #1e293b; color: #d4af37; padding: 10px; text-align: center; font-size: 0.85rem; }
+        .demo-table td { padding: 10px; text-align: center; border-bottom: 1px solid #1e293b; font-size: 0.85rem; }
 
-        .demo-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
+        .features { padding: 80px 40px; max-width: 1400px; margin: 0 auto; }
+        .features h2 { text-align: center; font-size: 2.5rem; color: #d4af37; margin-bottom: 50px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .feature-card { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 30px; text-align: center; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: #d4af37; }
+        .feature-card i { font-size: 2.5rem; color: #d4af37; margin-bottom: 15px; }
+        .feature-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
+        .feature-card p { color: #94a3b8; font-size: 0.9rem; }
 
-        .demo-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .demo-table th {
-            background: #1e293b;
-            color: #d4af37;
-            padding: 10px;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-        .demo-table td {
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #1e293b;
-            font-size: 0.85rem;
-        }
+        .pricing { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+        .pricing h2 { text-align: center; font-size: 2.5rem; color: #d4af37; margin-bottom: 50px; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .price-card { background: #111827; border: 2px solid #334155; border-radius: 20px; padding: 35px 25px; text-align: center; position: relative; }
+        .price-card.featured { border-color: #d4af37; transform: scale(1.05); }
+        .price-card.featured::before { content: "POPULAR"; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #d4af37; color: #111827; padding: 4px 15px; border-radius: 20px; font-size: 0.7rem; font-weight: 900; }
+        .price-card h3 { color: #94a3b8; font-size: 1rem; margin-bottom: 15px; }
+        .price-card .price { font-size: 3rem; font-weight: 900; color: #d4af37; }
+        .price-card .price span { font-size: 1rem; color: #94a3b8; }
+        .price-card ul { list-style: none; margin: 25px 0; text-align: left; }
+        .price-card ul li { padding: 8px 0; color: #cbd5e1; font-size: 0.9rem; }
+        .price-card ul li i { color: #10b981; margin-right: 10px; }
 
-        /* ===== FEATURES ===== */
-        .features {
-            padding: 80px 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .features h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #d4af37;
-            margin-bottom: 50px;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        .feature-card {
-            background: #111827;
-            border: 1px solid #334155;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: #d4af37;
-        }
-        .feature-card i {
-            font-size: 2.5rem;
-            color: #d4af37;
-            margin-bottom: 15px;
-        }
-        .feature-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-        .feature-card p {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: #111827; border: 3px solid #d4af37; border-radius: 20px; padding: 35px; max-width: 500px; width: 100%; text-align: center; }
+        .modal-content h2 { color: #d4af37; font-size: 1.8rem; margin-bottom: 15px; }
+        .modal-content p { color: #cbd5e1; margin-bottom: 15px; line-height: 1.6; }
+        .modal-content .highlight { color: #10b981; font-size: 1.1rem; font-weight: 700; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
 
-        /* ===== PRICING ===== */
-        .pricing {
-            padding: 80px 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .pricing h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #d4af37;
-            margin-bottom: 50px;
-        }
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        .price-card {
-            background: #111827;
-            border: 2px solid #334155;
-            border-radius: 20px;
-            padding: 35px 25px;
-            text-align: center;
-            position: relative;
-            transition: all 0.3s;
-        }
-        .price-card:hover { transform: translateY(-5px); }
-        .price-card.featured {
-            border-color: #d4af37;
-            transform: scale(1.05);
-        }
-        .price-card.featured:hover { transform: scale(1.08); }
-        .price-card.featured::before {
-            content: "POPULAR";
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #d4af37;
-            color: #111827;
-            padding: 4px 15px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 900;
-        }
-        .price-card h3 {
-            color: #94a3b8;
-            font-size: 1rem;
-            margin-bottom: 15px;
-        }
-        .price-card .price {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #d4af37;
-        }
-        .price-card .price span {
-            font-size: 1rem;
-            color: #94a3b8;
-        }
-        .price-card ul {
-            list-style: none;
-            margin: 25px 0;
-            text-align: left;
-        }
-        .price-card ul li {
-            padding: 8px 0;
-            color: #cbd5e1;
-            font-size: 0.9rem;
-        }
-        .price-card ul li i {
-            color: #10b981;
-            margin-right: 10px;
-        }
-
-        /* ===== HOW IT WORKS ===== */
-        .how-it-works {
-            padding: 80px 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .how-it-works h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #d4af37;
-            margin-bottom: 50px;
-        }
-
-        /* ===== MODAL ===== */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-content {
-            background: #111827;
-            border: 3px solid #d4af37;
-            border-radius: 20px;
-            padding: 35px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            animation: modalSlide 0.3s ease;
-        }
-        @keyframes modalSlide {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .modal-content h2 {
-            color: #d4af37;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-        .modal-content p {
-            color: #cbd5e1;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        .modal-content .highlight {
-            color: #10b981;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            background: #111827;
-            padding: 40px;
-            text-align: center;
-            color: #94a3b8;
-            border-top: 1px solid #334155;
-            margin-top: 40px;
-        }
+        .footer { background: #111827; padding: 40px; text-align: center; color: #94a3b8; border-top: 1px solid #334155; margin-top: 40px; }
         .footer strong { color: #d4af37; }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
             .nav-links { display: none; }
             .hero { padding: 50px 20px; }
             .hero h1 { font-size: 2rem; }
             .hero p { font-size: 1rem; }
-            .hero-stats { gap: 20px; }
-            .demo-section, .features, .pricing, .how-it-works { padding: 40px 20px; }
+            .demo-section, .features, .pricing { padding: 40px 20px; }
             .price-card.featured { transform: scale(1); }
-            .price-card.featured:hover { transform: scale(1.02); }
-            .nav-buttons { gap: 8px; }
-            .btn-outline, .btn-primary { padding: 8px 15px; font-size: 0.85rem; }
-            .upgrade-banner { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== NAVBAR ===== -->
     <nav class="navbar">
-        <a href="index.html" class="logo">
-            🚀 Nexi<span>Rocket-XAU</span>
-        </a>
+        <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
         <div class="nav-links">
             <a onclick="scrollToSection('demo')">Live Demo</a>
             <a onclick="scrollToSection('features')">Features</a>
             <a onclick="scrollToSection('pricing')">Pricing</a>
-            <a onclick="scrollToSection('how')">How It Works</a>
         </div>
         <div class="nav-buttons">
             <button class="btn-outline" onclick="goToSignIn()">Sign In</button>
@@ -473,150 +115,67 @@
         </div>
     </nav>
 
-    <!-- ===== HERO SECTION ===== -->
     <section class="hero">
-        <div class="hero-badge">
-            <i class="fas fa-circle" style="font-size:0.5rem; color:#10b981;"></i>
-            Live Trading Active
-        </div>
+        <div class="hero-badge"><i class="fas fa-circle" style="font-size:0.5rem; color:#10b981;"></i> Live Trading Active</div>
         <h1>AI-Powered <span>Gold Trading</span> Robot</h1>
         <p>Watch our AI trade gold in real-time. Start with just $100. No experience needed.</p>
-        <button class="btn-primary" onclick="scrollToSection('demo')" style="font-size:1.2rem; padding:15px 40px;">
-            <i class="fas fa-play"></i> Try Free Demo (3 Trades)
-        </button>
-
+        <button class="btn-primary" onclick="scrollToSection('demo')" style="font-size:1.2rem; padding:15px 40px;"><i class="fas fa-play"></i> Try Free Demo (3 Trades)</button>
         <div class="hero-stats">
-            <div class="hero-stat">
-                <div class="num" id="liveUsers">1,247</div>
-                <div class="label">Active Traders</div>
-            </div>
-            <div class="hero-stat">
-                <div class="num">68%</div>
-                <div class="label">Win Rate</div>
-            </div>
-            <div class="hero-stat">
-                <div class="num">$42K+</div>
-                <div class="label">Total Profit</div>
-            </div>
+            <div class="hero-stat"><div class="num" id="liveUsers">1,247</div><div class="label">Active Traders</div></div>
+            <div class="hero-stat"><div class="num">68%</div><div class="label">Win Rate</div></div>
+            <div class="hero-stat"><div class="num">$42K+</div><div class="label">Total Profit</div></div>
         </div>
     </section>
 
-    <!-- ===== LIVE DEMO ROBOT ===== -->
     <section class="demo-section" id="demo">
         <div class="demo-header">
             <h2>🔥 Live Trading Demo</h2>
-            <div class="free-badge">
-                <i class="fas fa-gift"></i> FREE: 3 Trades/Day
-            </div>
+            <div class="free-badge"><i class="fas fa-gift"></i> FREE: 3 Trades/Day</div>
         </div>
 
-        <!-- Upgrade Banner -->
         <div class="upgrade-banner">
-            <div class="text">
-                ⚠️ <strong>Free users get only 3 trades per day.</strong> Want unlimited?
-            </div>
-            <button class="btn-primary" onclick="goToRegister()">
-                <i class="fas fa-crown"></i> Register for $3 (First Month)
-            </button>
+            <div class="text">⚠️ <strong>Free users get only 3 trades per day.</strong> Want unlimited?</div>
+            <button class="btn-primary" onclick="goToRegister()"><i class="fas fa-crown"></i> Register for $3</button>
         </div>
 
-        <!-- Demo Dashboard -->
         <div class="demo-dashboard">
-            <!-- Stats -->
             <div class="demo-stats">
-                <div class="demo-stat">
-                    <div class="label">💰 Balance</div>
-                    <div class="value gold" id="demoBalance">$300.00</div>
-                </div>
-                <div class="demo-stat">
-                    <div class="label">📈 Floating P/L</div>
-                    <div class="value green" id="demoFloating">+$0.00</div>
-                </div>
-                <div class="demo-stat">
-                    <div class="label">🎯 Free Trades Left</div>
-                    <div class="value yellow" id="freeTradesLeft">3</div>
-                </div>
-                <div class="demo-stat">
-                    <div class="label">📊 Status</div>
-                    <div class="value" id="demoStatus" style="color:#94a3b8;">⏳ Ready</div>
-                </div>
+                <div class="demo-stat"><div class="label">💰 Balance</div><div class="value gold" id="demoBalance">$300.00</div></div>
+                <div class="demo-stat"><div class="label">📈 Floating P/L</div><div class="value green" id="demoFloating">+$0.00</div></div>
+                <div class="demo-stat"><div class="label">🎯 Free Trades Left</div><div class="value yellow" id="freeTradesLeft">3</div></div>
+                <div class="demo-stat"><div class="label">📊 Status</div><div class="value" id="demoStatus" style="color:#94a3b8;">⏳ Ready</div></div>
             </div>
 
-            <!-- S/R Panel -->
             <div class="demo-sr-panel">
                 <div><span>🛡️ Support:</span> <strong style="color:#ef4444;" id="demoSupport">--</strong></div>
                 <div><span>📊 Price:</span> <strong style="color:#d4af37;" id="demoPrice">--</strong></div>
                 <div><span>🚀 Resistance:</span> <strong style="color:#10b981;" id="demoResistance">--</strong></div>
             </div>
 
-            <!-- Controls -->
             <div class="demo-controls">
-                <button class="btn-primary" onclick="startDemo()" id="btnDemoStart">
-                    <i class="fas fa-play"></i> START DEMO
-                </button>
-                <button class="btn-outline" onclick="stopDemo()" id="btnDemoStop" disabled>
-                    <i class="fas fa-stop"></i> STOP
-                </button>
+                <button class="btn-primary" onclick="startDemo()" id="btnDemoStart"><i class="fas fa-play"></i> START DEMO</button>
+                <button class="btn-outline" onclick="stopDemo()" id="btnDemoStop" disabled><i class="fas fa-stop"></i> STOP</button>
             </div>
 
-            <!-- Table -->
             <table class="demo-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Type</th>
-                        <th>Entry</th>
-                        <th>Current</th>
-                        <th>SL</th>
-                        <th>TP</th>
-                        <th>P/L</th>
-                    </tr>
-                </thead>
-                <tbody id="demoTableBody">
-                    <tr><td colspan="7" style="text-align:center; padding:20px; color:#94a3b8;">Click START DEMO to begin</td></tr>
-                </tbody>
+                <thead><tr><th>#</th><th>Type</th><th>Entry</th><th>Current</th><th>SL</th><th>TP</th><th>P/L</th></tr></thead>
+                <tbody id="demoTableBody"><tr><td colspan="7" style="text-align:center; padding:20px; color:#94a3b8;">Click START DEMO to begin</td></tr></tbody>
             </table>
         </div>
     </section>
 
-    <!-- ===== FEATURES ===== -->
     <section class="features" id="features">
         <h2>Why Choose NexiRocket-XAU?</h2>
         <div class="features-grid">
-            <div class="feature-card">
-                <i class="fas fa-robot"></i>
-                <h3>AI-Powered Trading</h3>
-                <p>Advanced algorithms analyze market 24/7</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-chart-line"></i>
-                <h3>Real-Time Signals</h3>
-                <p>Live gold prices with instant entry signals</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Risk Management</h3>
-                <p>Auto SL/TP with dynamic trailing stops</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-mobile-alt"></i>
-                <h3>Works Everywhere</h3>
-                <p>Desktop, tablet, mobile - all supported</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-bolt"></i>
-                <h3>Fast Execution</h3>
-                <p>Entries within milliseconds of signal</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-headset"></i>
-                <h3>24/7 Support</h3>
-                <p>WhatsApp & Telegram support included</p>
-            </div>
+            <div class="feature-card"><i class="fas fa-robot"></i><h3>AI-Powered</h3><p>Advanced algorithms analyze 24/7</p></div>
+            <div class="feature-card"><i class="fas fa-chart-line"></i><h3>Real-Time</h3><p>Live gold prices with instant signals</p></div>
+            <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Risk Management</h3><p>Auto SL/TP with dynamic stops</p></div>
+            <div class="feature-card"><i class="fas fa-mobile-alt"></i><h3>Works Everywhere</h3><p>Desktop, tablet, mobile</p></div>
+            <div class="feature-card"><i class="fas fa-bolt"></i><h3>Fast Execution</h3><p>Entries within milliseconds</p></div>
+            <div class="feature-card"><i class="fas fa-headset"></i><h3>24/7 Support</h3><p>WhatsApp & Telegram</p></div>
         </div>
     </section>
 
-    <!-- ===== PRICING ===== -->
     <section class="pricing" id="pricing">
         <h2>Simple Pricing</h2>
         <div class="pricing-grid">
@@ -626,25 +185,21 @@
                 <ul>
                     <li><i class="fas fa-check"></i> 3 Trades per day</li>
                     <li><i class="fas fa-check"></i> Live market data</li>
-                    <li><i class="fas fa-check"></i> Basic signals</li>
                     <li><i class="fas fa-times" style="color:#ef4444;"></i> No history</li>
                 </ul>
                 <button class="btn-outline" style="width:100%;" onclick="scrollToSection('demo')">Try Free</button>
             </div>
-
             <div class="price-card featured">
                 <h3>PRO (First Month)</h3>
                 <div class="price">$3<span>/month</span></div>
                 <ul>
                     <li><i class="fas fa-check"></i> Unlimited trades</li>
-                    <li><i class="fas fa-check"></i> Full trade history</li>
-                    <li><i class="fas fa-check"></i> Advanced AI signals</li>
+                    <li><i class="fas fa-check"></i> Full history</li>
+                    <li><i class="fas fa-check"></i> Advanced AI</li>
                     <li><i class="fas fa-check"></i> WhatsApp support</li>
-                    <li><i class="fas fa-check"></i> Custom starting capital</li>
                 </ul>
                 <button class="btn-primary" style="width:100%;" onclick="goToRegister()">Register Now</button>
             </div>
-
             <div class="price-card">
                 <h3>PRO (Regular)</h3>
                 <div class="price">$5<span>/month</span></div>
@@ -652,47 +207,17 @@
                     <li><i class="fas fa-check"></i> Everything in Pro</li>
                     <li><i class="fas fa-check"></i> Priority support</li>
                     <li><i class="fas fa-check"></i> Monthly reports</li>
-                    <li><i class="fas fa-check"></i> Early access features</li>
                 </ul>
                 <button class="btn-outline" style="width:100%;" onclick="goToRegister()">Subscribe</button>
             </div>
         </div>
     </section>
 
-    <!-- ===== HOW IT WORKS ===== -->
-    <section class="how-it-works" id="how">
-        <h2>How It Works</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <i class="fas fa-user-plus"></i>
-                <h3>1. Register</h3>
-                <p>Sign up with email and phone</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-credit-card"></i>
-                <h3>2. Pay $3</h3>
-                <p>Send payment via Binance</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-key"></i>
-                <h3>3. Get Secret Key</h3>
-                <p>Receive your access key</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-play-circle"></i>
-                <h3>4. Start Trading</h3>
-                <p>Unlimited AI trading access</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <p>NexiRocket-XAU Pro Max presented by <strong>NexifyNOva</strong></p>
         <p style="font-size:0.8rem; margin-top:10px;">© 2026 All Rights Reserved.</p>
     </footer>
 
-    <!-- ===== FREE TRADES MODAL ===== -->
     <div class="modal" id="freeTradesModal">
         <div class="modal-content">
             <h2>⏳ Free Trades Used!</h2>
@@ -706,33 +231,11 @@
     </div>
 
     <script>
-        // ================================================================
-        //  NAVIGATION FUNCTIONS (FIXED - Now redirects properly)
-        // ================================================================
-        function goToRegister() {
-            window.location.href = 'register.html';
-        }
+        function goToRegister() { window.location.href = 'register.html'; }
+        function goToSignIn() { window.location.href = 'signin.html'; }
+        function scrollToSection(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
 
-        function goToSignIn() {
-            window.location.href = 'signin.html';
-        }
-
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // ================================================================
-        //  DEMO MODE (GUEST) - 3 FREE TRADES
-        // ================================================================
-        let demoBalance = 300;
-        let demoFloating = 0;
-        let freeTradesLeft = 3;
-        let demoRunning = false;
-        let demoPrice = 0;
-        let demoTrade = null;
-        let demoInterval = null;
-        let demoTradeCounter = 0;
+        let demoBalance = 300, demoFloating = 0, freeTradesLeft = 3, demoRunning = false, demoPrice = 0, demoTrade = null, demoInterval = null, demoTradeCounter = 0;
 
         async function getDemoPrice() {
             try {
@@ -740,104 +243,59 @@
                 const data = await resp.json();
                 if (data.price) demoPrice = parseFloat(data.price);
                 else demoPrice = 4410 + (Math.random() - 0.5) * 6;
-            } catch (e) {
-                demoPrice = 4410 + (Math.random() - 0.5) * 6;
-            }
+            } catch (e) { demoPrice = 4410 + (Math.random() - 0.5) * 6; }
 
             document.getElementById('demoPrice').innerText = '$' + demoPrice.toFixed(2);
             document.getElementById('demoSupport').innerText = (demoPrice - 5).toFixed(2);
             document.getElementById('demoResistance').innerText = (demoPrice + 5).toFixed(2);
 
-            // Update floating P/L if trade is open
             if (demoTrade) {
                 const lotSize = 0.01;
-                demoFloating = (demoTrade.type === 'BUY') ?
-                    (demoPrice - demoTrade.entry) * lotSize * 100 :
-                    (demoTrade.entry - demoPrice) * lotSize * 100;
+                demoFloating = (demoTrade.type === 'BUY') ? (demoPrice - demoTrade.entry) * lotSize * 100 : (demoTrade.entry - demoPrice) * lotSize * 100;
+                document.getElementById('demoFloating').innerText = (demoFloating >= 0 ? '+' : '') + '$' + demoFloating.toFixed(2);
+                document.getElementById('demoFloating').style.color = demoFloating >= 0 ? '#10b981' : '#ef4444';
 
-                document.getElementById('demoFloating').innerText = 
-                    (demoFloating >= 0 ? '+' : '') + '$' + demoFloating.toFixed(2);
-                document.getElementById('demoFloating').style.color = 
-                    demoFloating >= 0 ? '#10b981' : '#ef4444';
-
-                // Update table
                 document.getElementById('demoTableBody').innerHTML = `
                     <tr>
                         <td>#${demoTrade.id}</td>
-                        <td style="color:${demoTrade.type === 'BUY' ? '#10b981' : '#ef4444'}; font-weight:700;">
-                            ${demoTrade.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}
-                        </td>
+                        <td style="color:${demoTrade.type === 'BUY' ? '#10b981' : '#ef4444'}; font-weight:700;">${demoTrade.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</td>
                         <td>$${demoTrade.entry.toFixed(2)}</td>
                         <td>$${demoPrice.toFixed(2)}</td>
                         <td>$${demoTrade.sl.toFixed(2)}</td>
                         <td>$${demoTrade.tp.toFixed(2)}</td>
-                        <td style="color:${demoFloating >= 0 ? '#10b981' : '#ef4444'}; font-weight:700;">
-                            ${demoFloating >= 0 ? '+' : ''}$${demoFloating.toFixed(2)}
-                        </td>
+                        <td style="color:${demoFloating >= 0 ? '#10b981' : '#ef4444'}; font-weight:700;">${demoFloating >= 0 ? '+' : ''}$${demoFloating.toFixed(2)}</td>
                     </tr>
                 `;
 
-                // Check SL/TP hit
                 if (demoTrade.type === 'BUY') {
-                    if (demoPrice >= demoTrade.tp || demoPrice <= demoTrade.sl) {
-                        closeDemoTrade();
-                    }
+                    if (demoPrice >= demoTrade.tp || demoPrice <= demoTrade.sl) closeDemoTrade();
                 } else {
-                    if (demoPrice <= demoTrade.tp || demoPrice >= demoTrade.sl) {
-                        closeDemoTrade();
-                    }
+                    if (demoPrice <= demoTrade.tp || demoPrice >= demoTrade.sl) closeDemoTrade();
                 }
             }
         }
 
         function startDemo() {
-            if (freeTradesLeft <= 0) {
-                showFreeTradesModal();
-                return;
-            }
-
+            if (freeTradesLeft <= 0) { document.getElementById('freeTradesModal').style.display = 'flex'; return; }
             demoRunning = true;
             document.getElementById('btnDemoStart').disabled = true;
             document.getElementById('btnDemoStop').disabled = false;
             document.getElementById('demoStatus').innerText = '🟢 Running';
             document.getElementById('demoStatus').style.color = '#10b981';
-
-            // Start price feed
             getDemoPrice();
             demoInterval = setInterval(getDemoPrice, 1000);
-
-            // Auto entry after 3 seconds
-            setTimeout(() => {
-                if (demoRunning && freeTradesLeft > 0 && !demoTrade) {
-                    openDemoTrade();
-                }
-            }, 3000);
+            setTimeout(() => { if (demoRunning && freeTradesLeft > 0 && !demoTrade) openDemoTrade(); }, 3000);
         }
 
         function openDemoTrade() {
             if (demoTrade || freeTradesLeft <= 0) return;
-
             demoTradeCounter++;
             const type = Math.random() > 0.5 ? 'BUY' : 'SELL';
             const entry = demoPrice;
-
             let sl, tp;
-            if (type === 'BUY') {
-                sl = entry - (entry * 0.003);
-                tp = entry + (entry * 0.008);
-            } else {
-                sl = entry + (entry * 0.003);
-                tp = entry - (entry * 0.008);
-            }
-
-            demoTrade = {
-                id: demoTradeCounter,
-                type: type,
-                entry: entry,
-                sl: sl,
-                tp: tp
-            };
-
+            if (type === 'BUY') { sl = entry - (entry * 0.003); tp = entry + (entry * 0.008); }
+            else { sl = entry + (entry * 0.003); tp = entry - (entry * 0.008); }
+            demoTrade = { id: demoTradeCounter, type, entry, sl, tp };
             freeTradesLeft--;
             document.getElementById('freeTradesLeft').innerText = freeTradesLeft;
             document.getElementById('demoStatus').innerText = '🟢 Trade Open: ' + type;
@@ -845,31 +303,13 @@
 
         function closeDemoTrade() {
             if (!demoTrade) return;
-
-            const profit = (demoTrade.type === 'BUY') ?
-                (demoPrice - demoTrade.entry) * 0.01 * 100 :
-                (demoTrade.entry - demoPrice) * 0.01 * 100;
-
+            const profit = (demoTrade.type === 'BUY') ? (demoPrice - demoTrade.entry) * 0.01 * 100 : (demoTrade.entry - demoPrice) * 0.01 * 100;
             demoBalance += profit;
             document.getElementById('demoBalance').innerText = '$' + demoBalance.toFixed(2);
-
-            demoTrade = null;
-            demoFloating = 0;
+            demoTrade = null; demoFloating = 0;
             document.getElementById('demoFloating').innerText = '+$0.00';
-
-            // Check if free trades exhausted
-            if (freeTradesLeft <= 0) {
-                setTimeout(showFreeTradesModal, 1500);
-            } else {
-                // Open next trade after 3 seconds
-                if (demoRunning) {
-                    setTimeout(() => {
-                        if (demoRunning && !demoTrade && freeTradesLeft > 0) {
-                            openDemoTrade();
-                        }
-                    }, 3000);
-                }
-            }
+            if (freeTradesLeft <= 0) { setTimeout(() => document.getElementById('freeTradesModal').style.display = 'flex', 1500); }
+            else if (demoRunning) { setTimeout(() => { if (demoRunning && !demoTrade && freeTradesLeft > 0) openDemoTrade(); }, 3000); }
         }
 
         function stopDemo() {
@@ -878,36 +318,20 @@
             document.getElementById('btnDemoStart').disabled = false;
             document.getElementById('btnDemoStop').disabled = true;
             document.getElementById('demoStatus').innerText = '⏹️ Stopped';
-            document.getElementById('demoStatus').style.color = '#94a3b8';
-            demoTrade = null;
-            demoFloating = 0;
+            demoTrade = null; demoFloating = 0;
             document.getElementById('demoFloating').innerText = '+$0.00';
-            document.getElementById('demoTableBody').innerHTML = 
-                '<tr><td colspan="7" style="text-align:center; padding:20px; color:#94a3b8;">Demo stopped</td></tr>';
+            document.getElementById('demoTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#94a3b8;">Demo stopped</td></tr>';
         }
 
-        function showFreeTradesModal() {
-            document.getElementById('freeTradesModal').style.display = 'flex';
-        }
+        function closeModal() { document.getElementById('freeTradesModal').style.display = 'none'; }
 
-        function closeModal() {
-            document.getElementById('freeTradesModal').style.display = 'none';
-        }
-
-        // Live users counter animation
         setInterval(() => {
             const el = document.getElementById('liveUsers');
             if (el) {
                 const current = parseInt(el.innerText.replace(',', ''));
-                const change = Math.floor(Math.random() * 10) - 3;
-                el.innerText = (current + change).toLocaleString();
+                el.innerText = (current + Math.floor(Math.random() * 10) - 3).toLocaleString();
             }
         }, 5000);
-
-        // Close modal on outside click
-        document.getElementById('freeTradesModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
     </script>
 </body>
 </html>
