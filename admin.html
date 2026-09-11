@@ -45,6 +45,9 @@
         .badge.banned { background: rgba(107, 114, 128, 0.3); color: #9ca3af; }
         .badge.renewal { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
         .badge.new { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
+        .badge.demo { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
+        .badge.clients { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+        .badge.both { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .btn-action { padding: 6px 14px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.75rem; margin: 0 2px; }
         .btn-verify { background: #10b981; color: #fff; }
         .btn-unverify { background: #f59e0b; color: #fff; }
@@ -121,8 +124,105 @@
             text-align: center;
             padding: 15px;
         }
+
+        /* ✅ ALERT MANAGER STYLES */
+        .alert-form {
+            background: #0f1729;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .alert-form label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            margin-top: 12px;
+        }
+        .alert-form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            min-height: 80px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        .alert-form textarea:focus { border-color: #d4af37; }
+        .alert-form input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .alert-form input[type="datetime-local"]:focus { border-color: #d4af37; }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0;
+            cursor: pointer;
+        }
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+        .alert-list-item {
+            background: #0f1729;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .alert-list-item.inactive {
+            opacity: 0.5;
+        }
+        .alert-list-item .alert-msg {
+            color: #fff;
+            font-size: 0.95rem;
+            flex: 1;
+            min-width: 200px;
+        }
+        .alert-list-item .alert-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        .alert-list-item .alert-actions {
+            display: flex;
+            gap: 8px;
+        }
+
         @media (max-width: 768px) {
             .setting-row { grid-template-columns: 1fr; gap: 8px; }
+            .alert-list-item { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -178,6 +278,36 @@
             </div>
 
             <div class="section">
+                <h2>📢 Alert Manager</h2>
+                <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Alert messages demo page aur client dashboard pe speech bubble mein dikhenge.</p>
+
+                <div class="alert-form">
+                    <label>Message *</label>
+                    <textarea id="alertMessage" placeholder="Alert message likhein... jaise 'Don't trade at Risk time'"></textarea>
+
+                    <label>Target *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="alertTarget" value="demo" /> 🎮 Demo only</label>
+                        <label><input type="radio" name="alertTarget" value="clients" /> 👥 Clients only</label>
+                        <label><input type="radio" name="alertTarget" value="both" checked /> 🌐 Both</label>
+                    </div>
+
+                    <label>Start Time (optional)</label>
+                    <input type="datetime-local" id="alertStartTime" />
+
+                    <label>End Time (optional)</label>
+                    <input type="datetime-local" id="alertEndTime" />
+
+                    <button class="btn-action btn-verify" onclick="saveAlert()" id="saveAlertBtn" style="margin-top:20px; padding:12px 30px; font-size:0.95rem;">💾 Save Alert</button>
+                    <button class="btn-action btn-unverify" onclick="resetAlertForm()" id="cancelAlertBtn" style="margin-top:20px; padding:12px 30px; font-size:0.95rem; display:none;">✖ Cancel Edit</button>
+                    <div id="alertMessage2" style="margin-top:15px; font-size:0.9rem; display:none;"></div>
+                </div>
+
+                <h3 style="color:#d4af37; font-size:1rem; margin:25px 0 15px;">📋 Active Alerts</h3>
+                <div id="alertsList"><div class="loading-state">⏳ Loading alerts...</div></div>
+            </div>
+
+            <div class="section">
                 <h2>⚙️ Settings</h2>
                 <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Site-wide settings — save karte hi poori site pe apply ho jayengi.</p>
                 <div id="settingsContainer"><div class="loading-state">⏳ Loading settings...</div></div>
@@ -203,7 +333,8 @@
     <script>
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'nexi2026';
-        let allUsers = [], allPayments = [], allSettings = [];
+        let allUsers = [], allPayments = [], allSettings = [], allAlerts = [];
+        let editingAlertId = null;
 
         document.getElementById('adminUsername').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -244,6 +375,197 @@
                 loadData();
             }
         });
+
+        // ================================================================
+        // ALERTS — Load, Render, Save, Edit, Delete
+        // ================================================================
+        async function loadAlerts() {
+            const container = document.getElementById('alertsList');
+            container.innerHTML = '<div class="loading-state">⏳ Loading alerts...</div>';
+
+            try {
+                const sb = initSupabase();
+                const { data, error } = await sb
+                    .from('alerts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                allAlerts = data || [];
+                renderAlerts();
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`;
+            }
+        }
+
+        function renderAlerts() {
+            const container = document.getElementById('alertsList');
+
+            if (allAlerts.length === 0) {
+                container.innerHTML = '<div class="empty-state">No alerts yet. Naya alert banayein upar wale form se.</div>';
+                return;
+            }
+
+            container.innerHTML = allAlerts.map(a => {
+                const targetBadge = a.target === 'demo' ? '🎮 Demo' : a.target === 'clients' ? '👥 Clients' : '🌐 Both';
+                const targetClass = a.target;
+                const timeInfo = [];
+                if (a.start_time) timeInfo.push('Start: ' + new Date(a.start_time).toLocaleString());
+                if (a.end_time) timeInfo.push('End: ' + new Date(a.end_time).toLocaleString());
+
+                return `<div class="alert-list-item ${a.is_active ? '' : 'inactive'}">
+                    <div class="alert-msg">
+                        <strong>${a.message}</strong>
+                        <div class="alert-meta" style="margin-top:8px;">
+                            <span class="badge ${targetClass}">${targetBadge}</span>
+                            <span class="badge ${a.is_active ? 'active' : 'rejected'}">${a.is_active ? '✓ Active' : '✗ Inactive'}</span>
+                            ${timeInfo.length > 0 ? '<span>' + timeInfo.join(' | ') + '</span>' : '<span>Always</span>'}
+                        </div>
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn-action btn-unverify" onclick="toggleAlertActive('${a.id}', ${!a.is_active})">${a.is_active ? '⏸ Deactivate' : '▶ Activate'}</button>
+                        <button class="btn-action btn-view" onclick="editAlert('${a.id}')">✎ Edit</button>
+                        <button class="btn-action btn-reject" onclick="removeAlert('${a.id}')">🗑</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function saveAlert() {
+            const message = document.getElementById('alertMessage').value.trim();
+            const target = document.querySelector('input[name="alertTarget"]:checked').value;
+            const startTime = document.getElementById('alertStartTime').value;
+            const endTime = document.getElementById('alertEndTime').value;
+
+            const btn = document.getElementById('saveAlertBtn');
+            const msg = document.getElementById('alertMessage2');
+
+            if (!message) {
+                msg.innerHTML = '❌ Message khali hai!';
+                msg.style.color = '#ef4444';
+                msg.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            msg.style.display = 'none';
+
+            try {
+                const sb = initSupabase();
+
+                const alertData = {
+                    message: message,
+                    target: target,
+                    start_time: startTime ? new Date(startTime).toISOString() : null,
+                    end_time: endTime ? new Date(endTime).toISOString() : null,
+                    is_active: true
+                };
+
+                if (editingAlertId) {
+                    // Update
+                    const { error } = await sb
+                        .from('alerts')
+                        .update(alertData)
+                        .eq('id', editingAlertId);
+                    if (error) throw error;
+
+                    msg.innerHTML = '✅ Alert updated successfully!';
+                    msg.style.color = '#10b981';
+                } else {
+                    // Create
+                    const { error } = await sb
+                        .from('alerts')
+                        .insert([alertData]);
+                    if (error) throw error;
+
+                    msg.innerHTML = '✅ Alert saved successfully!';
+                    msg.style.color = '#10b981';
+                }
+
+                msg.style.display = 'block';
+                setTimeout(() => { msg.style.display = 'none'; }, 3000);
+
+                resetAlertForm();
+                loadAlerts();
+
+            } catch (err) {
+                console.error(err);
+                msg.innerHTML = '❌ Error: ' + err.message;
+                msg.style.color = '#ef4444';
+                msg.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '💾 Save Alert';
+        }
+
+        function editAlert(id) {
+            const a = allAlerts.find(x => x.id === id);
+            if (!a) return;
+
+            editingAlertId = id;
+            document.getElementById('alertMessage').value = a.message;
+            document.querySelector(`input[name="alertTarget"][value="${a.target}"]`).checked = true;
+
+            if (a.start_time) {
+                document.getElementById('alertStartTime').value = new Date(a.start_time).toISOString().slice(0, 16);
+            } else {
+                document.getElementById('alertStartTime').value = '';
+            }
+            if (a.end_time) {
+                document.getElementById('alertEndTime').value = new Date(a.end_time).toISOString().slice(0, 16);
+            } else {
+                document.getElementById('alertEndTime').value = '';
+            }
+
+            document.getElementById('cancelAlertBtn').style.display = 'inline-block';
+            document.getElementById('saveAlertBtn').innerHTML = '✎ Update Alert';
+            window.scrollTo({ top: document.getElementById('alertMessage').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function resetAlertForm() {
+            editingAlertId = null;
+            document.getElementById('alertMessage').value = '';
+            document.querySelector('input[name="alertTarget"][value="both"]').checked = true;
+            document.getElementById('alertStartTime').value = '';
+            document.getElementById('alertEndTime').value = '';
+            document.getElementById('cancelAlertBtn').style.display = 'none';
+            document.getElementById('saveAlertBtn').innerHTML = '💾 Save Alert';
+        }
+
+        async function toggleAlertActive(id, active) {
+            try {
+                const sb = initSupabase();
+                const { error } = await sb
+                    .from('alerts')
+                    .update({ is_active: active, updated_at: new Date().toISOString() })
+                    .eq('id', id);
+                if (error) throw error;
+                loadAlerts();
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
+        }
+
+        async function removeAlert(id) {
+            if (!confirm('Delete this alert?')) return;
+            try {
+                const sb = initSupabase();
+                const { error } = await sb
+                    .from('alerts')
+                    .delete()
+                    .eq('id', id);
+                if (error) throw error;
+                loadAlerts();
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
+        }
 
         // ================================================================
         // SETTINGS — Load, Render, Save
@@ -407,6 +729,7 @@
                 renderPayments();
                 renderUsers();
                 loadSettings();
+                loadAlerts();
 
             } catch (err) {
                 console.error(err);
@@ -478,9 +801,6 @@
             document.getElementById('screenshotModal').style.display = 'none';
         }
 
-        // ================================================================
-        // ✅ VERIFY PAYMENT — user ko activate karo
-        // ================================================================
         async function verifyPayment(index) {
             const p = allPayments[index];
             if (!p) return;
@@ -533,9 +853,6 @@
             }
         }
 
-        // ================================================================
-        // ✅ UNVERIFY PAYMENT
-        // ================================================================
         async function unverifyPayment(index) {
             const p = allPayments[index];
             if (!p) return;
