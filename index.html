@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>NexiRocket-XAU Pro Max | AI Gold Trading Robot</title>
+   <title>Nexi Rocket-XauPo Pro Max | AI Gold Trading Robot</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -261,7 +261,50 @@
         }
         .btn-admin:hover { background: #ef4444; color: #fff; }
 
-        .hero { padding: 80px 40px; text-align: center; background: radial-gradient(circle at center, #1a2332 0%, #0a0e17 100%); }
+       /* ✅ RISK MANAGEMENT TICKER */
+.risk-ticker {
+    background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+    border-top: 1px solid #ef4444;
+    border-bottom: 1px solid #ef4444;
+    overflow: hidden;
+    padding: 10px 0;
+    position: sticky;
+    top: 70px;
+    z-index: 99;
+}
+
+.risk-ticker-content {
+    display: inline-block;
+    white-space: nowrap;
+    color: #fecaca;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    animation: riskScroll 60s linear infinite;
+    padding-left: 100%;
+}
+
+@keyframes riskScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.risk-ticker:hover .risk-ticker-content {
+    animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+    .risk-ticker {
+        top: 60px;
+        padding: 8px 0;
+    }
+    .risk-ticker-content {
+        font-size: 0.75rem;
+        animation-duration: 45s;
+    }
+}
+
+.hero { padding: 80px 40px; text-align: center;
         .hero h1 { font-size: 3.5rem; font-weight: 900; color: #d4af37; margin-bottom: 15px; line-height: 1.2; }
         .hero h1 span { color: #fff; }
         .hero p { font-size: 1.3rem; color: #94a3b8; max-width: 700px; margin: 0 auto 30px; }
@@ -330,6 +373,38 @@
         .footer { background: #111827; padding: 40px; text-align: center; color: #94a3b8; border-top: 1px solid #334155; margin-top: 40px; }
         .footer strong { color: #d4af37; }
 
+.nexify-glow {
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 1.5px;
+    display: inline-block;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(90deg, #ffffff, #d4af37, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: 
+        nexifyShimmer 3s linear infinite,
+        nexifyHeartbeat 1.5s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes nexifyShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes nexifyHeartbeat {
+    0%   { transform: scale(1); }
+    14%  { transform: scale(1.08); }
+    28%  { transform: scale(1); }
+    42%  { transform: scale(1.08); }
+    70%  { transform: scale(1); }
+    100% { transform: scale(1); }
+}
+
         @media (max-width: 768px) {
             .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
             .nav-links { display: none; }
@@ -371,7 +446,7 @@
 
     <!-- NAVBAR WITH ADMIN LINK -->
     <nav class="navbar">
-        <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
+        <a href="index.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
         <div class="nav-links">
             <a onclick="scrollToSection('demo')">Live Demo</a>
             <a onclick="scrollToSection('features')">Features</a>
@@ -384,19 +459,22 @@
             <button class="btn-outline" id="navSignInBtn" onclick="goToSignIn()">Sign In</button>
             <button class="btn-primary" id="navGetStartedBtn" onclick="goToRegister()">Get Started</button>
         </div>
-    </nav>
+       </nav>
+
+    <!-- ✅ RISK MANAGEMENT TICKER -->
+    <div class="risk-ticker">
+        <div class="risk-ticker-content">
+            ⚠️ Trading is risky. Manage your capital with risk management. &nbsp;&nbsp;•&nbsp;&nbsp; 
+            For $100 account, use a cents account and don't take trades larger than 0.40 or 0.60 lots. &nbsp;&nbsp;•&nbsp;&nbsp; 
+            For accounts above $200, use cents or standard account but don't take trades larger than 0.01 lots. &nbsp;&nbsp;•&nbsp;&nbsp; 
+            ⚠️ Trading is risky. Manage your capital with risk management. &nbsp;&nbsp;•&nbsp;&nbsp; 
+            For $100 account, use a cents account and don't take trades larger than 0.40 or 0.60 lots. &nbsp;&nbsp;•&nbsp;&nbsp; 
+            For accounts above $200, use cents or standard account but don't take trades larger than 0.01 lots. &nbsp;&nbsp;•&nbsp;&nbsp;
+            ⚠️ Trading is risky. Manage your capital with risk management.
+        </div>
+    </div>
 
     <section class="hero">
-        <div class="hero-badge"><i class="fas fa-circle" style="font-size:0.5rem; color:#10b981;"></i> Live Trading Active</div>
-        <h1>AI-Powered <span>Gold Trading</span> Robot</h1>
-        <p>Watch our AI trade gold in real-time. Start with just $100. No experience needed.</p>
-        <button class="btn-primary" onclick="scrollToSection('demo')" style="font-size:1.2rem; padding:15px 40px;"><i class="fas fa-play"></i> Try Free Demo (3 Trades)</button>
-        <div class="hero-stats">
-            <div class="hero-stat"><div class="num" id="liveUsers">1,247</div><div class="label">Active Traders</div></div>
-            <div class="hero-stat"><div class="num">68%</div><div class="label">Win Rate</div></div>
-            <div class="hero-stat"><div class="num">$42K+</div><div class="label">Total Profit</div></div>
-        </div>
-    </section>
 
     <section class="demo-section" id="demo">
         <div class="demo-header">
@@ -485,9 +563,9 @@
     </section>
 
     <footer class="footer">
-        <p>NexiRocket-XAU Pro Max presented by <strong>NexifyNOva</strong></p>
-        <p style="font-size:0.8rem; margin-top:10px;">© 2026 All Rights Reserved.</p>
-    </footer>
+    <p>A product is Published and Designed By <strong class="nexify-glow">NexifyNova</strong></p>
+    <p style="font-size:0.8rem; margin-top:10px;">© 2026 All Rights Reserved.</p>
+</footer>
 
     <div class="modal" id="freeTradesModal">
         <div class="modal-content">
@@ -668,4 +746,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
