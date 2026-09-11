@@ -1,5 +1,5 @@
 // ============================================================
-// NexiXaupo — Supabase Client Configuration
+// Nexi Rocket-XauPo — Supabase Client Configuration
 // File: supabase-config.js
 // ============================================================
 
@@ -21,7 +21,7 @@ function initSupabase() {
 }
 
 // ============================================================
-// HELPER FUNCTIONS — aage kaam aayenge
+// HELPER FUNCTIONS — Users
 // ============================================================
 
 // Email se user dhoondein
@@ -94,4 +94,67 @@ async function getAllPayments() {
     return data || [];
 }
 
-console.log('✅ supabase-config.js loaded');S
+// ============================================================
+// HELPER FUNCTIONS — Settings
+// ============================================================
+
+// Ek setting ki value laao (string)
+async function getSetting(key, defaultValue = null) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('settings')
+        .select('value')
+        .eq('key', key)
+        .maybeSingle();
+    if (error) {
+        console.error('getSetting error:', error);
+        return defaultValue;
+    }
+    return data ? data.value : defaultValue;
+}
+
+// Saari settings laao (admin panel ke liye) — category ke hisaab se grouped
+async function getAllSettings() {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('settings')
+        .select('*')
+        .order('category', { ascending: true })
+        .order('display_order', { ascending: true });
+    if (error) {
+        console.error('getAllSettings error:', error);
+        return [];
+    }
+    return data || [];
+}
+
+// Setting update karo (admin panel se)
+async function updateSetting(key, value) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('settings')
+        .update({ value: String(value), updated_at: new Date().toISOString() })
+        .eq('key', key)
+        .select()
+        .single();
+    if (error) {
+        console.error('updateSetting error:', error);
+        return { error };
+    }
+    return { data };
+}
+
+// ============================================================
+// HELPER — Free Trades (cached)
+// ============================================================
+
+let _cachedFreeTrades = null;
+
+async function getFreeTradesPerDay() {
+    if (_cachedFreeTrades !== null) return _cachedFreeTrades;
+    const val = await getSetting('free_trades_per_day', '3');
+    _cachedFreeTrades = parseInt(val) || 3;
+    return _cachedFreeTrades;
+}
+
+console.log('✅ supabase-config.js loaded');
