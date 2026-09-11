@@ -23,14 +23,13 @@
         .form-group input:focus { border-color: #d4af37; }
         .btn-submit { width: 100%; padding: 16px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px; }
         .btn-submit:hover { transform: translateY(-2px); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .message { padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; font-size: 0.9rem; }
         .message.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; display: block; }
         .message.warning { background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; display: block; }
         .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
         .register-link { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; }
         .register-link a { color: #d4af37; text-decoration: none; font-weight: 700; }
-        .debug-info { text-align: center; margin-top: 20px; padding: 10px; background: #1e293b; border-radius: 8px; font-size: 0.75rem; color: #64748b; }
-        .debug-info button { background: #334155; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; }
     </style>
 </head>
 <body>
@@ -54,99 +53,139 @@
                     <label>Password</label>
                     <input type="password" id="loginPassword" placeholder="Enter password" required />
                 </div>
-                <button type="submit" class="btn-submit">
+                <button type="submit" class="btn-submit" id="signinBtn">
                     <i class="fas fa-sign-in-alt"></i> Sign In
                 </button>
                 <div class="register-link">
                     Don't have an account? <a href="register.html">Register</a>
                 </div>
             </form>
-            <div class="debug-info">
-                <span id="userCount">Registered Users: 0</span>
-                <button onclick="clearAllUsers()" style="margin-left: 10px;">Clear All</button>
-            </div>
         </div>
     </div>
 
+    <!-- ✅ Supabase CDN + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
     <script>
-        function handleSignIn(event) {
+        async function handleSignIn(event) {
             event.preventDefault();
+
             const input = document.getElementById('loginInput').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
-            const messageBox = document.getElementById('messageBox');
 
-            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
+            const btn = document.getElementById('signinBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
 
-            if (users.length === 0) {
-                messageBox.className = 'message error';
-                messageBox.innerHTML = '❌ No users registered yet!<br>Please <a href="register.html" style="color:#d4af37;">Register first</a>.';
-                return;
-            }
+            try {
+                const sb = initSupabase();
+                if (!sb) throw new Error('Supabase client init failed');
 
-            const user = users.find(u => (u.email === input || u.phone === input) && u.password === password);
+                // ✅ Email ya phone se user dhoondein
+                const { data: users, error } = await sb
+                    .from('users')
+                    .select('*')
+                    .or(`email.eq.${input},phone.eq.${input}`)
+                    .limit(1);
 
-            if (!user) {
-                messageBox.className = 'message error';
-                messageBox.innerText = '❌ Invalid credentials! Please check and try again.';
-                return;
-            }
+                if (error) throw error;
 
-            // Save user session FIRST
-            localStorage.setItem('nexiCurrentUser', JSON.stringify(user));
+                if (!users || users.length === 0) {
+                    showMessage('❌ Invalid credentials! Please check and try again.', 'error');
+                    resetBtn();
+                    return;
+                }
 
-            // Check subscription expiry
-            const today = new Date().toISOString().split('T')[0];
+                const user = users[0];
 
-            if (user.subscriptionEnd < today) {
-                messageBox.className = 'message warning';
-                messageBox.innerHTML = '⚠️ Your subscription has expired!<br>Redirecting to renewal page...';
+                // ✅ Password check
+                if (user.password_hash !== password) {
+                    showMessage('❌ Invalid credentials! Please check and try again.', 'error');
+                    resetBtn();
+                    return;
+                }
+
+                // ✅ Status check
+                if (user.status === 'pending') {
+                    showMessage('⏳ Aapka account abhi admin verify nahi hua.<br>Payment verify hone ke baad login kar payenge.', 'warning');
+                    resetBtn();
+                    return;
+                }
+
+                if (user.status === 'banned') {
+                    showMessage('🚫 Aapka account ban kar diya gaya hai.<br>Support se rabta karein.', 'error');
+                    resetBtn();
+                    return;
+                }
+
+                // ✅ Subscription expiry check
+                const today = new Date().toISOString().split('T')[0];
+                const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
+
+                // Session save karo pehle (renewal page ke liye zaroori)
+                const sessionUser = {
+                    id: user.id,
+                    fullName: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    secretKey: user.secret_key,
+                    startingCapital: parseFloat(user.capital),
+                    subscriptionStart: user.subscription_start,
+                    subscriptionEnd: expiry,
+                    status: user.status
+                };
+                localStorage.setItem('nexiCurrentUser', JSON.stringify(sessionUser));
+
+                if (user.status === 'expired' || !expiry || expiry < today) {
+                    showMessage('⚠️ Your subscription has expired!<br>Redirecting to renewal page...', 'warning');
+                    setTimeout(() => {
+                        window.location.replace('renewal.html');
+                    }, 2000);
+                    return;
+                }
+
+                // ✅ Success
+                showMessage('✅ Login successful!<br>Welcome back, ' + user.name + '!', 'success');
                 setTimeout(() => {
-                    window.location.replace('renewal.html');
-                }, 2000);
-                return;
-            }
+                    window.location.replace('dashboard.html');
+                }, 1200);
 
-            messageBox.className = 'message success';
-            messageBox.innerHTML = '✅ Login successful!<br>Welcome back, ' + user.fullName + '!';
-            setTimeout(() => {
-                window.location.replace('dashboard.html');
-            }, 1500);
+            } catch (err) {
+                console.error(err);
+                showMessage('❌ Error: ' + err.message, 'error');
+                resetBtn();
+            }
         }
 
-        // ✅ ENTER key support — dono fields mein
+        function resetBtn() {
+            const btn = document.getElementById('signinBtn');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+        }
+
+        function showMessage(text, type) {
+            const box = document.getElementById('messageBox');
+            box.className = 'message ' + type;
+            box.innerHTML = text;
+            box.style.display = 'block';
+        }
+
+        // ENTER key support
         document.getElementById('loginInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const pwd = document.getElementById('loginPassword');
-                if (pwd.value.trim() === '') {
-                    pwd.focus();
-                } else {
-                    document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                }
+                if (pwd.value.trim() === '') pwd.focus();
+                else document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
             }
         });
-
         document.getElementById('loginPassword').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
             }
         });
-
-        window.addEventListener('load', () => {
-            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-            document.getElementById('userCount').innerText = 'Registered Users: ' + users.length;
-        });
-
-        function clearAllUsers() {
-            if (confirm('Clear all registered users? (Debug only)')) {
-                localStorage.removeItem('nexiUsers');
-                localStorage.removeItem('nexiCurrentUser');
-                localStorage.removeItem('nexiPendingPayments');
-                document.getElementById('userCount').innerText = 'Registered Users: 0';
-                alert('✅ All users cleared!');
-            }
-        }
     </script>
 </body>
 </html>
