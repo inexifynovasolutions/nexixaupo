@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Admin | NexiRocket-XAU</title>
+    <title>Admin | Nexi Rocket-XauPo</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -59,6 +59,71 @@
         .modal-content .close-btn { background: #ef4444; color: #fff; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 15px; }
         .modal-content .details { text-align: left; color: #cbd5e1; font-size: 0.9rem; line-height: 1.8; margin: 15px 0; }
         .modal-content .details strong { color: #fff; }
+
+        /* ✅ SETTINGS STYLES */
+        .settings-category {
+            background: #0f1729;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .settings-category h3 {
+            color: #d4af37;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+        .setting-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 15px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+        .setting-row label {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .setting-row .desc {
+            display: block;
+            color: #64748b;
+            font-size: 0.75rem;
+            font-weight: normal;
+            margin-top: 3px;
+        }
+        .setting-row input {
+            width: 100%;
+            padding: 10px 14px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .setting-row input:focus {
+            border-color: #d4af37;
+        }
+        .setting-row input.big-number {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-align: center;
+            padding: 15px;
+        }
+        @media (max-width: 768px) {
+            .setting-row { grid-template-columns: 1fr; gap: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -76,7 +141,7 @@
 
     <div id="adminDashboard" style="display: none;">
         <nav class="navbar">
-            <a href="#" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
+            <a href="#" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
             <div style="display: flex; align-items: center;">
                 <span class="admin-badge">🔐 ADMIN</span>
                 <button class="btn-refresh" onclick="loadData()"><i class="fas fa-sync"></i> Refresh</button>
@@ -111,6 +176,14 @@
                     </table>
                 </div>
             </div>
+
+            <div class="section">
+                <h2>⚙️ Settings</h2>
+                <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Site-wide settings — save karte hi poori site pe apply ho jayengi.</p>
+                <div id="settingsContainer"><div class="loading-state">⏳ Loading settings...</div></div>
+                <button class="btn-action btn-verify" onclick="saveAllSettings()" id="saveSettingsBtn" style="margin-top:20px; padding:12px 30px; font-size:0.95rem;">💾 Save All Changes</button>
+                <div id="settingsMessage" style="margin-top:15px; font-size:0.9rem; display:none;"></div>
+            </div>
         </div>
     </div>
 
@@ -130,7 +203,7 @@
     <script>
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'nexi2026';
-        let allUsers = [], allPayments = [];
+        let allUsers = [], allPayments = [], allSettings = [];
 
         document.getElementById('adminUsername').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -173,6 +246,139 @@
         });
 
         // ================================================================
+        // SETTINGS — Load, Render, Save
+        // ================================================================
+        async function loadSettings() {
+            const container = document.getElementById('settingsContainer');
+            container.innerHTML = '<div class="loading-state">⏳ Loading settings...</div>';
+
+            try {
+                const sb = initSupabase();
+                const { data, error } = await sb
+                    .from('settings')
+                    .select('*')
+                    .order('category', { ascending: true })
+                    .order('display_order', { ascending: true });
+
+                if (error) throw error;
+                allSettings = data || [];
+                renderSettings();
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`;
+            }
+        }
+
+        function renderSettings() {
+            const container = document.getElementById('settingsContainer');
+
+            if (allSettings.length === 0) {
+                container.innerHTML = '<div class="empty-state">No settings found</div>';
+                return;
+            }
+
+            const grouped = {};
+            allSettings.forEach(s => {
+                if (!grouped[s.category]) grouped[s.category] = [];
+                grouped[s.category].push(s);
+            });
+
+            const categoryIcons = {
+                general: '📁',
+                trading: '📊',
+                pricing: '💰',
+                payment: '💳',
+                contact: '📞'
+            };
+
+            let html = '';
+            for (const cat in grouped) {
+                const icon = categoryIcons[cat] || '📁';
+                html += `<div class="settings-category">
+                    <h3>${icon} ${cat.toUpperCase()}</h3>`;
+
+                grouped[cat].forEach(s => {
+                    const isBigNumber = (s.key === 'free_trades_per_day');
+                    html += `<div class="setting-row">
+                        <label>
+                            ${s.label}
+                            ${s.description ? `<span class="desc">${s.description}</span>` : ''}
+                        </label>
+                        <input 
+                            type="${s.input_type === 'number' ? 'number' : 'text'}"
+                            id="setting_${s.key}"
+                            data-key="${s.key}"
+                            value="${s.value || ''}"
+                            class="${isBigNumber ? 'big-number' : ''}"
+                            placeholder="${s.label}"
+                        />
+                    </div>`;
+                });
+
+                html += `</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        async function saveAllSettings() {
+            const btn = document.getElementById('saveSettingsBtn');
+            const msg = document.getElementById('settingsMessage');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            msg.style.display = 'none';
+
+            try {
+                const sb = initSupabase();
+                const inputs = document.querySelectorAll('[data-key]');
+                let updated = 0;
+                let errors = [];
+
+                for (const input of inputs) {
+                    const key = input.dataset.key;
+                    const value = input.value.trim();
+                    const original = allSettings.find(s => s.key === key);
+
+                    if (original && original.value !== value) {
+                        const { error } = await sb
+                            .from('settings')
+                            .update({ value: value, updated_at: new Date().toISOString() })
+                            .eq('key', key);
+
+                        if (error) {
+                            errors.push(`${key}: ${error.message}`);
+                        } else {
+                            updated++;
+                            original.value = value;
+                        }
+                    }
+                }
+
+                if (errors.length > 0) {
+                    msg.innerHTML = `⚠️ ${updated} updated, ${errors.length} errors:<br>${errors.join('<br>')}`;
+                    msg.style.color = '#fbbf24';
+                } else {
+                    msg.innerHTML = `✅ ${updated} setting${updated !== 1 ? 's' : ''} saved successfully!`;
+                    msg.style.color = '#10b981';
+                }
+                msg.style.display = 'block';
+
+                setTimeout(() => { msg.style.display = 'none'; }, 4000);
+
+            } catch (err) {
+                console.error(err);
+                msg.innerHTML = '❌ Error: ' + err.message;
+                msg.style.color = '#ef4444';
+                msg.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '💾 Save All Changes';
+        }
+
+        // ================================================================
         // LOAD DATA from Supabase
         // ================================================================
         async function loadData() {
@@ -183,7 +389,6 @@
                 const sb = initSupabase();
                 if (!sb) throw new Error('Supabase init failed');
 
-                // Users
                 const { data: users, error: uErr } = await sb
                     .from('users')
                     .select('*')
@@ -191,7 +396,6 @@
                 if (uErr) throw uErr;
                 allUsers = users || [];
 
-                // Payments + join users
                 const { data: payments, error: pErr } = await sb
                     .from('payments')
                     .select('*, users(name, email, phone)')
@@ -202,6 +406,7 @@
                 updateStats();
                 renderPayments();
                 renderUsers();
+                loadSettings();
 
             } catch (err) {
                 console.error(err);
@@ -290,7 +495,6 @@
             try {
                 const sb = initSupabase();
 
-                // 1. User update: active + subscription dates
                 const { error: uErr } = await sb
                     .from('users')
                     .update({
@@ -301,7 +505,6 @@
                     .eq('id', p.user_id);
                 if (uErr) throw uErr;
 
-                // 2. Payment update: approved
                 const { error: pErr } = await sb
                     .from('payments')
                     .update({
@@ -312,7 +515,6 @@
                     .eq('id', p.id);
                 if (pErr) throw pErr;
 
-                // 3. Admin log
                 await sb.from('admin_logs').insert([{
                     admin_id: 'admin',
                     action: 'verify_payment',
@@ -342,13 +544,9 @@
             try {
                 const sb = initSupabase();
 
-                // 1. User: expired
                 await sb.from('users').update({ status: 'expired' }).eq('id', p.user_id);
-
-                // 2. Payment: pending
                 await sb.from('payments').update({ status: 'pending', verified_by: null, verified_at: null }).eq('id', p.id);
 
-                // 3. Log
                 await sb.from('admin_logs').insert([{
                     admin_id: 'admin',
                     action: 'unverify_payment',
