@@ -21,6 +21,7 @@
         .logo span { color: #fff; }
         .admin-badge { background: #dc2626; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-left: 10px; }
+        .btn-refresh { background: #334155; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-left: 10px; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
         .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .admin-stat { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 20px; text-align: center; }
@@ -37,10 +38,11 @@
         td { padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; }
         .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .badge.pending { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
-        .badge.verified { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge.approved { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .badge.rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
         .badge.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .badge.expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge.banned { background: rgba(107, 114, 128, 0.3); color: #9ca3af; }
         .badge.renewal { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
         .badge.new { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
         .btn-action { padding: 6px 14px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.75rem; margin: 0 2px; }
@@ -49,9 +51,10 @@
         .btn-reject { background: #ef4444; color: #fff; }
         .btn-view { background: #60a5fa; color: #fff; }
         .empty-state { text-align: center; padding: 40px; color: #64748b; }
+        .loading-state { text-align: center; padding: 40px; color: #d4af37; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
         .modal-content { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; text-align: center; }
-        .modal-content img { width: 100%; border-radius: 10px; margin: 15px 0; }
+        .modal-content img { width: 100%; border-radius: 10px; margin: 15px 0; max-height: 60vh; object-fit: contain; }
         .modal-content h3 { color: #d4af37; margin-bottom: 15px; }
         .modal-content .close-btn { background: #ef4444; color: #fff; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 15px; }
         .modal-content .details { text-align: left; color: #cbd5e1; font-size: 0.9rem; line-height: 1.8; margin: 15px 0; }
@@ -76,6 +79,7 @@
             <a href="#" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
             <div style="display: flex; align-items: center;">
                 <span class="admin-badge">🔐 ADMIN</span>
+                <button class="btn-refresh" onclick="loadData()"><i class="fas fa-sync"></i> Refresh</button>
                 <button class="btn-logout" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </nav>
@@ -89,11 +93,11 @@
             </div>
 
             <div class="section">
-                <h2>💳 Pending Payments</h2>
+                <h2>💳 Payments</h2>
                 <div class="table-wrap">
                     <table>
                         <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>UID</th><th>Amount</th><th>Type</th><th>Proof</th><th>Status</th><th>Action</th></tr></thead>
-                        <tbody id="paymentsBody"><tr><td colspan="10" class="empty-state">No pending payments</td></tr></tbody>
+                        <tbody id="paymentsBody"><tr><td colspan="10" class="loading-state">⏳ Loading...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -103,7 +107,7 @@
                 <div class="table-wrap">
                     <table>
                         <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Secret Key</th><th>Capital</th><th>Expiry</th><th>Status</th><th>Action</th></tr></thead>
-                        <tbody id="usersBody"><tr><td colspan="9" class="empty-state">No users</td></tr></tbody>
+                        <tbody id="usersBody"><tr><td colspan="9" class="loading-state">⏳ Loading...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -119,36 +123,32 @@
         </div>
     </div>
 
+    <!-- ✅ Supabase CDN + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
     <script>
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'nexi2026';
         let allUsers = [], allPayments = [];
 
-        // ✅ ENTER key support — admin login
         document.getElementById('adminUsername').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const pwd = document.getElementById('adminPassword');
-                if (pwd.value.trim() === '') {
-                    pwd.focus();
-                } else {
-                    adminLogin();
-                }
+                if (pwd.value.trim() === '') pwd.focus();
+                else adminLogin();
             }
         });
-
         document.getElementById('adminPassword').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                adminLogin();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); adminLogin(); }
         });
 
         function adminLogin() {
             const u = document.getElementById('adminUsername').value;
             const p = document.getElementById('adminPassword').value;
             if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
-                localStorage.setItem('nexiAdmin', 'true');
+                sessionStorage.setItem('nexiAdmin', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
                 loadData();
@@ -159,43 +159,63 @@
 
         function adminLogout() {
             if (confirm('Logout from admin?')) {
-                localStorage.removeItem('nexiAdmin');
-
-                // ✅ History clear taake back button kaam na kare
-                if (window.history && window.history.pushState) {
-                    window.history.pushState(null, '', window.location.href);
-                    window.onpopstate = function() {
-                        window.history.go(1);
-                    };
-                }
-
-                // ✅ replace use karein, href nahi
+                sessionStorage.removeItem('nexiAdmin');
                 window.location.replace('index.html');
             }
         }
 
         window.addEventListener('load', () => {
-            if (localStorage.getItem('nexiAdmin') === 'true') {
+            if (sessionStorage.getItem('nexiAdmin') === 'true') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
                 loadData();
             }
         });
 
-        function loadData() {
-            allUsers = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-            allPayments = JSON.parse(localStorage.getItem('nexiPendingPayments') || '[]');
-            updateStats();
-            renderPayments();
-            renderUsers();
+        // ================================================================
+        // LOAD DATA from Supabase
+        // ================================================================
+        async function loadData() {
+            document.getElementById('paymentsBody').innerHTML = '<tr><td colspan="10" class="loading-state">⏳ Loading...</td></tr>';
+            document.getElementById('usersBody').innerHTML = '<tr><td colspan="9" class="loading-state">⏳ Loading...</td></tr>';
+
+            try {
+                const sb = initSupabase();
+                if (!sb) throw new Error('Supabase init failed');
+
+                // Users
+                const { data: users, error: uErr } = await sb
+                    .from('users')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                if (uErr) throw uErr;
+                allUsers = users || [];
+
+                // Payments + join users
+                const { data: payments, error: pErr } = await sb
+                    .from('payments')
+                    .select('*, users(name, email, phone)')
+                    .order('created_at', { ascending: false });
+                if (pErr) throw pErr;
+                allPayments = payments || [];
+
+                updateStats();
+                renderPayments();
+                renderUsers();
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('paymentsBody').innerHTML = `<tr><td colspan="10" class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</td></tr>`;
+                document.getElementById('usersBody').innerHTML = `<tr><td colspan="9" class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</td></tr>`;
+            }
         }
 
         function updateStats() {
             document.getElementById('totalUsers').innerText = allUsers.length;
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('activeUsers').innerText = allUsers.filter(u => u.subscriptionEnd >= today).length;
+            document.getElementById('activeUsers').innerText = allUsers.filter(u => u.status === 'active' && u.subscription_end && u.subscription_end.split('T')[0] >= today).length;
             document.getElementById('pendingPayments').innerText = allPayments.filter(p => p.status === 'pending').length;
-            const rev = allPayments.filter(p => p.status === 'verified').reduce((s, p) => s + (p.amount || 0), 0);
+            const rev = allPayments.filter(p => p.status === 'approved').reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
             document.getElementById('totalRevenue').innerText = '$' + rev.toFixed(2);
         }
 
@@ -205,42 +225,46 @@
                 tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No payments</td></tr>';
                 return;
             }
-            tbody.innerHTML = allPayments.map((p, i) => `<tr>
-                <td>#${i + 1}</td>
-                <td>${p.fullName || '--'}</td>
-                <td style="font-size:0.8rem;">${p.email || '--'}</td>
-                <td style="font-size:0.8rem;">${p.phone || '--'}</td>
-                <td style="font-family:monospace;">${p.payerUID || '--'}</td>
-                <td class="gold">$${(p.amount || 0).toFixed(2)}</td>
-                <td><span class="badge ${p.type === 'renewal' ? 'renewal' : 'new'}">${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New'}</span></td>
-                <td>${p.screenshot ? `<button class="btn-action btn-view" onclick="viewScreenshot(${i})"><i class="fas fa-eye"></i></button>` : '--'}</td>
-                <td><span class="badge ${p.status}">${p.status}</span></td>
-                <td>
-                    ${p.status === 'pending' ? `
-                        <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
-                        <button class="btn-action btn-reject" onclick="rejectPayment(${i})">✗</button>
-                    ` : p.status === 'verified' ? `
-                        <button class="btn-action btn-unverify" onclick="unverifyPayment(${i})">↺ Unverify</button>
-                    ` : p.status === 'rejected' ? `
-                        <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
-                    ` : '--'}
-                </td>
-            </tr>`).join('');
+            tbody.innerHTML = allPayments.map((p, i) => {
+                const u = p.users || {};
+                return `<tr>
+                    <td>#${i + 1}</td>
+                    <td>${u.name || '--'}</td>
+                    <td style="font-size:0.8rem;">${u.email || '--'}</td>
+                    <td style="font-size:0.8rem;">${u.phone || '--'}</td>
+                    <td style="font-family:monospace;">${p.payer_uid || '--'}</td>
+                    <td style="color:#d4af37; font-weight:700;">$${(parseFloat(p.amount) || 0).toFixed(2)}</td>
+                    <td><span class="badge ${p.type === 'renewal' ? 'renewal' : 'new'}">${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New'}</span></td>
+                    <td>${p.screenshot_url ? `<button class="btn-action btn-view" onclick="viewScreenshot(${i})"><i class="fas fa-eye"></i></button>` : '--'}</td>
+                    <td><span class="badge ${p.status}">${p.status}</span></td>
+                    <td>
+                        ${p.status === 'pending' ? `
+                            <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
+                            <button class="btn-action btn-reject" onclick="rejectPayment(${i})">✗</button>
+                        ` : p.status === 'approved' ? `
+                            <button class="btn-action btn-unverify" onclick="unverifyPayment(${i})">↺ Unverify</button>
+                        ` : p.status === 'rejected' ? `
+                            <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
+                        ` : '--'}
+                    </td>
+                </tr>`;
+            }).join('');
         }
 
         function viewScreenshot(index) {
             const p = allPayments[index];
-            if (!p || !p.screenshot) return;
-            document.getElementById('modalScreenshot').src = p.screenshot;
+            if (!p || !p.screenshot_url) return;
+            document.getElementById('modalScreenshot').src = p.screenshot_url;
+            const u = p.users || {};
             document.getElementById('modalDetails').innerHTML = `
-                <div>👤 <strong>${p.fullName || '--'}</strong></div>
-                <div>📧 ${p.email || '--'}</div>
-                <div>📱 ${p.phone || '--'}</div>
-                <div>💰 Amount: <strong style="color:#10b981;">$${(p.amount || 0).toFixed(2)}</strong></div>
-                <div>🆔 Binance UID: <strong style="color:#d4af37; font-family:monospace;">${p.payerUID || '--'}</strong></div>
-                <div>📅 Date: ${new Date(p.paymentDate).toLocaleString()}</div>
+                <div>👤 <strong>${u.name || '--'}</strong></div>
+                <div>📧 ${u.email || '--'}</div>
+                <div>📱 ${u.phone || '--'}</div>
+                <div>💰 Amount: <strong style="color:#10b981;">$${(parseFloat(p.amount) || 0).toFixed(2)}</strong></div>
+                <div>🆔 Binance UID: <strong style="color:#d4af37; font-family:monospace;">${p.payer_uid || '--'}</strong></div>
+                <div>📅 Date: ${new Date(p.created_at).toLocaleString()}</div>
                 <div>📊 Type: <strong>${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New Registration'}</strong></div>
-                <div>📌 Status: <strong style="color:${p.status === 'verified' ? '#10b981' : p.status === 'rejected' ? '#ef4444' : '#fbbf24'};">${p.status.toUpperCase()}</strong></div>
+                <div>📌 Status: <strong style="color:${p.status === 'approved' ? '#10b981' : p.status === 'rejected' ? '#ef4444' : '#fbbf24'};">${p.status.toUpperCase()}</strong></div>
             `;
             document.getElementById('screenshotModal').style.display = 'flex';
         }
@@ -250,108 +274,122 @@
         }
 
         // ================================================================
-        // ✅ VERIFY PAYMENT — baar baar verify/unverify ho sakta hai
+        // ✅ VERIFY PAYMENT — user ko activate karo
         // ================================================================
-        function verifyPayment(index) {
+        async function verifyPayment(index) {
             const p = allPayments[index];
             if (!p) return;
 
             const today = new Date();
-            let newExpiry;
+            const newExpiry = new Date(today);
+            newExpiry.setMonth(newExpiry.getMonth() + 1);
 
-            if (p.type === 'renewal') {
-                const prevExpiry = new Date(p.previousExpiry || today);
-                const startDate = prevExpiry > today ? prevExpiry : today;
-                newExpiry = new Date(startDate);
-                newExpiry.setMonth(newExpiry.getMonth() + 1);
-            } else {
-                newExpiry = new Date(today);
-                newExpiry.setMonth(newExpiry.getMonth() + 1);
+            const todayStr = today.toISOString();
+            const expiryStr = newExpiry.toISOString();
+
+            try {
+                const sb = initSupabase();
+
+                // 1. User update: active + subscription dates
+                const { error: uErr } = await sb
+                    .from('users')
+                    .update({
+                        status: 'active',
+                        subscription_start: todayStr,
+                        subscription_end: expiryStr
+                    })
+                    .eq('id', p.user_id);
+                if (uErr) throw uErr;
+
+                // 2. Payment update: approved
+                const { error: pErr } = await sb
+                    .from('payments')
+                    .update({
+                        status: 'approved',
+                        verified_by: 'admin',
+                        verified_at: new Date().toISOString()
+                    })
+                    .eq('id', p.id);
+                if (pErr) throw pErr;
+
+                // 3. Admin log
+                await sb.from('admin_logs').insert([{
+                    admin_id: 'admin',
+                    action: 'verify_payment',
+                    target_user: p.user_id,
+                    meta: { payment_id: p.id, amount: p.amount, type: p.type }
+                }]);
+
+                const u = p.users || {};
+                alert(`✅ VERIFIED!\n\nUser: ${u.name}\nNew Expiry: ${expiryStr.split('T')[0]}\nSecret Key: ${allUsers.find(x => x.id === p.user_id)?.secret_key || '--'}`);
+
+                loadData();
+
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
             }
-
-            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-            const existing = users.find(u => u.email === p.email);
-
-            if (existing) {
-                // User already exists — subscription update, KEEP existing secret key
-                existing.subscriptionEnd = newExpiry.toISOString().split('T')[0];
-                existing.status = 'active';
-                if (!existing.secretKey) {
-                    const emailPart = (p.email || 'USER').substring(0, 4).toUpperCase();
-                    const phonePart = (p.phone || '0000').slice(-4);
-                    const random = Math.floor(1000 + Math.random() * 9000);
-                    existing.secretKey = emailPart + phonePart + random;
-                }
-                p.secretKey = existing.secretKey;
-            } else {
-                // New user
-                const emailPart = (p.email || 'USER').substring(0, 4).toUpperCase();
-                const phonePart = (p.phone || '0000').slice(-4);
-                const random = Math.floor(1000 + Math.random() * 9000);
-                const secretKey = emailPart + phonePart + random;
-                const newUser = {
-                    id: 'user_' + Date.now(),
-                    fullName: p.fullName,
-                    email: p.email,
-                    phone: p.phone,
-                    password: p.password || '123456',
-                    startingCapital: p.startingCapital || 100,
-                    secretKey: secretKey,
-                    subscriptionStart: today.toISOString().split('T')[0],
-                    subscriptionEnd: newExpiry.toISOString().split('T')[0],
-                    status: 'active'
-                };
-                users.push(newUser);
-                p.secretKey = secretKey;
-            }
-
-            localStorage.setItem('nexiUsers', JSON.stringify(users));
-
-            // Toggle status
-            p.status = 'verified';
-            p.verifiedAt = new Date().toISOString();
-            p.lastAction = 'verify_' + Date.now();
-            localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
-
-            const action = p.type === 'renewal' ? 'RENEWED' : 'VERIFIED';
-            alert(`✅ ${action}!\n\nUser: ${p.fullName}\nNew Expiry: ${newExpiry.toISOString().split('T')[0]}\nSecret Key: ${p.secretKey}\n\nAap isko baar baar Verify/Unverify kar sakte hain.`);
-            loadData();
         }
 
         // ================================================================
-        // ✅ UNVERIFY PAYMENT — user ko expired mark karein, delete nahi
+        // ✅ UNVERIFY PAYMENT
         // ================================================================
-        function unverifyPayment(index) {
+        async function unverifyPayment(index) {
             const p = allPayments[index];
             if (!p) return;
-            if (!confirm(`Unverify payment for ${p.fullName}?\n\nThis will mark them as expired (but you can re-verify anytime).`)) return;
+            if (!confirm(`Unverify payment for ${p.users?.name}?\n\nThis will mark user as expired.`)) return;
 
-            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-            const existing = users.find(u => u.email === p.email);
+            try {
+                const sb = initSupabase();
 
-            if (existing) {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                existing.subscriptionEnd = yesterday.toISOString().split('T')[0];
-                existing.status = 'expired';
-                localStorage.setItem('nexiUsers', JSON.stringify(users));
+                // 1. User: expired
+                await sb.from('users').update({ status: 'expired' }).eq('id', p.user_id);
+
+                // 2. Payment: pending
+                await sb.from('payments').update({ status: 'pending', verified_by: null, verified_at: null }).eq('id', p.id);
+
+                // 3. Log
+                await sb.from('admin_logs').insert([{
+                    admin_id: 'admin',
+                    action: 'unverify_payment',
+                    target_user: p.user_id,
+                    meta: { payment_id: p.id }
+                }]);
+
+                alert('↺ Payment UNVERIFIED!');
+                loadData();
+
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
             }
-
-            // Status toggle: verified → pending
-            p.status = 'pending';
-            p.unverifiedAt = new Date().toISOString();
-            p.lastAction = 'unverify_' + Date.now();
-            localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
-
-            alert(`↺ Payment UNVERIFIED!\n\nUser: ${p.fullName}\nAb aap dobara Verify ya Reject kar sakte hain.`);
-            loadData();
         }
 
-        function rejectPayment(index) {
+        async function rejectPayment(index) {
+            const p = allPayments[index];
+            if (!p) return;
             if (!confirm('Reject this payment?')) return;
-            allPayments[index].status = 'rejected';
-            localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
-            loadData();
+
+            try {
+                const sb = initSupabase();
+                await sb.from('payments').update({
+                    status: 'rejected',
+                    verified_by: 'admin',
+                    verified_at: new Date().toISOString()
+                }).eq('id', p.id);
+
+                await sb.from('admin_logs').insert([{
+                    admin_id: 'admin',
+                    action: 'reject_payment',
+                    target_user: p.user_id,
+                    meta: { payment_id: p.id }
+                }]);
+
+                loadData();
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
         }
 
         function renderUsers() {
@@ -362,26 +400,36 @@
                 return;
             }
             tbody.innerHTML = allUsers.map((u, i) => {
-                const isActive = u.subscriptionEnd >= today;
+                const isActive = u.status === 'active' && u.subscription_end && u.subscription_end.split('T')[0] >= today;
+                const expiry = u.subscription_end ? u.subscription_end.split('T')[0] : '--';
                 return `<tr>
                     <td>#${i + 1}</td>
-                    <td>${u.fullName}</td>
+                    <td>${u.name}</td>
                     <td style="font-size:0.8rem;">${u.email}</td>
                     <td style="font-size:0.8rem;">${u.phone}</td>
-                    <td style="font-family:monospace; color:#d4af37;">${u.secretKey}</td>
-                    <td class="gold">$${u.startingCapital.toFixed(2)}</td>
-                    <td style="font-size:0.8rem;">${u.subscriptionEnd}</td>
-                    <td><span class="badge ${isActive ? 'active' : 'expired'}">${isActive ? 'Active' : 'Expired'}</span></td>
-                    <td><button class="btn-action btn-reject" onclick="deleteUser(${i})">🗑</button></td>
+                    <td style="font-family:monospace; color:#d4af37;">${u.secret_key}</td>
+                    <td style="color:#d4af37; font-weight:700;">$${(parseFloat(u.capital) || 0).toFixed(2)}</td>
+                    <td style="font-size:0.8rem;">${expiry}</td>
+                    <td><span class="badge ${isActive ? 'active' : (u.status === 'pending' ? 'pending' : 'expired')}">${isActive ? 'Active' : u.status}</span></td>
+                    <td><button class="btn-action btn-reject" onclick="deleteUser('${u.id}')">🗑</button></td>
                 </tr>`;
             }).join('');
         }
 
-        function deleteUser(index) {
-            if (!confirm(`Delete ${allUsers[index].fullName}?`)) return;
-            allUsers.splice(index, 1);
-            localStorage.setItem('nexiUsers', JSON.stringify(allUsers));
-            loadData();
+        async function deleteUser(id) {
+            const u = allUsers.find(x => x.id === id);
+            if (!u) return;
+            if (!confirm(`Delete ${u.name}? Saare payments bhi delete honge.`)) return;
+
+            try {
+                const sb = initSupabase();
+                await sb.from('users').delete().eq('id', id);
+                alert('🗑 User deleted');
+                loadData();
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
         }
 
         document.getElementById('screenshotModal').addEventListener('click', function(e) {
