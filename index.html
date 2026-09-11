@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   <title>Nexi Rocket-XauPo Pro Max | AI Gold Trading Robot</title>
+    <title>Nexi Rocket-XauPo Pro Max | AI Gold Trading Robot</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0e17; color: #f8fafc; overflow-x: hidden; }
 
         /* ================================================================ */
-        /* ✅ WELCOME OVERLAY — Saba ka message (manual close)                */
+        /* ✅ WELCOME OVERLAY                                                 */
         /* ================================================================ */
         #welcomeOverlay {
             position: fixed;
@@ -35,7 +35,6 @@
             pointer-events: none;
         }
 
-        /* ✅ Cross (×) button — top right */
         .welcome-close-btn {
             position: absolute;
             top: 25px;
@@ -65,10 +64,6 @@
             box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
         }
 
-        .welcome-close-btn:active {
-            transform: rotate(90deg) scale(0.95);
-        }
-
         .welcome-text {
             font-size: 1.5rem;
             color: #f8fafc;
@@ -85,7 +80,6 @@
             font-style: normal;
         }
 
-        /* ✅ SABA — Dil ki tarah dhadakta rahe */
         .saba-name {
             font-size: 8rem;
             font-weight: 900;
@@ -116,7 +110,6 @@
             animation: sabaUnderline 1s ease-out 1.8s forwards;
         }
 
-        /* ✅ NAYA MESSAGE — SABA ke neeche */
         .saba-message {
             margin-top: 40px;
             font-size: 1.4rem;
@@ -155,7 +148,6 @@
             50% { transform: scale(1.06); }
         }
 
-        /* Small hint text near cross */
         .welcome-hint {
             position: absolute;
             bottom: 30px;
@@ -168,9 +160,6 @@
             animation: fadeInUp 1s ease-out 3s forwards;
         }
 
-        /* ================================================================ */
-        /* ANIMATIONS                                                        */
-        /* ================================================================ */
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -182,21 +171,9 @@
         }
 
         @keyframes sabaAppear {
-            0% {
-                opacity: 0;
-                transform: scale(0.3) rotate(-15deg);
-                filter: blur(20px);
-            }
-            60% {
-                opacity: 1;
-                transform: scale(1.15) rotate(5deg);
-                filter: blur(0);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0);
-                filter: blur(0);
-            }
+            0% { opacity: 0; transform: scale(0.3) rotate(-15deg); filter: blur(20px); }
+            60% { opacity: 1; transform: scale(1.15) rotate(5deg); filter: blur(0); }
+            100% { opacity: 1; transform: scale(1) rotate(0); filter: blur(0); }
         }
 
         @keyframes sabaUnderline {
@@ -204,7 +181,6 @@
             to { width: 80%; }
         }
 
-        /* ✅ HEARTBEAT — Dil ki tarah dhadakta rahe */
         @keyframes heartbeat {
             0%   { transform: scale(1);    text-shadow: 0 0 60px rgba(212, 175, 55, 0.6); }
             14%  { transform: scale(1.12); text-shadow: 0 0 80px rgba(212, 175, 55, 0.9); }
@@ -214,7 +190,6 @@
             100% { transform: scale(1);    text-shadow: 0 0 60px rgba(212, 175, 55, 0.6); }
         }
 
-        /* Mobile responsive */
         @media (max-width: 768px) {
             .saba-name { font-size: 5rem; letter-spacing: 4px; }
             .welcome-text { font-size: 1.1rem; }
@@ -235,7 +210,7 @@
         }
 
         /* ================================================================ */
-        /* BAQI SITE STYLES (jo pehle thay)                                  */
+        /* BAQI SITE STYLES                                                  */
         /* ================================================================ */
         .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
@@ -261,50 +236,44 @@
         }
         .btn-admin:hover { background: #ef4444; color: #fff; }
 
-       /* ✅ RISK MANAGEMENT TICKER */
-.risk-ticker {
-    background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
-    border-top: 1px solid #ef4444;
-    border-bottom: 1px solid #ef4444;
-    overflow: hidden;
-    padding: 10px 0;
-    position: sticky;
-    top: 70px;
-    z-index: 99;
-}
+        /* ✅ RISK MANAGEMENT TICKER */
+        .risk-ticker {
+            background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+            border-top: 1px solid #ef4444;
+            border-bottom: 1px solid #ef4444;
+            overflow: hidden;
+            padding: 10px 0;
+            position: sticky;
+            top: 70px;
+            z-index: 99;
+        }
 
-.risk-ticker-content {
-    display: inline-block;
-    white-space: nowrap;
-    color: #fecaca;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    animation: riskScroll 60s linear infinite;
-    padding-left: 100%;
-}
+        .risk-ticker-content {
+            display: inline-block;
+            white-space: nowrap;
+            color: #fecaca;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            animation: riskScroll 60s linear infinite;
+            padding-left: 100%;
+        }
 
-@keyframes riskScroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-}
+        @keyframes riskScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
 
-.risk-ticker:hover .risk-ticker-content {
-    animation-play-state: paused;
-}
+        .risk-ticker:hover .risk-ticker-content {
+            animation-play-state: paused;
+        }
 
-@media (max-width: 768px) {
-    .risk-ticker {
-        top: 60px;
-        padding: 8px 0;
-    }
-    .risk-ticker-content {
-        font-size: 0.75rem;
-        animation-duration: 45s;
-    }
-}
+        @media (max-width: 768px) {
+            .risk-ticker { top: 60px; padding: 8px 0; }
+            .risk-ticker-content { font-size: 0.75rem; animation-duration: 45s; }
+        }
 
-.hero { padding: 80px 40px; text-align: center;
+        .hero { padding: 80px 40px; text-align: center; background: radial-gradient(circle at center, #1a2332 0%, #0a0e17 100%); }
         .hero h1 { font-size: 3.5rem; font-weight: 900; color: #d4af37; margin-bottom: 15px; line-height: 1.2; }
         .hero h1 span { color: #fff; }
         .hero p { font-size: 1.3rem; color: #94a3b8; max-width: 700px; margin: 0 auto 30px; }
@@ -373,37 +342,37 @@
         .footer { background: #111827; padding: 40px; text-align: center; color: #94a3b8; border-top: 1px solid #334155; margin-top: 40px; }
         .footer strong { color: #d4af37; }
 
-.nexify-glow {
-    color: #ffffff;
-    font-weight: 900;
-    font-size: 1.2rem;
-    letter-spacing: 1.5px;
-    display: inline-block;
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(90deg, #ffffff, #d4af37, #ffffff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    background-size: 200% auto;
-    animation: 
-        nexifyShimmer 3s linear infinite,
-        nexifyHeartbeat 1.5s ease-in-out infinite;
-    transform-origin: center;
-}
+        .nexify-glow {
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 1.6rem;
+            letter-spacing: 1.5px;
+            display: inline-block;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(90deg, #ffffff, #d4af37, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: 
+                nexifyShimmer 3s linear infinite,
+                nexifyHeartbeat 1.5s ease-in-out infinite;
+            transform-origin: center;
+        }
 
-@keyframes nexifyShimmer {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
-}
+        @keyframes nexifyShimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
 
-@keyframes nexifyHeartbeat {
-    0%   { transform: scale(1); }
-    14%  { transform: scale(1.08); }
-    28%  { transform: scale(1); }
-    42%  { transform: scale(1.08); }
-    70%  { transform: scale(1); }
-    100% { transform: scale(1); }
-}
+        @keyframes nexifyHeartbeat {
+            0%   { transform: scale(1); }
+            14%  { transform: scale(1.08); }
+            28%  { transform: scale(1); }
+            42%  { transform: scale(1.08); }
+            70%  { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
 
         @media (max-width: 768px) {
             .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
@@ -419,11 +388,8 @@
 </head>
 <body>
 
-    <!-- ================================================================ -->
-    <!-- ✅ WELCOME OVERLAY — Manual close + Heartbeat SABA + New Message  -->
-    <!-- ================================================================ -->
+    <!-- WELCOME OVERLAY -->
     <div id="welcomeOverlay">
-        <!-- Cross button -->
         <button class="welcome-close-btn" onclick="closeWelcome()" title="Close">&times;</button>
 
         <div class="welcome-text">
@@ -432,7 +398,6 @@
 
         <div class="saba-name">SABA</div>
 
-        <!-- ✅ NAYA MESSAGE -->
         <div class="saba-message">
             <span class="line highlight">Trade kare ga bache</span>
             <span class="line highlight">Saba bane ga</span>
@@ -444,7 +409,7 @@
         <div class="welcome-hint">Click × to enter the site →</div>
     </div>
 
-    <!-- NAVBAR WITH ADMIN LINK -->
+    <!-- NAVBAR -->
     <nav class="navbar">
         <a href="index.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
         <div class="nav-links">
@@ -459,9 +424,9 @@
             <button class="btn-outline" id="navSignInBtn" onclick="goToSignIn()">Sign In</button>
             <button class="btn-primary" id="navGetStartedBtn" onclick="goToRegister()">Get Started</button>
         </div>
-       </nav>
+    </nav>
 
-    <!-- ✅ RISK MANAGEMENT TICKER -->
+    <!-- RISK TICKER -->
     <div class="risk-ticker">
         <div class="risk-ticker-content">
             ⚠️ Trading is risky. Manage your capital with risk management. &nbsp;&nbsp;•&nbsp;&nbsp; 
@@ -475,16 +440,26 @@
     </div>
 
     <section class="hero">
+        <div class="hero-badge"><i class="fas fa-circle" style="font-size:0.5rem; color:#10b981;"></i> Live Trading Active</div>
+        <h1>AI-Powered <span>Gold Trading</span> Robot</h1>
+        <p>Watch our AI trade gold in real-time. Start with just $100. No experience needed.</p>
+        <button class="btn-primary" onclick="scrollToSection('demo')" style="font-size:1.2rem; padding:15px 40px;"><i class="fas fa-play"></i> Try Free Demo (<span id="heroFreeTrades">3</span> Trades)</button>
+        <div class="hero-stats">
+            <div class="hero-stat"><div class="num" id="liveUsers">1,247</div><div class="label">Active Traders</div></div>
+            <div class="hero-stat"><div class="num">68%</div><div class="label">Win Rate</div></div>
+            <div class="hero-stat"><div class="num">$42K+</div><div class="label">Total Profit</div></div>
+        </div>
+    </section>
 
     <section class="demo-section" id="demo">
         <div class="demo-header">
             <h2>🔥 Live Trading Demo</h2>
-            <div class="free-badge"><i class="fas fa-gift"></i> FREE: 3 Trades/Day</div>
+            <div class="free-badge"><i class="fas fa-gift"></i> FREE: <span id="freeTradesBadge">3</span> Trades/Day</div>
         </div>
 
         <div class="upgrade-banner">
-            <div class="text">⚠️ <strong>Free users get only 3 trades per day.</strong> Want unlimited?</div>
-            <button class="btn-primary" onclick="goToRegister()"><i class="fas fa-crown"></i> Register for $3</button>
+            <div class="text">⚠️ <strong>Free users get only <span id="upgradeFreeTrades">3</span> trades per day.</strong> Want unlimited?</div>
+            <button class="btn-primary" onclick="goToRegister()"><i class="fas fa-crown"></i> Register for $<span id="upgradePrice">3</span></button>
         </div>
 
         <div class="demo-dashboard">
@@ -514,7 +489,7 @@
     </section>
 
     <section class="features" id="features">
-        <h2>Why Choose NexiRocket-XAU?</h2>
+        <h2>Why Choose Nexi Rocket-XauPo?</h2>
         <div class="features-grid">
             <div class="feature-card"><i class="fas fa-robot"></i><h3>AI-Powered</h3><p>Advanced algorithms analyze 24/7</p></div>
             <div class="feature-card"><i class="fas fa-chart-line"></i><h3>Real-Time</h3><p>Live gold prices with instant signals</p></div>
@@ -532,7 +507,7 @@
                 <h3>FREE DEMO</h3>
                 <div class="price">$0<span>/day</span></div>
                 <ul>
-                    <li><i class="fas fa-check"></i> 3 Trades per day</li>
+                    <li><i class="fas fa-check"></i> <span id="freeCardTrades">3</span> Trades per day</li>
                     <li><i class="fas fa-check"></i> Live market data</li>
                     <li><i class="fas fa-times" style="color:#ef4444;"></i> No history</li>
                 </ul>
@@ -540,7 +515,7 @@
             </div>
             <div class="price-card featured">
                 <h3>PRO (First Month)</h3>
-                <div class="price">$3<span>/month</span></div>
+                <div class="price">$<span id="firstMonthPrice">3</span><span>/month</span></div>
                 <ul>
                     <li><i class="fas fa-check"></i> Unlimited trades</li>
                     <li><i class="fas fa-check"></i> Full history</li>
@@ -551,7 +526,7 @@
             </div>
             <div class="price-card">
                 <h3>PRO (Regular)</h3>
-                <div class="price">$5<span>/month</span></div>
+                <div class="price">$<span id="renewalPrice">5</span><span>/month</span></div>
                 <ul>
                     <li><i class="fas fa-check"></i> Everything in Pro</li>
                     <li><i class="fas fa-check"></i> Priority support</li>
@@ -563,50 +538,46 @@
     </section>
 
     <footer class="footer">
-    <p>A product is Published and Designed By <strong class="nexify-glow">NexifyNova</strong></p>
-    <p style="font-size:0.8rem; margin-top:10px;">© 2026 All Rights Reserved.</p>
-</footer>
+        <p>A product is Published and Designed By <strong class="nexify-glow">NexifyNova</strong></p>
+        <p style="font-size:0.8rem; margin-top:10px;">© 2026 All Rights Reserved.</p>
+    </footer>
 
     <div class="modal" id="freeTradesModal">
         <div class="modal-content">
             <h2>⏳ Free Trades Used!</h2>
-            <p>You have used all 3 free trades for today.</p>
-            <p class="highlight">Register for just $3 to get unlimited trading!</p>
+            <p>You have used all <span id="modalFreeTrades">3</span> free trades for today.</p>
+            <p class="highlight">Register for just $<span id="modalPrice">3</span> to get unlimited trading!</p>
             <div class="modal-buttons">
-                <button class="btn-primary" onclick="goToRegister()">Register Now ($3)</button>
+                <button class="btn-primary" onclick="goToRegister()">Register Now ($<span id="modalPrice2">3</span>)</button>
                 <button class="btn-outline" onclick="closeModal()">Maybe Later</button>
             </div>
         </div>
     </div>
+
+    <!-- ✅ Supabase CDN + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
 
     <script>
         function goToRegister() { window.location.href = 'register.html'; }
         function goToSignIn() { window.location.href = 'signin.html'; }
         function scrollToSection(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
 
-        // ================================================================
-        // ✅ WELCOME OVERLAY — Cross button se band ho
-        // ================================================================
         function closeWelcome() {
             const overlay = document.getElementById('welcomeOverlay');
             if (overlay) {
                 overlay.classList.add('fade-out');
                 setTimeout(() => {
                     overlay.style.display = 'none';
-                    // Body scroll enable
                     document.body.style.overflow = '';
                 }, 600);
             }
         }
 
-        // Welcome overlay open hone par body scroll band
         window.addEventListener('load', () => {
             document.body.style.overflow = 'hidden';
         });
 
-        // ================================================================
-        // ✅ ESC key se bhi overlay band ho jaye
-        // ================================================================
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const overlay = document.getElementById('welcomeOverlay');
@@ -616,6 +587,78 @@
             }
         });
 
+        // ================================================================
+        // ✅ DYNAMIC SETTINGS — Supabase se values fetch karo
+        // ================================================================
+        let settingsCache = {};
+        let freeTradesLimit = 3; // default
+
+        async function loadDynamicSettings() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                const { data, error } = await sb
+                    .from('settings')
+                    .select('key, value');
+
+                if (error) throw error;
+
+                settingsCache = {};
+                (data || []).forEach(s => { settingsCache[s.key] = s.value; });
+
+                // Apply to UI
+                applySettingsToUI();
+
+            } catch (err) {
+                console.error('loadDynamicSettings error:', err);
+            }
+        }
+
+        function applySettingsToUI() {
+            const freeTrades = settingsCache.free_trades_per_day || '3';
+            const firstPrice = settingsCache.first_month_price || '3';
+            const renewalPrice = settingsCache.renewal_price || '5';
+
+            freeTradesLimit = parseInt(freeTrades) || 3;
+
+            // Update all elements
+            const ids = {
+                'heroFreeTrades': freeTrades,
+                'freeTradesBadge': freeTrades,
+                'upgradeFreeTrades': freeTrades,
+                'upgradePrice': firstPrice,
+                'freeCardTrades': freeTrades,
+                'firstMonthPrice': firstPrice,
+                'renewalPrice': renewalPrice,
+                'modalFreeTrades': freeTrades,
+                'modalPrice': firstPrice,
+                'modalPrice2': firstPrice
+            };
+
+            for (const id in ids) {
+                const el = document.getElementById(id);
+                if (el) el.innerText = ids[id];
+            }
+
+            // Update free trades left only if demo hasn't started
+            if (!demoRunning && !demoTrade) {
+                const el = document.getElementById('freeTradesLeft');
+                if (el) el.innerText = freeTradesLimit;
+                freeTradesLeft = freeTradesLimit;
+            }
+        }
+
+        // Load settings on page load
+        window.addEventListener('load', () => {
+            loadDynamicSettings();
+            // Auto-refresh every 30 seconds
+            setInterval(loadDynamicSettings, 30000);
+        });
+
+        // ================================================================
+        // DEMO LOGIC
+        // ================================================================
         let demoBalance = 300, demoFloating = 0, freeTradesLeft = 3, demoRunning = false, demoPrice = 0, demoTrade = null, demoInterval = null, demoTradeCounter = 0;
 
         async function getDemoPrice() {
@@ -714,7 +757,7 @@
             }
         }, 5000);
 
-        // ✅ Logged-in user detection — Dashboard/Logout buttons show karein
+        // ✅ Logged-in user detection
         window.addEventListener('load', () => {
             const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
             if (user) {
@@ -730,14 +773,6 @@
                     getStartedBtn.onclick = () => {
                         if (confirm('Logout?')) {
                             localStorage.removeItem('nexiCurrentUser');
-
-                            if (window.history && window.history.pushState) {
-                                window.history.pushState(null, '', window.location.href);
-                                window.onpopstate = function() {
-                                    window.history.go(1);
-                                };
-                            }
-
                             window.location.replace('index.html');
                         }
                     };
@@ -746,4 +781,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
