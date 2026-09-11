@@ -8,198 +8,61 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0e17; color: #f8fafc; min-height: 100vh; }
-
-        .navbar {
-            background: #111827;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #d4af37;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: #d4af37;
-            text-decoration: none;
-        }
+        .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
         .logo span { color: #fff; }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #d4af37;
-            color: #d4af37;
-            padding: 8px 22px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 8px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; }
         .container { max-width: 700px; margin: 0 auto; padding: 30px 20px; }
-
-        .alert-banner {
-            background: linear-gradient(135deg, #7f1d1d, #450a0a);
-            border: 2px solid #ef4444;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .alert-banner { background: linear-gradient(135deg, #7f1d1d, #450a0a); border: 2px solid #ef4444; border-radius: 15px; padding: 20px; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
         .alert-banner i { font-size: 2rem; color: #ef4444; }
         .alert-banner h3 { color: #ef4444; font-size: 1.2rem; margin-bottom: 5px; }
         .alert-banner p { color: #fca5a5; font-size: 0.9rem; }
-
-        .form-card {
-            background: #111827;
-            border: 2px solid #334155;
-            border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-        .form-card h2 {
-            color: #d4af37;
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .form-card .subtitle {
-            color: #94a3b8;
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
-        }
-
-        .info-box {
-            background: #1e293b;
-            border-left: 4px solid #d4af37;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
+        .form-card { background: #111827; border: 2px solid #334155; border-radius: 20px; padding: 35px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .form-card h2 { color: #d4af37; font-size: 1.6rem; margin-bottom: 10px; text-align: center; }
+        .form-card .subtitle { color: #94a3b8; text-align: center; margin-bottom: 25px; font-size: 0.9rem; }
+        .info-box { background: #1e293b; border-left: 4px solid #d4af37; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
         .info-box p { color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; }
         .info-box strong { color: #d4af37; }
-
-        .binance-box {
-            background: #0f1729;
-            border: 2px dashed #d4af37;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .binance-box h3 {
-            color: #d4af37;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
-        .binance-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #1e293b;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
+        .binance-box { background: #0f1729; border: 2px dashed #d4af37; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .binance-box h3 { color: #d4af37; margin-bottom: 15px; font-size: 1rem; }
+        .binance-row { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; }
         .binance-row .label { color: #94a3b8; font-size: 0.8rem; }
         .binance-row .value { color: #fff; font-weight: 700; font-family: monospace; font-size: 1rem; }
         .binance-row .value.green { color: #10b981; }
-        .copy-btn {
-            background: #d4af37;
-            color: #111827;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.75rem;
-        }
-
+        .copy-btn { background: #d4af37; color: #111827; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
         .form-group { margin-bottom: 18px; }
-        .form-group label {
-            display: block;
-            color: #94a3b8;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 13px 16px;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-        }
+        .form-group label { display: block; color: #94a3b8; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+        .form-group input { width: 100%; padding: 13px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; }
         .form-group input:focus { border-color: #d4af37; }
-
-        .btn-submit {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #d4af37, #f0d060);
-            color: #111827;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+        .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1.05rem; font-weight: 700; cursor: pointer; margin-top: 10px; }
         .btn-submit:hover { transform: translateY(-2px); }
-
-        .message {
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-            font-size: 0.9rem;
-        }
-        .message.error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            display: block;
-        }
-        .message.success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid #10b981;
-            color: #10b981;
-            display: block;
-        }
-
-        .logout-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .message { padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; font-size: 0.9rem; }
+        .message.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; display: block; }
+        .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
+        .logout-link { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; }
         .logout-link a { color: #ef4444; text-decoration: none; font-weight: 700; }
-
-        .expiry-info {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+        .expiry-info { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
         .expiry-info .label { color: #94a3b8; font-size: 0.8rem; }
         .expiry-info .value { color: #ef4444; font-size: 1.3rem; font-weight: 900; margin-top: 5px; }
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0e17; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 9999; }
+        .loading-screen .spinner { font-size: 3rem; color: #d4af37; animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+        <p style="color:#94a3b8; margin-top:20px;">Loading...</p>
+    </div>
 
     <nav class="navbar">
         <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
         <a href="signin.html" class="btn-outline">Sign In</a>
     </nav>
 
-    <div class="container">
+    <div class="container" id="mainContainer" style="display:none;">
 
         <div class="alert-banner">
             <i class="fas fa-exclamation-triangle"></i>
@@ -229,24 +92,15 @@
             <div class="binance-box">
                 <h3>📋 Binance Payment Info</h3>
                 <div class="binance-row">
-                    <div>
-                        <div class="label">Binance UID</div>
-                        <div class="value">968525536</div>
-                    </div>
+                    <div><div class="label">Binance UID</div><div class="value">968525536</div></div>
                     <button class="copy-btn" onclick="copyText('968525536')"><i class="fas fa-copy"></i> Copy</button>
                 </div>
                 <div class="binance-row">
-                    <div>
-                        <div class="label">Binance Nickname</div>
-                        <div class="value">NexiProduct</div>
-                    </div>
+                    <div><div class="label">Binance Nickname</div><div class="value">NexiProduct</div></div>
                     <button class="copy-btn" onclick="copyText('NexiProduct')"><i class="fas fa-copy"></i> Copy</button>
                 </div>
                 <div class="binance-row">
-                    <div>
-                        <div class="label">Amount</div>
-                        <div class="value green">$5.00</div>
-                    </div>
+                    <div><div class="label">Amount</div><div class="value green">$5.00</div></div>
                     <button class="copy-btn" onclick="copyText('5')"><i class="fas fa-copy"></i> Copy</button>
                 </div>
             </div>
@@ -258,13 +112,11 @@
                     <label>Screenshot (Transfer Proof) *</label>
                     <input type="file" id="screenshot" accept="image/*" required style="padding: 10px;" />
                 </div>
-
                 <div class="form-group">
                     <label>Your Binance UID (from which you sent) *</label>
                     <input type="text" id="payerUID" placeholder="Enter your Binance UID" required />
                 </div>
-
-                <button type="submit" class="btn-submit">
+                <button type="submit" class="btn-submit" id="renewalBtn">
                     <i class="fas fa-paper-plane"></i> Submit Renewal
                 </button>
             </form>
@@ -276,73 +128,115 @@
 
     </div>
 
+    <!-- ✅ Supabase CDN + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
     <script>
-        window.addEventListener('load', () => {
-            const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
-            if (!user) {
+        let currentUser = null;
+
+        // ================================================================
+        //  LOAD: Session se fresh user data
+        // ================================================================
+        window.addEventListener('load', async () => {
+            const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
+            if (!session || !session.id) {
                 alert('❌ Please login first!');
                 window.location.replace('signin.html');
                 return;
             }
 
-            document.getElementById('prevExpiry').innerText = user.subscriptionEnd;
+            try {
+                const sb = initSupabase();
+                const { data: user, error } = await sb
+                    .from('users')
+                    .select('*')
+                    .eq('id', session.id)
+                    .maybeSingle();
+                if (error) throw error;
+                if (!user) {
+                    alert('❌ User not found!');
+                    localStorage.removeItem('nexiCurrentUser');
+                    window.location.replace('signin.html');
+                    return;
+                }
 
-            const today = new Date().toISOString().split('T')[0];
-            if (user.subscriptionEnd >= today) {
-                alert('✅ Your subscription is still active!');
-                window.location.replace('dashboard.html');
+                currentUser = user;
+                const today = new Date().toISOString().split('T')[0];
+                const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
+
+                // Agar subscription active hai to renewal ki zaroorat nahi
+                if (user.status === 'active' && expiry && expiry >= today) {
+                    alert('✅ Your subscription is still active!');
+                    window.location.replace('dashboard.html');
+                    return;
+                }
+
+                // Prev expiry show
+                document.getElementById('prevExpiry').innerText = expiry || '--';
+
+                // Show page
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+                window.location.replace('signin.html');
             }
         });
 
-        function handleRenewal(event) {
+        // ================================================================
+        //  SUBMIT RENEWAL → payments table insert
+        // ================================================================
+        async function handleRenewal(event) {
             event.preventDefault();
-            const messageBox = document.getElementById('messageBox');
 
-            const screenshot = document.getElementById('screenshot').files[0];
+            const screenshotFile = document.getElementById('screenshot').files[0];
             const payerUID = document.getElementById('payerUID').value.trim();
 
-            if (!screenshot) {
-                showMessage('❌ Please upload screenshot!', 'error');
-                return;
-            }
-            if (!payerUID) {
-                showMessage('❌ Please enter Binance UID!', 'error');
-                return;
-            }
+            if (!screenshotFile) { showMessage('❌ Please upload screenshot!', 'error'); return; }
+            if (!payerUID) { showMessage('❌ Please enter Binance UID!', 'error'); return; }
 
-            const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
+            const btn = document.getElementById('renewalBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
 
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const renewalData = {
-                    id: 'renewal_' + Date.now(),
-                    userId: user.id,
-                    fullName: user.fullName,
-                    email: user.email,
-                    phone: user.phone,
-                    password: user.password,
-                    startingCapital: user.startingCapital,
-                    screenshot: e.target.result,
-                    payerUID: payerUID,
-                    amount: 5.00,
-                    paymentDate: new Date().toISOString(),
-                    status: 'pending',
-                    type: 'renewal',
-                    previousExpiry: user.subscriptionEnd
-                };
+            reader.onload = async function(e) {
+                const base64Screenshot = e.target.result;
 
-                const payments = JSON.parse(localStorage.getItem('nexiPendingPayments') || '[]');
-                payments.push(renewalData);
-                localStorage.setItem('nexiPendingPayments', JSON.stringify(payments));
+                try {
+                    const sb = initSupabase();
+                    if (!sb) throw new Error('Supabase init failed');
 
-                showMessage('✅ Renewal submitted!<br>Admin will verify within 5-30 minutes.<br>You will be redirected...', 'success');
+                    // payments table mein renewal entry
+                    const { error } = await sb.from('payments').insert([{
+                        user_id: currentUser.id,
+                        amount: 5.00,
+                        type: 'renewal',
+                        screenshot_url: base64Screenshot,
+                        payer_uid: payerUID,
+                        status: 'pending'
+                    }]);
 
-                setTimeout(() => {
-                    localStorage.removeItem('nexiCurrentUser');
-                    window.location.replace('index.html');
-                }, 3000);
+                    if (error) throw error;
+
+                    showMessage('✅ Renewal submitted!<br>Admin will verify within 5-30 minutes.<br>You will be redirected...', 'success');
+
+                    setTimeout(() => {
+                        localStorage.removeItem('nexiCurrentUser');
+                        window.location.replace('index.html');
+                    }, 3000);
+
+                } catch (err) {
+                    console.error(err);
+                    showMessage('❌ Error: ' + err.message, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Renewal';
+                }
             };
-            reader.readAsDataURL(screenshot);
+            reader.readAsDataURL(screenshotFile);
         }
 
         function showMessage(text, type) {
@@ -353,28 +247,17 @@
         }
 
         function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Copied: ' + text);
-            });
+            navigator.clipboard.writeText(text).then(() => { alert('✅ Copied: ' + text); });
         }
 
-        // ✅ LOGOUT — history clear + replace
         function logout() {
             if (confirm('Logout?')) {
                 localStorage.removeItem('nexiCurrentUser');
-
-                if (window.history && window.history.pushState) {
-                    window.history.pushState(null, '', window.location.href);
-                    window.onpopstate = function() {
-                        window.history.go(1);
-                    };
-                }
-
                 window.location.replace('index.html');
             }
         }
 
-        // ✅ ENTER key support — renewal form
+        // ENTER key support
         document.getElementById('renewalForm').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && e.target.type !== 'file') {
                 e.preventDefault();
