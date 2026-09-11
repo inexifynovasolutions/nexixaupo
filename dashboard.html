@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Dashboard | Saba Rocket Xaupo</title>
+    <title>Dashboard | NexiRocket-XAU</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -66,10 +66,19 @@
         .progress-wrap { margin-top: 12px; padding: 8px 12px; background: #0f1729; border-radius: 10px; border: 1px solid #334155; }
         .progress-track { position: relative; height: 10px; background: #1e293b; border-radius: 10px; margin: 18px 0 10px; }
         .progress-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #ef4444, #d4af37, #10b981); transition: width 0.3s; }
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0e17; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 9999; }
+        .loading-screen .spinner { font-size: 3rem; color: #d4af37; animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
         @media (max-width: 768px) { .balance-panel, .mini-stats { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+        <p style="color:#94a3b8; margin-top:20px;">Loading your account...</p>
+    </div>
 
     <nav class="navbar">
         <a href="dashboard.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
@@ -79,7 +88,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container" id="mainContainer" style="display:none;">
 
         <div class="welcome-card">
             <h1>Welcome, <span id="welcomeName">Trader</span>! 🎉</h1>
@@ -134,7 +143,7 @@
             </div>
             <div id="progressContainer"></div>
 
-            <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">📜 Trade History</h3>
+            <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">📜 Trade History (Last 50)</h3>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>#</th><th>Date</th><th>Type</th><th>Entry</th><th>Exit</th><th>P/L</th><th>Balance</th></tr></thead>
@@ -154,43 +163,134 @@
 
     </div>
 
+    <!-- ✅ Supabase CDN + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
     <script>
+        let currentUser = null;
         let baseBalance = 0, currentPrice = 0, isTradeOpen = false, currentTrade = null, tradeCounter = 0;
-        let atr = 0, priceHistory = [], lastTradeTime = 0, rangeStartTime = Date.now();
+        let priceHistory = [], lastTradeTime = 0, rangeStartTime = Date.now();
         let isRobotRunning = false, robotInterval = null, tradeHistory = [];
         let FIXED_SUPPORT = 0, FIXED_RESISTANCE = 0, isSupportSet = false;
         const MIN_TRADE_INTERVAL = 15000;
         const $ = id => document.getElementById(id);
 
         // ================================================================
-        //  CHECK LOGIN + EXPIRY
+        //  LOAD: Fetch fresh user data from Supabase
         // ================================================================
-        window.addEventListener('load', () => {
-            const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
-            if (!user) {
+        window.addEventListener('load', async () => {
+            const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
+            if (!session || !session.id) {
                 alert('❌ Please login first!');
                 window.location.replace('signin.html');
                 return;
             }
 
-            const today = new Date().toISOString().split('T')[0];
-            if (user.subscriptionEnd < today) {
-                alert('⚠️ Subscription expired! Please renew.');
-                window.location.replace('renewal.html');
-                return;
-            }
+            try {
+                const sb = initSupabase();
+                if (!sb) throw new Error('Supabase init failed');
 
-            $('navUserName').innerText = user.fullName;
-            $('welcomeName').innerText = user.fullName;
-            $('statCapital').innerText = '$' + user.startingCapital.toFixed(2);
-            $('statExpiry').innerText = user.subscriptionEnd;
-            $('infoName').innerText = user.fullName;
-            $('infoEmail').innerText = user.email;
-            $('infoPhone').innerText = user.phone;
-            $('infoKey').innerText = user.secretKey;
-            $('infoEnd').innerText = user.subscriptionEnd;
-            $('capitalInput').value = user.startingCapital;
+                const { data: user, error } = await sb
+                    .from('users')
+                    .select('*')
+                    .eq('id', session.id)
+                    .maybeSingle();
+
+                if (error) throw error;
+                if (!user) {
+                    alert('❌ User not found!');
+                    localStorage.removeItem('nexiCurrentUser');
+                    window.location.replace('signin.html');
+                    return;
+                }
+
+                // Status check
+                if (user.status !== 'active') {
+                    alert('⚠️ Account status: ' + user.status);
+                    localStorage.removeItem('nexiCurrentUser');
+                    window.location.replace(user.status === 'pending' ? 'signin.html' : 'renewal.html');
+                    return;
+                }
+
+                // Expiry check
+                const today = new Date().toISOString().split('T')[0];
+                const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
+                if (!expiry || expiry < today) {
+                    alert('⚠️ Subscription expired! Please renew.');
+                    window.location.replace('renewal.html');
+                    return;
+                }
+
+                currentUser = user;
+
+                // ✅ Naya session (fresh data)
+                const sessionUser = {
+                    id: user.id,
+                    fullName: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    secretKey: user.secret_key,
+                    startingCapital: parseFloat(user.capital),
+                    subscriptionStart: user.subscription_start,
+                    subscriptionEnd: expiry,
+                    status: user.status
+                };
+                localStorage.setItem('nexiCurrentUser', JSON.stringify(sessionUser));
+
+                // Fill UI
+                $('navUserName').innerText = user.name;
+                $('welcomeName').innerText = user.name;
+                $('statCapital').innerText = '$' + parseFloat(user.capital).toFixed(2);
+                $('statExpiry').innerText = expiry;
+                $('infoName').innerText = user.name;
+                $('infoEmail').innerText = user.email;
+                $('infoPhone').innerText = user.phone;
+                $('infoKey').innerText = user.secret_key;
+                $('infoEnd').innerText = expiry;
+                $('capitalInput').value = parseFloat(user.capital);
+
+                // Load trade history
+                await loadTradeHistory();
+
+                // Show dashboard
+                $('loadingScreen').style.display = 'none';
+                $('mainContainer').style.display = 'block';
+
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error loading account: ' + err.message);
+                window.location.replace('signin.html');
+            }
         });
+
+        // ================================================================
+        //  LOAD TRADE HISTORY from Supabase
+        // ================================================================
+        async function loadTradeHistory() {
+            try {
+                const sb = initSupabase();
+                const { data, error } = await sb
+                    .from('trades')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+                if (error) throw error;
+                tradeHistory = (data || []).map(t => ({
+                    id: t.id.slice(0, 6),
+                    type: t.type.toUpperCase(),
+                    entry: parseFloat(t.entry),
+                    exit: parseFloat(t.exit || 0),
+                    profit: parseFloat(t.profit),
+                    balance: parseFloat(t.balance),
+                    date: t.created_at.split('T')[0]
+                }));
+                renderHistory();
+            } catch (err) {
+                console.error('loadTradeHistory:', err);
+            }
+        }
 
         // ================================================================
         //  START ROBOT
@@ -204,11 +304,9 @@
             baseBalance = capital;
             tradeCounter = 0;
             priceHistory = [];
-            tradeHistory = [];
             isTradeOpen = false;
             currentTrade = null;
             isSupportSet = false;
-            $('historyBody').innerHTML = '<tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
             isRobotRunning = true;
             $('btnStart').disabled = true;
             $('btnStop').disabled = false;
@@ -219,9 +317,6 @@
             robotInterval = setInterval(getLivePrice, 1000);
         }
 
-        // ================================================================
-        //  STOP ROBOT
-        // ================================================================
         function stopRobot() {
             isRobotRunning = false;
             if (robotInterval) clearInterval(robotInterval);
@@ -262,15 +357,9 @@
             updateLiveTable();
         }
 
-        // ================================================================
-        //  STRATEGY ENGINE
-        // ================================================================
         function analyzeStrategy(rsi) {
             if (!isRobotRunning || !isSupportSet) return;
-            if (isTradeOpen) {
-                checkTradeClose();
-                return;
-            }
+            if (isTradeOpen) { checkTradeClose(); return; }
             if (Date.now() - lastTradeTime < MIN_TRADE_INTERVAL) return;
 
             if (currentPrice > FIXED_RESISTANCE && rsi > 45) {
@@ -293,32 +382,11 @@
                 openTrade('SELL', currentPrice);
                 return;
             }
-
-            const elapsed = (Date.now() - rangeStartTime) / 1000;
-            if (elapsed > 90 && !isTradeOpen) {
-                const middle = (FIXED_SUPPORT + FIXED_RESISTANCE) / 2;
-                if (currentPrice < middle && rsi < 50) {
-                    $('activeStrategy').innerText = 'Range BUY';
-                    openTrade('BUY', currentPrice);
-                    rangeStartTime = Date.now();
-                    return;
-                }
-                if (currentPrice > middle && rsi > 50) {
-                    $('activeStrategy').innerText = 'Range SELL';
-                    openTrade('SELL', currentPrice);
-                    rangeStartTime = Date.now();
-                    return;
-                }
-            }
-
             $('activeStrategy').innerText = 'Waiting';
             $('aiSignal').innerText = 'Waiting';
             $('aiStatus').innerText = '⏳ Waiting';
         }
 
-        // ================================================================
-        //  OPEN TRADE
-        // ================================================================
         function openTrade(type, price) {
             if (isTradeOpen) return;
             isTradeOpen = true;
@@ -326,13 +394,8 @@
             lastTradeTime = Date.now();
             rangeStartTime = Date.now();
             let sl, tp;
-            if (type === 'BUY') {
-                sl = price * 0.997;
-                tp = price * 1.008;
-            } else {
-                sl = price * 1.003;
-                tp = price * 0.992;
-            }
+            if (type === 'BUY') { sl = price * 0.997; tp = price * 1.008; }
+            else { sl = price * 1.003; tp = price * 0.992; }
             currentTrade = { id: tradeCounter, type: type, entry: price, sl: sl, tp: tp };
             $('aiStatus').innerText = '🟢 Trade Open: ' + type;
             $('aiSignal').innerText = type + ' Signal';
@@ -340,9 +403,6 @@
             updateLiveTable();
         }
 
-        // ================================================================
-        //  CHECK TRADE CLOSE
-        // ================================================================
         function checkTradeClose() {
             if (!currentTrade) return;
             let hit = false;
@@ -355,25 +415,60 @@
         }
 
         // ================================================================
-        //  CLOSE TRADE
+        //  CLOSE TRADE → Supabase insert + user capital update
         // ================================================================
-        function closeTrade(exitPrice) {
+        async function closeTrade(exitPrice) {
             const lotSize = 0.01;
             let profit = currentTrade.type === 'BUY' ?
                 (exitPrice - currentTrade.entry) * lotSize * 100 :
                 (currentTrade.entry - exitPrice) * lotSize * 100;
             baseBalance += profit;
-            tradeHistory.push({
-                id: currentTrade.id,
+            const profitFixed = parseFloat(profit.toFixed(2));
+            const balanceFixed = parseFloat(baseBalance.toFixed(2));
+
+            // Show alert immediately (user experience)
+            alert((profit >= 0 ? '🎯 Profit: +$' : '🛑 Loss: -$') + Math.abs(profit).toFixed(2) + '\nBalance: $' + baseBalance.toFixed(2));
+
+            // Save to Supabase (background)
+            try {
+                const sb = initSupabase();
+                await sb.from('trades').insert([{
+                    user_id: currentUser.id,
+                    type: currentTrade.type.toLowerCase(),
+                    entry: parseFloat(currentTrade.entry.toFixed(4)),
+                    exit: parseFloat(exitPrice.toFixed(4)),
+                    profit: profitFixed,
+                    balance: balanceFixed
+                }]);
+
+                await sb.from('users')
+                    .update({ capital: balanceFixed })
+                    .eq('id', currentUser.id);
+
+                // Update local currentUser
+                currentUser.capital = balanceFixed;
+                const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
+                session.startingCapital = balanceFixed;
+                localStorage.setItem('nexiCurrentUser', JSON.stringify(session));
+                $('statCapital').innerText = '$' + balanceFixed.toFixed(2);
+
+            } catch (err) {
+                console.error('Trade save error:', err);
+            }
+
+            // Local history update
+            tradeHistory.unshift({
+                id: String(currentTrade.id).padStart(3, '0'),
                 type: currentTrade.type,
                 entry: currentTrade.entry,
                 exit: exitPrice,
-                profit: profit,
-                balance: baseBalance,
+                profit: profitFixed,
+                balance: balanceFixed,
                 date: new Date().toISOString().split('T')[0]
             });
+            if (tradeHistory.length > 50) tradeHistory.pop();
             renderHistory();
-            alert((profit >= 0 ? '🎯 Profit: +$' : '🛑 Loss: -$') + Math.abs(profit).toFixed(2) + '\nBalance: $' + baseBalance.toFixed(2));
+
             isTradeOpen = false;
             currentTrade = null;
             $('aiStatus').innerText = '⏳ Idle';
@@ -381,9 +476,6 @@
             updateLiveTable();
         }
 
-        // ================================================================
-        //  UPDATE BALANCE
-        // ================================================================
         function updateBalance() {
             let floatingPL = 0;
             if (isTradeOpen && currentTrade) {
@@ -397,9 +489,6 @@
             $('effectiveBalance').innerText = '$' + (baseBalance + floatingPL).toFixed(2);
         }
 
-        // ================================================================
-        //  UPDATE LIVE TABLE
-        // ================================================================
         function updateLiveTable() {
             const tbody = $('liveTableBody');
             if (!isTradeOpen || !currentTrade) {
@@ -432,16 +521,13 @@
                 </div>`;
         }
 
-        // ================================================================
-        //  RENDER HISTORY
-        // ================================================================
         function renderHistory() {
             const tbody = $('historyBody');
             if (tradeHistory.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
                 return;
             }
-            tbody.innerHTML = [...tradeHistory].reverse().map(t => `<tr>
+            tbody.innerHTML = tradeHistory.map(t => `<tr>
                 <td>#${t.id}</td>
                 <td style="font-size:0.8rem;color:#94a3b8;">${t.date}</td>
                 <td class="${t.type === 'BUY' ? 'buy' : 'sell'}">${t.type}</td>
@@ -452,20 +538,9 @@
             </tr>`).join('');
         }
 
-        // ================================================================
-        //  LOGOUT — history clear + replace (back button kaam na kare)
-        // ================================================================
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('nexiCurrentUser');
-
-                if (window.history && window.history.pushState) {
-                    window.history.pushState(null, '', window.location.href);
-                    window.onpopstate = function() {
-                        window.history.go(1);
-                    };
-                }
-
                 window.location.replace('index.html');
             }
         }
