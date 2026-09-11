@@ -10,7 +10,7 @@
         body { background: #0a0e17; color: #f8fafc; overflow-x: hidden; }
 
         /* ================================================================ */
-        /* ✅ WELCOME OVERLAY — Naya Professional Design                     */
+        /* ✅ WELCOME OVERLAY                                                 */
         /* ================================================================ */
         #welcomeOverlay {
             position: fixed;
@@ -36,7 +36,6 @@
             pointer-events: none;
         }
 
-        /* Floating gold particles */
         .welcome-particles {
             position: absolute;
             top: 0;
@@ -63,19 +62,14 @@
                 transform: translateY(100vh) translateX(0);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.6;
-            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
             100% {
                 transform: translateY(-10vh) translateX(50px);
                 opacity: 0;
             }
         }
 
-        /* Welcome Logo */
         .welcome-logo {
             font-size: 1.8rem;
             font-weight: 900;
@@ -87,11 +81,8 @@
             position: relative;
         }
 
-        .welcome-logo span {
-            color: #fff;
-        }
+        .welcome-logo span { color: #fff; }
 
-        /* Welcome Main Text */
         .welcome-title {
             font-size: 3rem;
             font-weight: 900;
@@ -105,7 +96,6 @@
             animation: fadeInUp 0.5s ease-out 1.2s forwards;
         }
 
-        /* Typewriter effect */
         .welcome-title .typewriter {
             display: inline-block;
             border-right: 3px solid #d4af37;
@@ -118,7 +108,6 @@
             50% { border-color: transparent; }
         }
 
-        /* Welcome Subtitle */
         .welcome-subtitle {
             font-size: 1.8rem;
             font-weight: 700;
@@ -142,7 +131,6 @@
             100% { background-position: 200% center; }
         }
 
-        /* Let's Start Button */
         .welcome-start-btn {
             background: linear-gradient(135deg, #d4af37, #f0d060);
             color: #111827;
@@ -168,20 +156,11 @@
             box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6);
         }
 
-        .welcome-start-btn:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
         @keyframes buttonPulse {
-            0%, 100% {
-                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-            }
-            50% {
-                box-shadow: 0 10px 50px rgba(212, 175, 55, 0.8), 0 0 30px rgba(212, 175, 55, 0.5);
-            }
+            0%, 100% { box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 10px 50px rgba(212, 175, 55, 0.8), 0 0 30px rgba(212, 175, 55, 0.5); }
         }
 
-        /* Welcome Tagline */
         .welcome-tagline {
             font-size: 1rem;
             color: #94a3b8;
@@ -194,7 +173,6 @@
             position: relative;
         }
 
-        /* Close button */
         .welcome-close-btn {
             position: absolute;
             top: 25px;
@@ -278,6 +256,91 @@
         }
         .btn-admin:hover { background: #ef4444; color: #fff; }
 
+        /* ✅ ALERT SPEECH BUBBLE */
+        #alertBubble {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 500;
+            max-width: 90%;
+            width: 500px;
+            animation: alertSlideIn 0.5s ease-out;
+        }
+
+        @keyframes alertSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .alert-bubble-content {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            padding: 20px 50px 20px 25px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
+            position: relative;
+            border: 2px solid #34d399;
+            animation: alertPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes alertPulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); }
+            50% { box-shadow: 0 10px 50px rgba(16, 185, 129, 0.9), 0 0 25px rgba(16, 185, 129, 0.6); }
+        }
+
+        .alert-bubble-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .alert-bubble-close:hover {
+            background: #ef4444;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .alert-bubble-tail {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 20px solid #059669;
+        }
+
+        @media (max-width: 768px) {
+            #alertBubble { width: 90%; top: 85px; }
+            .alert-bubble-content { font-size: 0.9rem; padding: 16px 45px 16px 20px; }
+        }
+
         /* ✅ RISK MANAGEMENT TICKER */
         .risk-ticker {
             background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
@@ -344,10 +407,7 @@
         .demo-stat .value.green { color: #10b981; }
         .demo-stat .value.yellow { color: #fbbf24; }
 
-        
-               /* ✅ FREE TRADES LEFT — Animated Number */
-                /* ✅ FREE TRADES LEFT — Animated Number */
-               /* ✅ FREE TRADES LEFT — Animated Number */
+        /* ✅ FREE TRADES LEFT — Animated Number */
         .free-trades-value {
             font-size: 3rem;
             font-weight: 900;
@@ -357,34 +417,15 @@
             transform-origin: center;
             will-change: transform;
             animation: 
-                quickSpin 0s ease-out 0s 1 forwards,
-                heartbeatLoop 5s ease-in-out 10s infinite;
+                quickSpin 1s linear 0s 1 forwards,
+                heartbeatLoop 30s ease-in-out 1s infinite;
         }
 
-        /* 
-           QUICK SPIN — Site khulte hi 3 second ka tez ghoomna
-           - 0s: 0° (start)
-           - 3s: 360° (complete, then stops)
-        */
         @keyframes quickSpin {
-            0% {
-                transform: rotate(0deg) scale(1);
-            }
-            100% {
-                transform: rotate(360deg) scale(1);
-            }
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(360deg) scale(1); }
         }
 
-        /* 
-           HEARTBEAT LOOP — Har 30 second baad
-           - 0s (start): Normal
-           - 0.3s:       💓 Dhadak (bara)
-           - 0.6s:       Wapas normal
-           - 0.9s:       💓 Dhadak (bara)
-           - 1.2s:       Wapas normal
-           - 1.2s-30s:   Ruka hua
-           - 30s: Loop restart
-        */
         @keyframes heartbeatLoop {
             0% {
                 transform: rotate(360deg) scale(1);
@@ -493,36 +534,37 @@
             .demo-section, .features, .pricing { padding: 40px 20px; }
             .price-card.featured { transform: scale(1); }
             .btn-admin { padding: 6px 12px; font-size: 0.75rem; }
-                       .free-trades-value { font-size: 2.2rem; }
+            .free-trades-value { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ✅ WELCOME OVERLAY — Naya Professional Pop-up -->
+    <!-- ✅ WELCOME OVERLAY -->
     <div id="welcomeOverlay">
-        <!-- Floating particles -->
         <div class="welcome-particles" id="welcomeParticles"></div>
-        
-        <!-- Close button -->
         <button class="welcome-close-btn" onclick="closeWelcome()" title="Close">&times;</button>
 
-        <!-- Logo -->
         <div class="welcome-logo">🚀 Nexi<span> Rocket-XauPo</span></div>
 
-        <!-- Title (typewriter) -->
         <div class="welcome-title">
             <span class="typewriter" id="typewriterText"></span>
         </div>
 
-        <!-- Subtitle (shimmer) -->
         <div class="welcome-subtitle">Trade safely with Nexi</div>
 
-        <!-- Start button -->
         <button class="welcome-start-btn" onclick="closeWelcome()">Let's Start →</button>
 
-        <!-- Tagline -->
         <div class="welcome-tagline">✨ AI-Powered Gold Trading ✨</div>
+    </div>
+
+    <!-- ✅ ALERT SPEECH BUBBLE -->
+    <div id="alertBubble" style="display: none;">
+        <div class="alert-bubble-content">
+            <button class="alert-bubble-close" onclick="closeAlertBubble()">×</button>
+            <div class="alert-bubble-text" id="alertBubbleText"></div>
+            <div class="alert-bubble-tail"></div>
+        </div>
     </div>
 
     <!-- NAVBAR -->
@@ -696,7 +738,6 @@
             }
         }
 
-        // Typewriter effect
         function typewriterEffect() {
             const text = "Welcome Traders";
             const el = document.getElementById('typewriterText');
@@ -713,7 +754,6 @@
             setTimeout(type, 1200);
         }
 
-        // Generate floating particles
         function generateParticles() {
             const container = document.getElementById('welcomeParticles');
             if (!container) return;
@@ -742,6 +782,69 @@
                     closeWelcome();
                 }
             }
+        });
+
+        // ================================================================
+        // ✅ ALERT BUBBLE — Admin message display
+        // ================================================================
+        let currentAlertId = null;
+
+        async function loadActiveAlert() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                const { data, error } = await sb
+                    .from('alerts')
+                    .select('*')
+                    .eq('is_active', true)
+                    .in('target', ['demo', 'both'])
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const now = new Date();
+                const active = (data || []).filter(a => {
+                    if (a.start_time && new Date(a.start_time) > now) return false;
+                    if (a.end_time && new Date(a.end_time) < now) return false;
+                    return true;
+                });
+
+                if (active.length === 0) {
+                    document.getElementById('alertBubble').style.display = 'none';
+                    currentAlertId = null;
+                    return;
+                }
+
+                const alert = active[0];
+
+                const closedAlertId = sessionStorage.getItem('closedAlertId');
+                if (closedAlertId === alert.id) {
+                    document.getElementById('alertBubble').style.display = 'none';
+                    return;
+                }
+
+                if (currentAlertId !== alert.id) {
+                    currentAlertId = alert.id;
+                    document.getElementById('alertBubbleText').innerText = alert.message;
+                    document.getElementById('alertBubble').style.display = 'block';
+                }
+
+            } catch (err) {
+                console.error('loadActiveAlert error:', err);
+            }
+        }
+
+        function closeAlertBubble() {
+            document.getElementById('alertBubble').style.display = 'none';
+            if (currentAlertId) {
+                sessionStorage.setItem('closedAlertId', currentAlertId);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            loadActiveAlert();
+            setInterval(loadActiveAlert, 30000);
         });
 
         // ================================================================
