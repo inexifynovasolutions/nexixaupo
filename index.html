@@ -347,79 +347,65 @@
         
                /* ✅ FREE TRADES LEFT — Animated Number */
                 /* ✅ FREE TRADES LEFT — Animated Number */
+               /* ✅ FREE TRADES LEFT — Animated Number */
         .free-trades-value {
             font-size: 3rem;
             font-weight: 900;
             color: #fbbf24;
             display: inline-block;
             text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-            animation: spinAndBeat 120s linear infinite;
             transform-origin: center;
             will-change: transform;
+            animation: 
+                quickSpin 3s ease-out 0s 1 forwards,
+                heartbeatLoop 30s ease-in-out 3s infinite;
         }
 
         /* 
-           TOTAL CYCLE: 120 seconds
-           
-           Phase 1 (0s-60s): Rotation + 2 heartbeats
-           - 0-25% (0-30s):    Rotate 0° → 180°
-           - 25% (30s):         💓 Heartbeat #1
-           - 25-50% (30-60s):   Rotate 180° → 360°
-           - 50% (60s):         💓 Heartbeat #2
-           
-           Phase 2 (60s-120s): Idle + 1 heartbeat
-           - 50-75% (60-90s):   Ruka hua
-           - 75% (90s):         💓 Heartbeat #3
-           - 75-100% (90-120s): Ruka hua
-           - 100% (120s):       Loop restart
+           QUICK SPIN — Site khulte hi 3 second ka tez ghoomna
+           - 0s: 0° (start)
+           - 3s: 360° (complete, then stops)
         */
-        @keyframes spinAndBeat {
-            /* Start: 0° */
+        @keyframes quickSpin {
             0% {
                 transform: rotate(0deg) scale(1);
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        /* 
+           HEARTBEAT LOOP — Har 30 second baad
+           - 0s (start): Normal
+           - 0.3s:       💓 Dhadak (bara)
+           - 0.6s:       Wapas normal
+           - 0.9s:       💓 Dhadak (bara)
+           - 1.2s:       Wapas normal
+           - 1.2s-30s:   Ruka hua
+           - 30s: Loop restart
+        */
+        @keyframes heartbeatLoop {
+            0% {
+                transform: rotate(360deg) scale(1);
                 text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
             }
-            /* 25% (30s): 180° + Heartbeat #1 */
-            24% {
-                transform: rotate(172.8deg) scale(1);
-                text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-            }
-            25% {
-                transform: rotate(180deg) scale(1.35);
-                text-shadow: 0 0 35px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.8);
-            }
-            26% {
-                transform: rotate(187.2deg) scale(1);
-                text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-            }
-            /* 50% (60s): 360° + Heartbeat #2 */
-            49% {
-                transform: rotate(352.8deg) scale(1);
-                text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-            }
-            50% {
+            1% {
                 transform: rotate(360deg) scale(1.35);
                 text-shadow: 0 0 35px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.8);
             }
-            51% {
+            2% {
                 transform: rotate(360deg) scale(1);
                 text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
             }
-            /* 50-75% (60-90s): Idle (ruka hua) */
-            74% {
-                transform: rotate(360deg) scale(1);
-                text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-            }
-            /* 75% (90s): Heartbeat #3 */
-            75% {
+            3% {
                 transform: rotate(360deg) scale(1.35);
                 text-shadow: 0 0 35px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.8);
             }
-            76% {
+            4% {
                 transform: rotate(360deg) scale(1);
                 text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
             }
-            /* 75-100% (90-120s): Idle */
             100% {
                 transform: rotate(360deg) scale(1);
                 text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
