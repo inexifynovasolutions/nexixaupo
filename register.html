@@ -33,6 +33,7 @@
         .form-group input:focus { border-color: #d4af37; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1.05rem; font-weight: 700; cursor: pointer; margin-top: 10px; }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .message { padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; font-size: 0.9rem; }
         .message.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; display: block; }
         .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
@@ -154,10 +155,17 @@
 
     </div>
 
+    <!-- ✅ Supabase CDN + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
     <script>
         let registrationData = {};
 
-        function handleRegister(event) {
+        // ================================================================
+        // STEP 1: Account Details → Supabase mein duplicate check
+        // ================================================================
+        async function handleRegister(event) {
             event.preventDefault();
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim().toLowerCase();
@@ -169,61 +177,176 @@
             if (password !== confirmPassword) { showMessage('❌ Passwords do not match!', 'error'); return; }
             if (startingCapital < 100) { showMessage('❌ Minimum capital is $100', 'error'); return; }
 
-            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-            const existingUser = users.find(u => u.email === email || u.phone === phone);
-            if (existingUser) { showMessage('❌ User already exists! Please <a href="signin.html" style="color:#d4af37;">Sign In</a>.', 'error'); return; }
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
 
-            registrationData = { fullName, email, phone, password, startingCapital };
-            showMessage('✅ Details saved! Redirecting to payment...', 'success');
-            setTimeout(() => {
-                document.getElementById('accountForm').style.display = 'none';
-                document.getElementById('paymentForm').style.display = 'block';
-                updateProgress(2);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 1000);
+            try {
+                const sb = initSupabase();
+                if (!sb) throw new Error('Supabase client init failed');
+
+                // Duplicate check: email ya phone already exist karta hai?
+                const { data: existing, error } = await sb
+                    .from('users')
+                    .select('id, email, phone')
+                    .or(`email.eq.${email},phone.eq.${phone}`)
+                    .limit(1);
+
+                if (error) throw error;
+
+                if (existing && existing.length > 0) {
+                    showMessage('❌ User already exists! Please <a href="signin.html" style="color:#d4af37;">Sign In</a>.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
+                    return;
+                }
+
+                // Save data temporarily
+                registrationData = { fullName, email, phone, password, startingCapital };
+                showMessage('✅ Details saved! Redirecting to payment...', 'success');
+
+                setTimeout(() => {
+                    document.getElementById('accountForm').style.display = 'none';
+                    document.getElementById('paymentForm').style.display = 'block';
+                    updateProgress(2);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 1000);
+
+            } catch (err) {
+                console.error(err);
+                showMessage('❌ Error: ' + err.message, 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
+            }
         }
 
-        function handlePayment(event) {
+        // ================================================================
+        // STEP 2: Payment → Supabase mein user + payment insert
+        // ================================================================
+        async function handlePayment(event) {
             event.preventDefault();
-            const screenshot = document.getElementById('screenshot').files[0];
+            const screenshotFile = document.getElementById('screenshot').files[0];
             const payerUID = document.getElementById('payerUID').value.trim();
-            if (!screenshot) { alert('❌ Please upload screenshot!'); return; }
+
+            if (!screenshotFile) { alert('❌ Please upload screenshot!'); return; }
             if (!payerUID) { alert('❌ Please enter Binance UID!'); return; }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const paymentData = {
-                    ...registrationData,
-                    id: 'payment_' + Date.now(),
-                    screenshot: e.target.result,
-                    payerUID: payerUID,
-                    amount: 3.00,
-                    paymentDate: new Date().toISOString(),
-                    status: 'pending'
-                };
-                const payments = JSON.parse(localStorage.getItem('nexiPendingPayments') || '[]');
-                payments.push(paymentData);
-                localStorage.setItem('nexiPendingPayments', JSON.stringify(payments));
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
 
-                document.getElementById('paymentForm').style.display = 'none';
-                document.getElementById('successForm').style.display = 'block';
-                updateProgress(3);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Screenshot = e.target.result;
+
+                try {
+                    const sb = initSupabase();
+                    if (!sb) throw new Error('Supabase client init failed');
+
+                    // ✅ Secret key generate karo (email4 + phone4 + random4)
+                    const emailPart = (registrationData.email || 'USER').substring(0, 4).toUpperCase();
+                    const phoneDigits = (registrationData.phone || '0000').replace(/\D/g, '');
+                    const phonePart = phoneDigits.slice(-4) || '0000';
+                    const random4 = Math.floor(1000 + Math.random() * 9000);
+                    const secretKey = emailPart + phonePart + random4;
+
+                    // ✅ 1. User insert (status = pending)
+                    const userPayload = {
+                        name: registrationData.fullName,
+                        email: registrationData.email,
+                        phone: registrationData.phone,
+                        password_hash: registrationData.password,
+                        secret_key: secretKey,
+                        capital: registrationData.startingCapital,
+                        status: 'pending'
+                    };
+
+                    const { data: userData, error: userError } = await sb
+                        .from('users')
+                        .insert([userPayload])
+                        .select()
+                        .single();
+
+                    if (userError) throw new Error('User create error: ' + userError.message);
+
+                    // ✅ 2. Payment insert (user_id link ke saath)
+                    const paymentPayload = {
+                        user_id: userData.id,
+                        amount: 3.00,
+                        type: 'first',
+                        screenshot_url: base64Screenshot,
+                        payer_uid: payerUID,
+                        status: 'pending'
+                    };
+
+                    const { error: paymentError } = await sb
+                        .from('payments')
+                        .insert([paymentPayload]);
+
+                    if (paymentError) throw new Error('Payment save error: ' + paymentError.message);
+
+                    // ✅ Success
+                    document.getElementById('paymentForm').style.display = 'none';
+                    document.getElementById('successForm').style.display = 'block';
+                    updateProgress(3);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                } catch (err) {
+                    console.error(err);
+                    alert('❌ ' + err.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment';
+                }
             };
-            reader.readAsDataURL(screenshot);
+            reader.readAsDataURL(screenshotFile);
         }
 
-        function verifySecretKey() {
+        // ================================================================
+        // STEP 3: Secret key verify → Supabase se user lookup
+        // ================================================================
+        async function verifySecretKey() {
             const input = document.getElementById('secretKeyInput').value.trim().toUpperCase();
             if (!input) { alert('❌ Please enter secret key!'); return; }
 
-            const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
-            const user = users.find(u => u.secretKey === input);
-            if (!user) { alert('❌ Invalid secret key!'); return; }
+            try {
+                const sb = initSupabase();
+                if (!sb) throw new Error('Supabase client init failed');
 
-            localStorage.setItem('nexiCurrentUser', JSON.stringify(user));
-            alert('✅ Account Activated!\n\nWelcome ' + user.fullName + '!');
-            setTimeout(() => { window.location.replace('dashboard.html'); }, 1500);
+                const { data: user, error } = await sb
+                    .from('users')
+                    .select('*')
+                    .eq('secret_key', input)
+                    .maybeSingle();
+
+                if (error) throw error;
+                if (!user) { alert('❌ Invalid secret key!'); return; }
+
+                if (user.status !== 'active') {
+                    alert('⏳ Aapka account abhi admin verify nahi hua.\n\nThodi der mein dobara koshish karein ya admin se rabta karein.');
+                    return;
+                }
+
+                // ✅ Session save (dashboard.html fields ke mutabiq)
+                const sessionUser = {
+                    id: user.id,
+                    fullName: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    secretKey: user.secret_key,
+                    startingCapital: parseFloat(user.capital),
+                    subscriptionStart: user.subscription_start,
+                    subscriptionEnd: user.subscription_end,
+                    status: user.status
+                };
+                localStorage.setItem('nexiCurrentUser', JSON.stringify(sessionUser));
+
+                alert('✅ Account Activated!\n\nWelcome ' + user.name + '!');
+                setTimeout(() => { window.location.replace('dashboard.html'); }, 1500);
+
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
         }
 
         function showMessage(text, type) {
@@ -254,7 +377,7 @@
 
         window.addEventListener('load', () => updateProgress(1));
 
-        // ✅ ENTER key support — register form
+        // ENTER key support — register form
         document.getElementById('registerForm').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && e.target.type !== 'checkbox' && e.target.type !== 'file') {
                 e.preventDefault();
@@ -269,7 +392,7 @@
             }
         });
 
-        // ✅ ENTER key support — payment form
+        // ENTER key support — payment form
         document.getElementById('paymentFormSubmit').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && e.target.type !== 'file') {
                 e.preventDefault();
