@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Statistics Room | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; }
+
+        /* LOGIN SCREEN */
+        .login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0e17; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .login-card { background: #111827; border: 2px solid #d4af37; border-radius: 20px; padding: 40px; max-width: 400px; width: 100%; text-align: center; }
+        .login-card h1 { color: #d4af37; margin-bottom: 10px; }
+        .login-card p { color: #94a3b8; margin-bottom: 25px; font-size: 0.9rem; }
+        .login-card input { width: 100%; padding: 14px 18px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 1rem; margin-bottom: 15px; outline: none; }
+        .login-card input:focus { border-color: #d4af37; }
+        .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .login-error { color: #ef4444; margin-top: 10px; font-size: 0.85rem; display: none; }
+
+        /* NAVBAR */
+        .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
+        .logo span { color: #fff; }
+        .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .admin-badge { background: #dc2626; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .room-badge { background: #60a5fa; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .btn-nav { background: #334155; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+        .btn-nav:hover { background: #475569; }
+        .btn-trading { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+        .btn-trading:hover { transform: translateY(-2px); }
+        .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+        .btn-logout:hover { background: #dc2626; }
+
+        /* CONTAINER */
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+
+        /* PAGE HEADER */
+        .page-header { text-align: center; margin-bottom: 30px; }
+        .page-header h1 { color: #d4af37; font-size: 2rem; margin-bottom: 8px; }
+        .page-header p { color: #94a3b8; font-size: 0.9rem; }
+
+        /* OVERVIEW CARDS */
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .overview-card { background: linear-gradient(135deg, #111827, #0f1729); border: 2px solid #334155; border-radius: 15px; padding: 22px; text-align: center; transition: all 0.3s; }
+        .overview-card:hover { border-color: #d4af37; transform: translateY(-3px); }
+        .overview-card .icon { font-size: 2rem; margin-bottom: 8px; }
+        .overview-card .label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .overview-card .value { font-size: 2rem; font-weight: 900; color: #d4af37; }
+        .overview-card .value.green { color: #10b981; }
+        .overview-card .value.blue { color: #60a5fa; }
+        .overview-card .value.purple { color: #a78bfa; }
+        .overview-card .sub { color: #64748b; font-size: 0.7rem; margin-top: 4px; }
+
+        /* SECTION */
+        .section { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .section-header h2 { color: #d4af37; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+        .section-header h2 .badge-new { background: #10b981; color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; }
+        .section-header p { color: #94a3b8; font-size: 0.85rem; margin-top: 5px; }
+
+        /* BUTTONS */
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; padding: 10px 22px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: #334155; color: #fff; padding: 10px 22px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-secondary:hover { background: #475569; }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: #fff; padding: 10px 22px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-success:hover { transform: translateY(-2px); }
+
+        /* TABLE */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #1e293b; color: #d4af37; padding: 12px; text-align: center; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; }
+        tr:hover td { background: rgba(212, 175, 55, 0.05); }
+
+        /* BADGES */
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+        .badge.green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge.red { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge.gold { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
+        .badge.blue { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+        .badge.gray { background: rgba(100, 116, 139, 0.2); color: #94a3b8; }
+
+        /* TOGGLE SWITCH */
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #1e293b; }
+        .toggle-row:last-child { border-bottom: none; }
+        .toggle-info { flex: 1; }
+        .toggle-info .title { color: #fff; font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .toggle-info .desc { color: #64748b; font-size: 0.78rem; }
+        .toggle-switch { position: relative; width: 55px; height: 28px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #334155; transition: 0.3s; border-radius: 28px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background: #fff; transition: 0.3s; border-radius: 50%; }
+        .toggle-switch input:checked + .toggle-slider { background: #10b981; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(27px); }
+
+        /* MESSAGES */
+        .info-msg { margin-top: 12px; font-size: 0.9rem; padding: 10px 15px; border-radius: 8px; display: none; }
+        .info-msg.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
+        .info-msg.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; display: block; }
+        .info-msg.warning { background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; display: block; }
+
+        /* EMPTY / LOADING */
+        .empty-state { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; }
+        .loading-state { text-align: center; padding: 40px; color: #d4af37; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 20px; }
+            .container { padding: 20px 12px; }
+            .section { padding: 18px; }
+            .overview-card .value { font-size: 1.5rem; }
+            .toggle-info .desc { display: none; }
+            .section-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <h1>📊 Statistics Room</h1>
+            <p>Admin access only</p>
+            <input type="text" id="adminUsername" placeholder="Username" />
+            <input type="password" id="adminPassword" placeholder="Password" />
+            <button onclick="adminLogin()">Login</button>
+            <div class="login-error" id="loginError">❌ Invalid credentials!</div>
+        </div>
+    </div>
+
+    <div id="statsRoom" style="display: none;">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="admin.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
+            <div class="nav-right">
+                <span class="admin-badge">🔐 ADMIN</span>
+                <span class="room-badge">📊 STATISTICS ROOM</span>
+                <a href="trading-room.html" class="btn-trading"><i class="fas fa-chart-line"></i> Trading Room</a>
+                <a href="admin.html" class="btn-nav"><i class="fas fa-arrow-left"></i> Back to Admin</a>
+                <button class="btn-logout" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+                <h1>📊 Statistics Room</h1>
+                <p>Win Rate • Visitors • Clients — Complete analytics dashboard</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- OVERVIEW CARDS                                                -->
+            <!-- ============================================================ -->
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="icon">🎯</div>
+                    <div class="label">Overall Win Rate</div>
+                    <div class="value green" id="ovWinRate">--</div>
+                    <div class="sub" id="ovWinRateSub">Last 30 days</div>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">📊</div>
+                    <div class="label">Total Trades</div>
+                    <div class="value" id="ovTotalTrades">0</div>
+                    <div class="sub" id="ovTradesSub">Wins: 0 | Losses: 0</div>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">👥</div>
+                    <div class="label">Total Visits</div>
+                    <div class="value blue" id="ovTotalVisits">0</div>
+                    <div class="sub">All time</div>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">💰</div>
+                    <div class="label">Total Clients</div>
+                    <div class="value purple" id="ovTotalClients">0</div>
+                    <div class="sub" id="ovClientsSub">Active: 0</div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 1: WIN RATE                                           -->
+            <!-- ============================================================ -->
+            <div class="section">
+                <div class="section-header">
+                    <div>
+                        <h2>🎯 Win Rate <span class="badge-new">DAILY</span></h2>
+                        <p>Date-wise win rate — last 30 days</p>
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn-success" onclick="recalculateToday()" id="recalcBtn">
+                            <i class="fas fa-sync"></i> Recalculate Today
+                        </button>
+                        <button class="btn-secondary" onclick="loadWinRateTable()">
+                            <i class="fas fa-redo"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="info-msg" id="recalcMessage"></div>
+                <div class="table-wrap" style="margin-top:15px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Total Trades</th>
+                                <th>Wins</th>
+                                <th>Losses</th>
+                                <th>Win Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="winRateBody">
+                            <tr><td colspan="5" class="loading-state">⏳ Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 2: VISITORS                                           -->
+            <!-- ============================================================ -->
+            <div class="section">
+                <div class="section-header">
+                    <div>
+                        <h2>👥 Visitors</h2>
+                        <p>Date-wise visits — last 30 days</p>
+                    </div>
+                    <button class="btn-secondary" onclick="loadVisitorsTable()">
+                        <i class="fas fa-redo"></i> Refresh
+                    </button>
+                </div>
+                <div class="table-wrap" style="margin-top:15px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Total Visits</th>
+                                <th>Unique Visitors</th>
+                            </tr>
+                        </thead>
+                        <tbody id="visitorsBody">
+                            <tr><td colspan="3" class="loading-state">⏳ Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 3: CLIENTS                                            -->
+            <!-- ============================================================ -->
+            <div class="section">
+                <div class="section-header">
+                    <div>
+                        <h2>💰 Clients</h2>
+                        <p>Date-wise registrations — last 30 days</p>
+                    </div>
+                    <button class="btn-secondary" onclick="loadClientsTable()">
+                        <i class="fas fa-redo"></i> Refresh
+                    </button>
+                </div>
+                <div class="table-wrap" style="margin-top:15px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>New Registrations</th>
+                                <th>Total Clients (cumulative)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientsBody">
+                            <tr><td colspan="3" class="loading-state">⏳ Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 4: DISPLAY TOGGLES                                    -->
+            <!-- ============================================================ -->
+            <div class="section">
+                <div class="section-header">
+                    <div>
+                        <h2>⚙️ Display Settings</h2>
+                        <p>Control what clients see on index.html & dashboard.html</p>
+                    </div>
+                </div>
+
+                <div style="margin-top:10px;">
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <div class="title">🎯 Show Win Rate</div>
+                            <div class="desc">Clients ko Real Performance section mein Win Rate dikhayein</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggleShowWinRate" onchange="updateDisplayToggle('show_win_rate', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <div class="title">👥 Show Visitors</div>
+                            <div class="desc">Clients ko Visitors counter dikhayein</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggleShowVisitors" onchange="updateDisplayToggle('show_visitors', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <div class="title">💰 Show Clients</div>
+                            <div class="desc">Clients ko Active Clients counter dikhayein</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggleShowClients" onchange="updateDisplayToggle('show_clients', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="info-msg" id="toggleMessage"></div>
+            </div>
+
+        </div>
+    </div>
+        <!-- ✅ Supabase CDN + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'nexi2026';
+        let allDailyStats = [];
+
+        // ================================================================
+        // LOGIN
+        // ================================================================
+        document.getElementById('adminUsername').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const pwd = document.getElementById('adminPassword');
+                if (pwd.value.trim() === '') pwd.focus();
+                else adminLogin();
+            }
+        });
+        document.getElementById('adminPassword').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); adminLogin(); }
+        });
+
+        function adminLogin() {
+            const u = document.getElementById('adminUsername').value;
+            const p = document.getElementById('adminPassword').value;
+            if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+                sessionStorage.setItem('nexiAdmin', 'true');
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('statsRoom').style.display = 'block';
+                loadAllData();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function adminLogout() {
+            if (confirm('Logout?')) {
+                sessionStorage.removeItem('nexiAdmin');
+                window.location.replace('index.html');
+            }
+        }
+
+        window.addEventListener('load', () => {
+            if (sessionStorage.getItem('nexiAdmin') === 'true') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('statsRoom').style.display = 'block';
+                loadAllData();
+            }
+        });
+
+        // ================================================================
+        // LOAD ALL DATA
+        // ================================================================
+        async function loadAllData() {
+            await Promise.all([
+                loadOverviewCards(),
+                loadWinRateTable(),
+                loadVisitorsTable(),
+                loadClientsTable(),
+                loadDisplayToggles()
+            ]);
+        }
+
+        // ================================================================
+        // OVERVIEW CARDS
+        // ================================================================
+        async function loadOverviewCards() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                // 1. Win Rate (last 30 days from daily_stats)
+                let totalWins = 0, totalLosses = 0, totalTradesCount = 0;
+                const { data: dailyData } = await sb
+                    .from('daily_stats')
+                    .select('win_trades, loss_trades, total_trades')
+                    .order('stat_date', { ascending: false })
+                    .limit(30);
+
+                (dailyData || []).forEach(d => {
+                    totalWins += parseInt(d.win_trades) || 0;
+                    totalLosses += parseInt(d.loss_trades) || 0;
+                    totalTradesCount += parseInt(d.total_trades) || 0;
+                });
+
+                const overallWinRate = totalTradesCount > 0
+                    ? ((totalWins / totalTradesCount) * 100).toFixed(1) + '%'
+                    : '0%';
+
+                document.getElementById('ovWinRate').innerText = overallWinRate;
+                document.getElementById('ovWinRateSub').innerText = 'Wins: ' + totalWins + ' | Losses: ' + totalLosses;
+
+                // 2. Total Trades
+                document.getElementById('ovTotalTrades').innerText = totalTradesCount;
+                document.getElementById('ovTradesSub').innerText = 'Wins: ' + totalWins + ' | Losses: ' + totalLosses;
+
+                // 3. Total Visits (all time from visits table)
+                const { count: visitCount } = await sb
+                    .from('visits')
+                    .select('*', { count: 'exact', head: true });
+                document.getElementById('ovTotalVisits').innerText = visitCount || 0;
+
+                // 4. Total Clients
+                const { count: totalClients } = await sb
+                    .from('users')
+                    .select('*', { count: 'exact', head: true });
+                const { count: activeClients } = await sb
+                    .from('users')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('status', 'active');
+
+                document.getElementById('ovTotalClients').innerText = totalClients || 0;
+                document.getElementById('ovClientsSub').innerText = 'Active: ' + (activeClients || 0);
+
+            } catch (err) {
+                console.error('loadOverviewCards error:', err);
+            }
+        }
+
+        // ================================================================
+        // WIN RATE TABLE
+        // ================================================================
+        async function loadWinRateTable() {
+            const tbody = document.getElementById('winRateBody');
+            tbody.innerHTML = '<tr><td colspan="5" class="loading-state">⏳ Loading...</td></tr>';
+
+            try {
+                const sb = initSupabase();
+                const { data, error } = await sb
+                    .from('daily_stats')
+                    .select('*')
+                    .order('stat_date', { ascending: false })
+                    .limit(30);
+
+                if (error) throw error;
+                allDailyStats = data || [];
+
+                if (allDailyStats.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No stats yet. "Recalculate Today" dabayein.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = allDailyStats.map(d => {
+                    const total = parseInt(d.total_trades) || 0;
+                    const wins = parseInt(d.win_trades) || 0;
+                    const losses = parseInt(d.loss_trades) || 0;
+                    const wr = total > 0 ? ((wins / total) * 100).toFixed(1) + '%' : '--';
+                    const wrColor = total > 0 && (wins / total) >= 0.5 ? 'green' : 'red';
+                    return `<tr>
+                        <td><strong>${d.stat_date}</strong></td>
+                        <td>${total}</td>
+                        <td style="color:#10b981; font-weight:700;">${wins}</td>
+                        <td style="color:#ef4444; font-weight:700;">${losses}</td>
+                        <td><span class="badge ${total > 0 ? wrColor : 'gray'}">${wr}</span></td>
+                    </tr>`;
+                }).join('');
+
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        // ================================================================
+        // RECALCULATE TODAY
+        // ================================================================
+        async function recalculateToday() {
+            const btn = document.getElementById('recalcBtn');
+            const msg = document.getElementById('recalcMessage');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+            msg.style.display = 'none';
+
+            try {
+                const sb = initSupabase();
+                const today = new Date().toISOString().split('T')[0];
+
+                // 1. Trades aaj ke (completed — exit not null)
+                const todayStart = today + 'T00:00:00.000Z';
+                const todayEnd = today + 'T23:59:59.999Z';
+
+                const { data: todayTrades, error: tErr } = await sb
+                    .from('trades')
+                    .select('profit, exit')
+                    .gte('created_at', todayStart)
+                    .lte('created_at', todayEnd)
+                    .not('exit', 'is', null);
+
+                if (tErr) throw tErr;
+
+                let totalTrades = 0, winTrades = 0, lossTrades = 0;
+                let totalProfit = 0, totalLoss = 0;
+
+                (todayTrades || []).forEach(t => {
+                    const p = parseFloat(t.profit) || 0;
+                    totalTrades++;
+                    if (p >= 0) { winTrades++; totalProfit += p; }
+                    else { lossTrades++; totalLoss += Math.abs(p); }
+                });
+
+                const winRate = totalTrades > 0 ? parseFloat(((winTrades / totalTrades) * 100).toFixed(2)) : 0;
+
+                // 2. Visits aaj ke
+                const { count: visitsToday } = await sb
+                    .from('visits')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('visited_date', today);
+
+                // Unique visitors: distinct ip_address ya user_agent based (simple: total visits as unique approximation)
+                const uniqueVisitors = visitsToday || 0;
+
+                // 3. New registrations aaj ke
+                const { count: newRegs } = await sb
+                    .from('users')
+                    .select('*', { count: 'exact', head: true })
+                    .gte('created_at', todayStart)
+                    .lte('created_at', todayEnd);
+
+                // 4. Total clients (active)
+                const { count: totalClients } = await sb
+                    .from('users')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('status', 'active');
+
+                // 5. Upsert into daily_stats
+                const payload = {
+                    stat_date: today,
+                    total_trades: totalTrades,
+                    win_trades: winTrades,
+                    loss_trades: lossTrades,
+                    total_profit: parseFloat(totalProfit.toFixed(2)),
+                    total_loss: parseFloat(totalLoss.toFixed(2)),
+                    win_rate: winRate,
+                    visits: visitsToday || 0,
+                    unique_visitors: uniqueVisitors,
+                    new_registrations: newRegs || 0,
+                    total_clients: totalClients || 0,
+                    updated_at: new Date().toISOString()
+                };
+
+                const { error: upErr } = await sb
+                    .from('daily_stats')
+                    .upsert([payload], { onConflict: 'stat_date' });
+
+                if (upErr) throw upErr;
+
+                msg.className = 'info-msg success';
+                msg.innerHTML = `✅ Today recalculated! Trades: ${totalTrades} (W: ${winTrades} | L: ${lossTrades}) | Visits: ${visitsToday || 0} | New Regs: ${newRegs || 0}`;
+                setTimeout(() => { msg.style.display = 'none'; }, 6000);
+
+                // Reload
+                await loadOverviewCards();
+                await loadWinRateTable();
+
+            } catch (err) {
+                console.error(err);
+                msg.className = 'info-msg error';
+                msg.innerHTML = '❌ Error: ' + err.message;
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sync"></i> Recalculate Today';
+        }
+
+        // ================================================================
+        // VISITORS TABLE
+        // ================================================================
+        async function loadVisitorsTable() {
+            const tbody = document.getElementById('visitorsBody');
+            tbody.innerHTML = '<tr><td colspan="3" class="loading-state">⏳ Loading...</td></tr>';
+
+            try {
+                const sb = initSupabase();
+
+                // Last 30 days ke visits group by date
+                const { data, error } = await sb
+                    .from('visits')
+                    .select('visited_date, ip_address')
+                    .order('visited_date', { ascending: false })
+                    .limit(5000);
+
+                if (error) throw error;
+
+                // Group by date
+                const grouped = {};
+                (data || []).forEach(v => {
+                    if (!v.visited_date) return;
+                    if (!grouped[v.visited_date]) grouped[v.visited_date] = { total: 0, ips: new Set() };
+                    grouped[v.visited_date].total++;
+                    if (v.ip_address) grouped[v.visited_date].ips.add(v.ip_address);
+                });
+
+                const dates = Object.keys(grouped).sort().reverse().slice(0, 30);
+
+                if (dates.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="empty-state">No visits recorded yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = dates.map(d => {
+                    const g = grouped[d];
+                    return `<tr>
+                        <td><strong>${d}</strong></td>
+                        <td style="color:#60a5fa; font-weight:700;">${g.total}</td>
+                        <td>${g.ips.size}</td>
+                    </tr>`;
+                }).join('');
+
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="3" class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        // ================================================================
+        // CLIENTS TABLE
+        // ================================================================
+        async function loadClientsTable() {
+            const tbody = document.getElementById('clientsBody');
+            tbody.innerHTML = '<tr><td colspan="3" class="loading-state">⏳ Loading...</td></tr>';
+
+            try {
+                const sb = initSupabase();
+
+                // All users with created_at
+                const { data, error } = await sb
+                    .from('users')
+                    .select('created_at')
+                    .order('created_at', { ascending: false })
+                    .limit(5000);
+
+                if (error) throw error;
+
+                // Group by date
+                const grouped = {};
+                (data || []).forEach(u => {
+                    if (!u.created_at) return;
+                    const d = u.created_at.split('T')[0];
+                    grouped[d] = (grouped[d] || 0) + 1;
+                });
+
+                const dates = Object.keys(grouped).sort().reverse().slice(0, 30);
+
+                if (dates.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="empty-state">No clients yet.</td></tr>';
+                    return;
+                }
+
+                // Calculate cumulative total (newest first — need to compute from oldest)
+                const allSorted = Object.keys(grouped).sort();
+                let cumulative = 0;
+                const cumMap = {};
+                allSorted.forEach(d => {
+                    cumulative += grouped[d];
+                    cumMap[d] = cumulative;
+                });
+
+                tbody.innerHTML = dates.map(d => `<tr>
+                    <td><strong>${d}</strong></td>
+                    <td style="color:#a78bfa; font-weight:700;">${grouped[d]}</td>
+                    <td>${cumMap[d]}</td>
+                </tr>`).join('');
+
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="3" class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        // ================================================================
+        // DISPLAY TOGGLES (settings)
+        // ================================================================
+        async function loadDisplayToggles() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                const { data, error } = await sb
+                    .from('settings')
+                    .select('key, value')
+                    .in('key', ['show_win_rate', 'show_visitors', 'show_clients']);
+
+                if (error) throw error;
+
+                const map = {};
+                (data || []).forEach(s => { map[s.key] = s.value; });
+
+                document.getElementById('toggleShowWinRate').checked = (map.show_win_rate || 'true') === 'true';
+                document.getElementById('toggleShowVisitors').checked = (map.show_visitors || 'true') === 'true';
+                document.getElementById('toggleShowClients').checked = (map.show_clients || 'true') === 'true';
+
+            } catch (err) {
+                console.error('loadDisplayToggles error:', err);
+            }
+        }
+
+        async function updateDisplayToggle(key, value) {
+            const msg = document.getElementById('toggleMessage');
+            try {
+                const sb = initSupabase();
+                const { error } = await sb
+                    .from('settings')
+                    .update({ value: String(value), updated_at: new Date().toISOString() })
+                    .eq('key', key);
+
+                if (error) throw error;
+
+                msg.className = 'info-msg success';
+                msg.innerHTML = `✅ ${key} = ${value ? 'ON' : 'OFF'} — clients ab yeh change dekh payenge.`;
+                setTimeout(() => { msg.style.display = 'none'; }, 3000);
+
+            } catch (err) {
+                console.error(err);
+                msg.className = 'info-msg error';
+                msg.innerHTML = '❌ Error: ' + err.message;
+                // Revert toggle
+                document.getElementById('toggleShowWinRate').checked = false;
+                await loadDisplayToggles();
+            }
+        }
+    </script>
+</body>
+</html>
