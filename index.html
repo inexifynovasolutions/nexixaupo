@@ -714,8 +714,7 @@
             </div>
         </div>
     </div>
-
-    <!-- ✅ Supabase CDN + Config -->
+        <!-- ✅ Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
@@ -785,9 +784,10 @@
         });
 
         // ================================================================
-        // ✅ ALERT BUBBLE — Admin message display
+        // ✅ ALERT BUBBLE — with RE-APPEAR logic
         // ================================================================
         let currentAlertId = null;
+        let currentAlertReappear = 0;
 
         async function loadActiveAlert() {
             try {
@@ -817,15 +817,30 @@
                 }
 
                 const alert = active[0];
+                const reappearSec = parseInt(alert.reappear_seconds) || 0;
 
-                const closedAlertId = sessionStorage.getItem('closedAlertId');
-                if (closedAlertId === alert.id) {
-                    document.getElementById('alertBubble').style.display = 'none';
-                    return;
+                // ✅ Re-appear check: agar close hua tha to kya time poora hua?
+                const closedAtRaw = localStorage.getItem('alertClosedAt_' + alert.id);
+                if (closedAtRaw) {
+                    if (reappearSec === 0) {
+                        // Never re-appear
+                        document.getElementById('alertBubble').style.display = 'none';
+                        return;
+                    }
+                    const closedAt = parseInt(closedAtRaw);
+                    const elapsedSec = (Date.now() - closedAt) / 1000;
+                    if (elapsedSec < reappearSec) {
+                        // Abhi time poora nahi hua
+                        document.getElementById('alertBubble').style.display = 'none';
+                        return;
+                    }
+                    // Time poora ho gaya — alert wapas dikhao
                 }
 
-                if (currentAlertId !== alert.id) {
+                // Show alert
+                if (currentAlertId !== alert.id || document.getElementById('alertBubble').style.display === 'none') {
                     currentAlertId = alert.id;
+                    currentAlertReappear = reappearSec;
                     document.getElementById('alertBubbleText').innerText = alert.message;
                     document.getElementById('alertBubble').style.display = 'block';
                 }
@@ -838,13 +853,14 @@
         function closeAlertBubble() {
             document.getElementById('alertBubble').style.display = 'none';
             if (currentAlertId) {
-                sessionStorage.setItem('closedAlertId', currentAlertId);
+                // Timestamp save karo — kitne baje close hua
+                localStorage.setItem('alertClosedAt_' + currentAlertId, Date.now().toString());
             }
         }
 
         window.addEventListener('load', () => {
             loadActiveAlert();
-            setInterval(loadActiveAlert, 30000);
+            setInterval(loadActiveAlert, 15000); // har 15 sec pe check (re-appear ke liye)
         });
 
         // ================================================================

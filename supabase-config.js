@@ -148,10 +148,8 @@ async function getFreeTradesPerDay() {
 // HELPER FUNCTIONS — Alerts
 // ============================================================
 
-// Active alerts laao (frontend ke liye) — time filter ke saath
 async function getActiveAlerts(target = 'both') {
     const sb = initSupabase();
-    const now = new Date().toISOString();
 
     let query = sb
         .from('alerts')
@@ -159,13 +157,11 @@ async function getActiveAlerts(target = 'both') {
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 
-    // Target filter: 'both' wale sab ko dikhein, specific target bhi
     if (target === 'demo') {
         query = query.in('target', ['demo', 'both']);
     } else if (target === 'clients') {
         query = query.in('target', ['clients', 'both']);
     }
-    // Agar target 'both' hai to filter nahi lagayenge (saare)
 
     const { data, error } = await query;
     if (error) {
@@ -173,17 +169,16 @@ async function getActiveAlerts(target = 'both') {
         return [];
     }
 
-    // Client-side time filter (start_time aur end_time)
+    const now = new Date();
     const filtered = (data || []).filter(a => {
-        if (a.start_time && new Date(a.start_time) > new Date()) return false;
-        if (a.end_time && new Date(a.end_time) < new Date()) return false;
+        if (a.start_time && new Date(a.start_time) > now) return false;
+        if (a.end_time && new Date(a.end_time) < now) return false;
         return true;
     });
 
     return filtered;
 }
 
-// Saare alerts laao (admin panel ke liye)
 async function getAllAlerts() {
     const sb = initSupabase();
     const { data, error } = await sb
@@ -197,7 +192,6 @@ async function getAllAlerts() {
     return data || [];
 }
 
-// Naya alert banao
 async function createAlert(alertData) {
     const sb = initSupabase();
     const { data, error } = await sb
@@ -212,7 +206,6 @@ async function createAlert(alertData) {
     return { data };
 }
 
-// Alert update karo
 async function updateAlert(id, updates) {
     const sb = initSupabase();
     const { data, error } = await sb
@@ -228,7 +221,6 @@ async function updateAlert(id, updates) {
     return { data };
 }
 
-// Alert delete karo
 async function deleteAlert(id) {
     const sb = initSupabase();
     const { error } = await sb
@@ -237,6 +229,224 @@ async function deleteAlert(id) {
         .eq('id', id);
     if (error) {
         console.error('deleteAlert error:', error);
+        return { error };
+    }
+    return { success: true };
+}
+
+// ============================================================
+// HELPER FUNCTIONS — Alert Templates
+// ============================================================
+
+async function getAllTemplates(limit = 100) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('alert_templates')
+        .select('*')
+        .order('last_used_at', { ascending: false, nullsFirst: false })
+        .order('created_at', { ascending: false })
+        .limit(limit);
+    if (error) {
+        console.error('getAllTemplates error:', error);
+        return [];
+    }
+    return data || [];
+}
+
+async function createTemplate(templateData) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('alert_templates')
+        .insert([templateData])
+        .select()
+        .single();
+    if (error) {
+        console.error('createTemplate error:', error);
+        return { error };
+    }
+    return { data };
+}
+
+async function updateTemplateUsage(id, currentCount) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('alert_templates')
+        .update({
+            times_used: (currentCount || 0) + 1,
+            last_used_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+    if (error) {
+        console.error('updateTemplateUsage error:', error);
+        return { error };
+    }
+    return { data };
+}
+
+async function deleteTemplate(id) {
+    const sb = initSupabase();
+    const { error } = await sb
+        .from('alert_templates')
+        .delete()
+        .eq('id', id);
+    if (error) {
+        console.error('deleteTemplate error:', error);
+        return { error };
+    }
+    return { success: true };
+}
+
+// ============================================================
+// HELPER FUNCTIONS — Publicity Banners (Step 5 — ready for use)
+// ============================================================
+
+async function getActiveBanners(target = 'both') {
+    const sb = initSupabase();
+
+    let query = sb
+        .from('publicity_banners')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+
+    if (target === 'demo') {
+        query = query.in('target', ['demo', 'both']);
+    } else if (target === 'clients') {
+        query = query.in('target', ['clients', 'both']);
+    }
+
+    const { data, error } = await query;
+    if (error) {
+        console.error('getActiveBanners error:', error);
+        return [];
+    }
+
+    const now = new Date();
+    const filtered = (data || []).filter(b => {
+        if (b.start_time && new Date(b.start_time) > now) return false;
+        if (b.end_time && new Date(b.end_time) < now) return false;
+        return true;
+    });
+
+    return filtered;
+}
+
+async function getAllBanners() {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('publicity_banners')
+        .select('*')
+        .order('created_at', { ascending: false });
+    if (error) {
+        console.error('getAllBanners error:', error);
+        return [];
+    }
+    return data || [];
+}
+
+async function createBanner(bannerData) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('publicity_banners')
+        .insert([bannerData])
+        .select()
+        .single();
+    if (error) {
+        console.error('createBanner error:', error);
+        return { error };
+    }
+    return { data };
+}
+
+async function updateBanner(id, updates) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('publicity_banners')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+    if (error) {
+        console.error('updateBanner error:', error);
+        return { error };
+    }
+    return { data };
+}
+
+async function deleteBanner(id) {
+    const sb = initSupabase();
+    const { error } = await sb
+        .from('publicity_banners')
+        .delete()
+        .eq('id', id);
+    if (error) {
+        console.error('deleteBanner error:', error);
+        return { error };
+    }
+    return { success: true };
+}
+
+// ============================================================
+// HELPER FUNCTIONS — Banner Templates (Step 5)
+// ============================================================
+
+async function getBannerTemplates(limit = 100) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('banner_templates')
+        .select('*')
+        .order('last_used_at', { ascending: false, nullsFirst: false })
+        .order('created_at', { ascending: false })
+        .limit(limit);
+    if (error) {
+        console.error('getBannerTemplates error:', error);
+        return [];
+    }
+    return data || [];
+}
+
+async function saveBannerTemplate(templateData) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('banner_templates')
+        .insert([templateData])
+        .select()
+        .single();
+    if (error) {
+        console.error('saveBannerTemplate error:', error);
+        return { error };
+    }
+    return { data };
+}
+
+async function updateBannerTemplateUsage(id, currentCount) {
+    const sb = initSupabase();
+    const { data, error } = await sb
+        .from('banner_templates')
+        .update({
+            times_used: (currentCount || 0) + 1,
+            last_used_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+    if (error) {
+        console.error('updateBannerTemplateUsage error:', error);
+        return { error };
+    }
+    return { data };
+}
+
+async function deleteBannerTemplate(id) {
+    const sb = initSupabase();
+    const { error } = await sb
+        .from('banner_templates')
+        .delete()
+        .eq('id', id);
+    if (error) {
+        console.error('deleteBannerTemplate error:', error);
         return { error };
     }
     return { success: true };

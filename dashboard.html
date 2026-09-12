@@ -257,8 +257,7 @@
         </div>
 
     </div>
-
-    <!-- ✅ Supabase CDN + Config -->
+        <!-- ✅ Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
@@ -272,7 +271,7 @@
         const $ = id => document.getElementById(id);
 
         // ================================================================
-        // ✅ ALERT BUBBLE — Client alerts
+        // ✅ ALERT BUBBLE — Client alerts with RE-APPEAR logic
         // ================================================================
         let currentAlertId = null;
 
@@ -304,14 +303,24 @@
                 }
 
                 const alert = active[0];
+                const reappearSec = parseInt(alert.reappear_seconds) || 0;
 
-                const closedAlertId = sessionStorage.getItem('closedAlertId');
-                if (closedAlertId === alert.id) {
-                    $('alertBubble').style.display = 'none';
-                    return;
+                // ✅ Re-appear check
+                const closedAtRaw = localStorage.getItem('alertClosedAt_' + alert.id);
+                if (closedAtRaw) {
+                    if (reappearSec === 0) {
+                        $('alertBubble').style.display = 'none';
+                        return;
+                    }
+                    const closedAt = parseInt(closedAtRaw);
+                    const elapsedSec = (Date.now() - closedAt) / 1000;
+                    if (elapsedSec < reappearSec) {
+                        $('alertBubble').style.display = 'none';
+                        return;
+                    }
                 }
 
-                if (currentAlertId !== alert.id) {
+                if (currentAlertId !== alert.id || $('alertBubble').style.display === 'none') {
                     currentAlertId = alert.id;
                     $('alertBubbleText').innerText = alert.message;
                     $('alertBubble').style.display = 'block';
@@ -325,13 +334,13 @@
         function closeAlertBubble() {
             $('alertBubble').style.display = 'none';
             if (currentAlertId) {
-                sessionStorage.setItem('closedAlertId', currentAlertId);
+                localStorage.setItem('alertClosedAt_' + currentAlertId, Date.now().toString());
             }
         }
 
         window.addEventListener('load', () => {
             loadActiveAlert();
-            setInterval(loadActiveAlert, 30000);
+            setInterval(loadActiveAlert, 15000); // 15 sec check (re-appear ke liye)
         });
 
         // ================================================================
