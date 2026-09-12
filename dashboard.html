@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dashboard | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -36,7 +37,7 @@
         @keyframes pbFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* ✅ ALERT SPEECH BUBBLE */
-        #alertBubble { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 9999; max-width: 90%; width: 500px; animation: alertSlideIn 0.5s ease-out; }
+        #alertBubble { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 10000; max-width: 90%; width: 500px; animation: alertSlideIn 0.5s ease-out; }
         @keyframes alertSlideIn { from { opacity: 0; transform: translateX(-50%) translateY(-30px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         .alert-bubble-content { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; padding: 20px 50px 20px 25px; border-radius: 15px; font-size: 1rem; font-weight: 700; text-align: center; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); position: relative; border: 2px solid #34d399; animation: alertPulse 2s ease-in-out infinite; }
         @keyframes alertPulse { 0%, 100% { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 10px 50px rgba(16, 185, 129, 0.9), 0 0 25px rgba(16, 185, 129, 0.6); } }
@@ -52,6 +53,38 @@
         .stat-card .label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 5px; }
         .stat-card .value { font-size: 1.5rem; font-weight: 900; color: #d4af37; }
         .stat-card .value.green { color: #10b981; }
+
+        /* ✅ REAL PERFORMANCE STATS */
+        .real-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .real-stat-card { background: linear-gradient(135deg, #111827, #0f1729); border: 2px solid #334155; border-radius: 15px; padding: 20px; text-align: center; transition: all 0.3s; }
+        .real-stat-card:hover { border-color: #d4af37; transform: translateY(-3px); }
+        .real-stat-card .icon { font-size: 2rem; margin-bottom: 8px; }
+        .real-stat-card .label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .real-stat-card .value { font-size: 1.8rem; font-weight: 900; color: #d4af37; }
+        .real-stat-card .value.green { color: #10b981; }
+        .real-stat-card .value.blue { color: #60a5fa; }
+        .real-stat-card .sub { color: #64748b; font-size: 0.7rem; margin-top: 4px; }
+
+        /* ✅ UPCOMING SIGNALS */
+        .signals-section { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .signals-section h2 { color: #d4af37; font-size: 1.3rem; margin-bottom: 8px; }
+        .signals-section .subtitle { color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px; }
+        .signal-row { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .signal-row .product-info { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 180px; }
+        .signal-row .product-logo { font-size: 1.8rem; }
+        .signal-row .product-name { font-size: 1rem; font-weight: 700; color: #fff; }
+        .signal-row .product-symbol { color: #94a3b8; font-size: 0.75rem; font-family: monospace; }
+        .signal-row .signal-badge { padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; }
+        .signal-row .signal-badge.buy { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .signal-row .signal-badge.sell { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .signal-row .signal-details { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.8rem; }
+        .signal-row .signal-details > div { text-align: center; }
+        .signal-row .signal-details .label { color: #94a3b8; font-size: 0.65rem; text-transform: uppercase; }
+        .signal-row .signal-details .value { color: #fff; font-weight: 700; margin-top: 3px; }
+        .signal-row .signal-details .value.green { color: #10b981; }
+        .signal-row .signal-details .value.red { color: #ef4444; }
+        .signal-row .signal-time { color: #60a5fa; font-size: 0.75rem; font-weight: 600; }
+
         .robot-section { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
         .robot-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .robot-header h2 { color: #d4af37; font-size: 1.4rem; }
@@ -83,7 +116,8 @@
         .red { color: #ef4444 !important; }
         .gold { color: #d4af37 !important; }
         .text-muted { color: #94a3b8; }
-        .info-card { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 20px; }
+        .badge-manual { background: rgba(96, 165, 250, 0.2); color: #60a5fa; padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: 700; margin-left: 6px; }
+        .info-card { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
         .info-card h3 { color: #d4af37; margin-bottom: 15px; font-size: 1.1rem; }
         .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1e293b; }
         .info-row:last-child { border-bottom: none; }
@@ -99,12 +133,20 @@
         .loading-screen .spinner { font-size: 3rem; color: #d4af37; animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
 
+        /* RISK DISCLAIMER FOOTER */
+        .footer { background: #111827; padding: 30px 20px; text-align: center; color: #94a3b8; border-top: 1px solid #334155; margin-top: 30px; }
+        .footer strong { color: #d4af37; }
+        .footer .disclaimer { max-width: 900px; margin: 20px auto 0; padding: 18px; background: #0f1729; border-left: 4px solid #ef4444; border-radius: 8px; text-align: left; font-size: 0.78rem; line-height: 1.6; color: #cbd5e1; }
+        .footer .disclaimer strong { color: #ef4444; }
+
         @media (max-width: 768px) {
+            .navbar { padding: 12px 20px; }
             .balance-panel, .mini-stats { grid-template-columns: 1fr; }
             #publicityBanner { top: 60px; font-size: 0.82rem; }
             #publicityBanner .pb-content { padding: 10px 42px 10px 15px; }
             #alertBubble { width: 90%; top: 85px; }
             .alert-bubble-content { font-size: 0.9rem; padding: 16px 45px 16px 20px; }
+            .signal-row { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -140,7 +182,7 @@
 
         <div class="welcome-card">
             <h1>Welcome, <span id="welcomeName">Trader</span>! 🎉</h1>
-            <p>Your AI trading robot is ready. Start making profits today.</p>
+            <p>Expert analysis + AI precision — ready to trade smartly.</p>
         </div>
 
         <div class="stats-grid">
@@ -150,9 +192,40 @@
             <div class="stat-card"><div class="label">🔑 Status</div><div class="value green">✅ Verified</div></div>
         </div>
 
+        <!-- ✅ REAL PERFORMANCE STATS (settings se conditional) -->
+        <div class="real-stats" id="realStatsSection" style="display:none;">
+            <div class="real-stat-card" id="statCardWinRate">
+                <div class="icon">🎯</div>
+                <div class="label">Win Rate</div>
+                <div class="value green" id="dashWinRate">0%</div>
+                <div class="sub">Based on closed trades</div>
+            </div>
+            <div class="real-stat-card" id="statCardVisitors">
+                <div class="icon">👥</div>
+                <div class="label">Visitors Today</div>
+                <div class="value blue" id="dashVisitors">0</div>
+                <div class="sub">Active community</div>
+            </div>
+            <div class="real-stat-card" id="statCardClients">
+                <div class="icon">📊</div>
+                <div class="label">Active Clients</div>
+                <div class="value" id="dashClients">0</div>
+                <div class="sub">Registered traders</div>
+            </div>
+        </div>
+
+        <!-- ✅ UPCOMING SIGNALS (signals table se — clients target) -->
+        <div class="signals-section" id="upcomingSignalsSection" style="display:none;">
+            <h2>🎯 Upcoming Trade Signals</h2>
+            <p class="subtitle">Expert trader ke diye gaye signals — jab actual trade HIT hoga to ye live ban jayengi.</p>
+            <div id="upcomingSignalsList">
+                <div style="text-align:center; padding:20px; color:#64748b;">⏳ Loading signals...</div>
+            </div>
+        </div>
+
         <div class="robot-section">
             <div class="robot-header">
-                <h2>🤖 AI Trading Robot</h2>
+                <h2>🎯 Expert Trading Signals</h2>
                 <span class="robot-status stopped" id="robotStatusBadge">⏹️ STOPPED</span>
             </div>
 
@@ -177,7 +250,7 @@
 
             <div class="mini-stats">
                 <div class="mini-stat"><div class="label">📊 Strategy</div><div class="value" id="activeStrategy">--</div></div>
-                <div class="mini-stat"><div class="label">🧠 AI Signal</div><div class="value" id="aiSignal">--</div></div>
+                <div class="mini-stat"><div class="label">🧠 Signal</div><div class="value" id="aiSignal">--</div></div>
                 <div class="mini-stat"><div class="label">📈 RSI</div><div class="value" id="rsiDisplay">--</div></div>
                 <div class="mini-stat"><div class="label">🎯 Status</div><div class="value" id="aiStatus">Idle</div></div>
             </div>
@@ -194,8 +267,8 @@
             <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">📜 Trade History (Last 50)</h3>
             <div class="table-wrap">
                 <table>
-                    <thead><tr><th>#</th><th>Date</th><th>Type</th><th>Entry</th><th>Exit</th><th>P/L</th><th>Balance</th></tr></thead>
-                    <tbody id="historyBody"><tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr></tbody>
+                    <thead><tr><th>#</th><th>Date</th><th>Product</th><th>Type</th><th>Entry</th><th>Exit</th><th>P/L</th><th>Balance</th></tr></thead>
+                    <tbody id="historyBody"><tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -210,6 +283,15 @@
         </div>
 
     </div>
+
+    <!-- RISK DISCLAIMER FOOTER -->
+    <footer class="footer">
+        <p>A product is Published and Designed By <strong>NexifyNova</strong></p>
+        <p style="font-size:0.8rem; margin-top:10px;">© 2026 All Rights Reserved.</p>
+        <div class="disclaimer">
+            <strong>⚠️ Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. You may lose some or all of your capital. All signals and analysis provided by Nexi XauPo are for educational purposes only and do not constitute financial advice. You are solely responsible for your own trading decisions. Nexi XauPo is not liable for any losses incurred.
+        </div>
+    </footer>
         <!-- ✅ Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
@@ -223,8 +305,19 @@
         const MIN_TRADE_INTERVAL = 15000;
         const $ = id => document.getElementById(id);
 
+        const PRODUCT_INFO = {
+            'XAUUSD': { icon: '🥇', name: 'Gold' },
+            'BTCUSD': { icon: '₿', name: 'Bitcoin' },
+            'XAGUSD': { icon: '🥈', name: 'Silver' },
+            'ETHUSD': { icon: 'Ξ', name: 'Ethereum' },
+            'EURUSD': { icon: '💶', name: 'EUR/USD' },
+            'GBPUSD': { icon: '💷', name: 'GBP/USD' },
+            'USDJPY': { icon: '💴', name: 'USD/JPY' },
+            'AUDUSD': { icon: '🇦🇺', name: 'AUD/USD' }
+        };
+
         // ================================================================
-        // PUBLICITY BANNER — Fetch active banners + 5 sec rotation
+        // PUBLICITY BANNER — clients target
         // ================================================================
         let activeBanners = [];
         let currentBannerIndex = 0;
@@ -317,7 +410,7 @@
         });
 
         // ================================================================
-        // ALERT BUBBLE — Client alerts with RE-APPEAR logic
+        // ALERT BUBBLE — clients target + re-appear
         // ================================================================
         let currentAlertId = null;
 
@@ -386,6 +479,160 @@
         window.addEventListener('load', () => {
             loadActiveAlert();
             setInterval(loadActiveAlert, 15000);
+        });
+
+        // ================================================================
+        // REAL PERFORMANCE STATS — settings se conditional
+        // ================================================================
+        let realStatsCache = {
+            winRate: '--', visitors: 0, clients: 0,
+            showWinRate: true, showVisitors: true, showClients: true
+        };
+
+        async function loadRealStats() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                // Settings read
+                const showWinRate = (await getSetting('show_win_rate', 'true')) === 'true';
+                const showVisitors = (await getSetting('show_visitors', 'true')) === 'true';
+                const showClients = (await getSetting('show_clients', 'true')) === 'true';
+
+                realStatsCache.showWinRate = showWinRate;
+                realStatsCache.showVisitors = showVisitors;
+                realStatsCache.showClients = showClients;
+
+                let winRate = '--';
+                let visitors = 0;
+                let clients = 0;
+
+                if (showWinRate) {
+                    const { data: dailyData } = await sb
+                        .from('daily_stats')
+                        .select('win_trades, total_trades, stat_date')
+                        .order('stat_date', { ascending: false })
+                        .limit(30);
+
+                    if (dailyData && dailyData.length > 0) {
+                        let totWins = 0, totTrades = 0;
+                        dailyData.forEach(d => {
+                            totWins += parseInt(d.win_trades) || 0;
+                            totTrades += parseInt(d.total_trades) || 0;
+                        });
+                        winRate = totTrades > 0 ? ((totWins / totTrades) * 100).toFixed(1) + '%' : '0%';
+                    } else {
+                        winRate = '0%';
+                    }
+                }
+
+                if (showVisitors) {
+                    const today = new Date().toISOString().split('T')[0];
+                    const { count } = await sb
+                        .from('visits')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('visited_date', today);
+                    visitors = count || 0;
+                }
+
+                if (showClients) {
+                    const { count } = await sb
+                        .from('users')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('status', 'active');
+                    clients = count || 0;
+                }
+
+                realStatsCache.winRate = winRate;
+                realStatsCache.visitors = visitors;
+                realStatsCache.clients = clients;
+
+                applyRealStatsToUI();
+            } catch (err) { console.error('loadRealStats:', err); }
+        }
+
+        function applyRealStatsToUI() {
+            const s = realStatsCache;
+            const sec = document.getElementById('realStatsSection');
+            if (!sec) return;
+
+            if (s.showWinRate || s.showVisitors || s.showClients) {
+                sec.style.display = 'grid';
+            } else {
+                sec.style.display = 'none';
+            }
+
+            document.getElementById('statCardWinRate').style.display = s.showWinRate ? 'block' : 'none';
+            document.getElementById('statCardVisitors').style.display = s.showVisitors ? 'block' : 'none';
+            document.getElementById('statCardClients').style.display = s.showClients ? 'block' : 'none';
+
+            document.getElementById('dashWinRate').innerText = s.winRate;
+            document.getElementById('dashVisitors').innerText = s.visitors;
+            document.getElementById('dashClients').innerText = s.clients;
+        }
+
+        window.addEventListener('load', () => {
+            loadRealStats();
+            setInterval(loadRealStats, 60000);
+        });
+
+        // ================================================================
+        // UPCOMING SIGNALS — clients target
+        // ================================================================
+        async function loadUpcomingSignals() {
+            const container = document.getElementById('upcomingSignalsList');
+            const section = document.getElementById('upcomingSignalsSection');
+            if (!container || !section) return;
+
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                const { data, error } = await sb
+                    .from('signals')
+                    .select('*')
+                    .eq('is_active', true)
+                    .in('target', ['clients', 'both'])
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    section.style.display = 'none';
+                    return;
+                }
+
+                section.style.display = 'block';
+                container.innerHTML = data.map(s => {
+                    const info = PRODUCT_INFO[s.product] || { icon: '📊', name: s.product };
+                    const timeInfo = s.expected_time
+                        ? '<div><div class="label">Expected</div><div class="signal-time">' + new Date(s.expected_time).toLocaleString() + '</div></div>'
+                        : '';
+                    return `<div class="signal-row">
+                        <div class="product-info">
+                            <div class="product-logo">${info.icon}</div>
+                            <div>
+                                <div class="product-name">${info.name}</div>
+                                <div class="product-symbol">${s.product}</div>
+                            </div>
+                            <div class="signal-badge ${s.type === 'BUY' ? 'buy' : 'sell'}">${s.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</div>
+                        </div>
+                        <div class="signal-details">
+                            <div><div class="label">Entry</div><div class="value">$${parseFloat(s.entry).toFixed(2)}</div></div>
+                            <div><div class="label">TP</div><div class="value green">$${parseFloat(s.tp).toFixed(2)}</div></div>
+                            <div><div class="label">SL</div><div class="value red">$${parseFloat(s.sl).toFixed(2)}</div></div>
+                            ${timeInfo}
+                        </div>
+                    </div>`;
+                }).join('');
+
+            } catch (err) { console.error('loadUpcomingSignals:', err); }
+        }
+
+        window.addEventListener('load', () => {
+            loadUpcomingSignals();
+            setInterval(loadUpcomingSignals, 30000);
         });
 
         // ================================================================
@@ -480,13 +727,36 @@
                     .order('created_at', { ascending: false })
                     .limit(50);
                 if (error) throw error;
-                tradeHistory = (data || []).map(t => ({
+
+                // Manual trades bhi fetch karo (jo admin ne HIT kiye)
+                const { data: manualData, error: mErr } = await sb
+                    .from('trades')
+                    .select('*')
+                    .eq('is_manual', true)
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+                if (mErr) console.warn('Manual trades fetch error:', mErr);
+
+                const allTrades = [...(data || []), ...(manualData || [])];
+                // Remove duplicates by id
+                const seen = new Set();
+                const unique = allTrades.filter(t => {
+                    if (seen.has(t.id)) return false;
+                    seen.add(t.id);
+                    return true;
+                });
+                unique.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                const limited = unique.slice(0, 50);
+
+                tradeHistory = limited.map(t => ({
                     id: t.id.slice(0, 6),
-                    type: t.type.toUpperCase(),
+                    type: (t.type || 'buy').toUpperCase(),
                     entry: parseFloat(t.entry),
                     exit: parseFloat(t.exit || 0),
-                    profit: parseFloat(t.profit),
-                    balance: parseFloat(t.balance),
+                    profit: parseFloat(t.profit || 0),
+                    balance: parseFloat(t.balance || 0),
+                    product: t.product || 'XAUUSD',
+                    is_manual: t.is_manual || false,
                     date: t.created_at.split('T')[0]
                 }));
                 renderHistory();
@@ -630,7 +900,9 @@
                     entry: parseFloat(currentTrade.entry.toFixed(4)),
                     exit: parseFloat(exitPrice.toFixed(4)),
                     profit: profitFixed,
-                    balance: balanceFixed
+                    balance: balanceFixed,
+                    product: 'XAUUSD',
+                    is_manual: false
                 }]);
 
                 await sb.from('users')
@@ -654,6 +926,8 @@
                 exit: exitPrice,
                 profit: profitFixed,
                 balance: balanceFixed,
+                product: 'XAUUSD',
+                is_manual: false,
                 date: new Date().toISOString().split('T')[0]
             });
             if (tradeHistory.length > 50) tradeHistory.pop();
@@ -714,18 +988,23 @@
         function renderHistory() {
             const tbody = $('historyBody');
             if (tradeHistory.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
                 return;
             }
-            tbody.innerHTML = tradeHistory.map(t => `<tr>
-                <td>#${t.id}</td>
-                <td style="font-size:0.8rem;color:#94a3b8;">${t.date}</td>
-                <td class="${t.type === 'BUY' ? 'buy' : 'sell'}">${t.type}</td>
-                <td>$${t.entry.toFixed(2)}</td>
-                <td>$${t.exit.toFixed(2)}</td>
-                <td class="${t.profit >= 0 ? 'green' : 'red'}">${t.profit >= 0 ? '+' : ''}$${t.profit.toFixed(2)}</td>
-                <td class="gold">$${t.balance.toFixed(2)}</td>
-            </tr>`).join('');
+            tbody.innerHTML = tradeHistory.map(t => {
+                const info = PRODUCT_INFO[t.product] || { icon: '📊', name: t.product };
+                const manualBadge = t.is_manual ? '<span class="badge-manual">MANUAL</span>' : '';
+                return `<tr>
+                    <td>#${t.id}</td>
+                    <td style="font-size:0.75rem;color:#94a3b8;">${t.date}</td>
+                    <td style="font-size:0.8rem;">${info.icon} ${info.name}${manualBadge}</td>
+                    <td class="${t.type === 'BUY' ? 'buy' : 'sell'}">${t.type}</td>
+                    <td>$${t.entry.toFixed(2)}</td>
+                    <td>$${t.exit.toFixed(2)}</td>
+                    <td class="${t.profit >= 0 ? 'green' : 'red'}">${t.profit >= 0 ? '+' : ''}$${t.profit.toFixed(2)}</td>
+                    <td class="gold">$${t.balance.toFixed(2)}</td>
+                </tr>`;
+            }).join('');
         }
 
         function logout() {
