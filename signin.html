@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Sign In | NexiRocket-XAU Pro Max</title>
+    <title>Sign In | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -13,7 +14,7 @@
         .logo span { color: #fff; }
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 8px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; }
         .btn-outline:hover { background: #d4af37; color: #111827; }
-        .container { display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 70px); padding: 40px 20px; }
+        .container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: calc(100vh - 70px); padding: 40px 20px; }
         .form-card { background: #111827; border: 2px solid #334155; border-radius: 20px; padding: 40px; max-width: 450px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .form-card h2 { color: #d4af37; font-size: 2rem; margin-bottom: 10px; text-align: center; }
         .form-card .subtitle { color: #94a3b8; text-align: center; margin-bottom: 30px; }
@@ -21,6 +22,10 @@
         .form-group label { display: block; color: #94a3b8; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; }
         .form-group input { width: 100%; padding: 14px 18px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 1rem; outline: none; transition: all 0.3s; }
         .form-group input:focus { border-color: #d4af37; }
+        .password-wrap { position: relative; }
+        .password-wrap input { padding-right: 45px; }
+        .eye-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 1.1rem; padding: 5px; }
+        .eye-toggle:hover { color: #d4af37; }
         .btn-submit { width: 100%; padding: 16px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px; }
         .btn-submit:hover { transform: translateY(-2px); }
         .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -30,12 +35,14 @@
         .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
         .register-link { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; }
         .register-link a { color: #d4af37; text-decoration: none; font-weight: 700; }
+        .footer-disclaimer { max-width: 450px; margin: 25px auto 0; padding: 15px; background: #0f1729; border-left: 4px solid #ef4444; border-radius: 8px; text-align: left; font-size: 0.75rem; line-height: 1.6; color: #cbd5e1; }
+        .footer-disclaimer strong { color: #ef4444; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
+        <a href="index.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
         <a href="register.html" class="btn-outline">Register</a>
     </nav>
 
@@ -51,7 +58,10 @@
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter password" required />
+                    <div class="password-wrap">
+                        <input type="password" id="loginPassword" placeholder="Enter password" required />
+                        <button type="button" class="eye-toggle" onclick="togglePassword('loginPassword', this)"><i class="fas fa-eye"></i></button>
+                    </div>
                 </div>
                 <button type="submit" class="btn-submit" id="signinBtn">
                     <i class="fas fa-sign-in-alt"></i> Sign In
@@ -61,13 +71,36 @@
                 </div>
             </form>
         </div>
-    </div>
 
-    <!-- ✅ Supabase CDN + Config -->
+        <div class="footer-disclaimer">
+            <strong>⚠️ Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. You may lose some or all of your capital. All signals and analysis provided by Nexi XauPo are for educational purposes only and do not constitute financial advice.
+        </div>
+    </div>
+        <!-- ✅ Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
     <script>
+        // ================================================================
+        // PASSWORD TOGGLE (EYE ICON)
+        // ================================================================
+        function togglePassword(fieldId, btn) {
+            const field = document.getElementById(fieldId);
+            const icon = btn.querySelector('i');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // ================================================================
+        // SIGN IN
+        // ================================================================
         async function handleSignIn(event) {
             event.preventDefault();
 
@@ -82,7 +115,6 @@
                 const sb = initSupabase();
                 if (!sb) throw new Error('Supabase client init failed');
 
-                // ✅ Email ya phone se user dhoondein
                 const { data: users, error } = await sb
                     .from('users')
                     .select('*')
@@ -99,14 +131,12 @@
 
                 const user = users[0];
 
-                // ✅ Password check
                 if (user.password_hash !== password) {
                     showMessage('❌ Invalid credentials! Please check and try again.', 'error');
                     resetBtn();
                     return;
                 }
 
-                // ✅ Status check
                 if (user.status === 'pending') {
                     showMessage('⏳ Aapka account abhi admin verify nahi hua.<br>Payment verify hone ke baad login kar payenge.', 'warning');
                     resetBtn();
@@ -119,11 +149,9 @@
                     return;
                 }
 
-                // ✅ Subscription expiry check
                 const today = new Date().toISOString().split('T')[0];
                 const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
 
-                // Session save karo pehle (renewal page ke liye zaroori)
                 const sessionUser = {
                     id: user.id,
                     fullName: user.name,
@@ -145,7 +173,6 @@
                     return;
                 }
 
-                // ✅ Success
                 showMessage('✅ Login successful!<br>Welcome back, ' + user.name + '!', 'success');
                 setTimeout(() => {
                     window.location.replace('dashboard.html');

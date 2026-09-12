@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Renew Subscription | NexiRocket-XAU</title>
+    <title>Renew Subscription | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -58,7 +59,7 @@
     </div>
 
     <nav class="navbar">
-        <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
+        <a href="index.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
         <a href="signin.html" class="btn-outline">Sign In</a>
     </nav>
 
@@ -68,7 +69,7 @@
             <i class="fas fa-exclamation-triangle"></i>
             <div>
                 <h3>Subscription Expired!</h3>
-                <p>Your subscription has expired. Renew to continue using the AI trading robot.</p>
+                <p>Your subscription has expired. Renew to continue using the Expert Trading Signals.</p>
             </div>
         </div>
 
@@ -127,8 +128,7 @@
         </div>
 
     </div>
-
-    <!-- ✅ Supabase CDN + Config -->
+        <!-- ✅ Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
@@ -210,7 +210,6 @@
                     const sb = initSupabase();
                     if (!sb) throw new Error('Supabase init failed');
 
-                    // payments table mein renewal entry
                     const { error } = await sb.from('payments').insert([{
                         user_id: currentUser.id,
                         amount: 5.00,
