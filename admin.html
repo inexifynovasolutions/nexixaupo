@@ -63,227 +63,85 @@
         .modal-content .details { text-align: left; color: #cbd5e1; font-size: 0.9rem; line-height: 1.8; margin: 15px 0; }
         .modal-content .details strong { color: #fff; }
 
-        /* ✅ SETTINGS STYLES */
-        .settings-category {
-            background: #0f1729;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-        .settings-category h3 {
-            color: #d4af37;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 10px;
-        }
-        .setting-row {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 15px;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #1e293b;
-        }
-        .setting-row:last-child {
-            border-bottom: none;
-        }
-        .setting-row label {
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        .setting-row .desc {
-            display: block;
-            color: #64748b;
-            font-size: 0.75rem;
-            font-weight: normal;
-            margin-top: 3px;
-        }
-        .setting-row input {
-            width: 100%;
-            padding: 10px 14px;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .setting-row input:focus {
-            border-color: #d4af37;
-        }
-        .setting-row input.big-number {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #d4af37;
-            text-align: center;
-            padding: 15px;
-        }
+        /* SETTINGS STYLES */
+        .settings-category { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .settings-category h3 { color: #d4af37; font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .setting-row { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; align-items: center; padding: 10px 0; border-bottom: 1px solid #1e293b; }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-row label { color: #cbd5e1; font-size: 0.9rem; font-weight: 600; }
+        .setting-row .desc { display: block; color: #64748b; font-size: 0.75rem; font-weight: normal; margin-top: 3px; }
+        .setting-row input { width: 100%; padding: 10px 14px; background: #1e293b; border: 2px solid #334155; border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+        .setting-row input:focus { border-color: #d4af37; }
+        .setting-row input.big-number { font-size: 1.8rem; font-weight: 900; color: #d4af37; text-align: center; padding: 15px; }
 
-        /* ✅ ALERT MANAGER STYLES */
-        .alert-form {
-            background: #0f1729;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .alert-form label {
-            display: block;
-            color: #cbd5e1;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            margin-top: 12px;
-        }
-        .alert-form textarea {
-            width: 100%;
-            padding: 12px 16px;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-            min-height: 80px;
-            font-family: inherit;
-            resize: vertical;
-        }
+        /* ALERT MANAGER STYLES */
+        .alert-form { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .alert-form label { display: block; color: #cbd5e1; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; margin-top: 12px; }
+        .alert-form textarea { width: 100%; padding: 12px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; min-height: 80px; font-family: inherit; resize: vertical; }
         .alert-form textarea:focus { border-color: #d4af37; }
-        .alert-form input[type="datetime-local"],
-        .alert-form input[type="text"],
-        .alert-form select {
-            width: 100%;
-            padding: 12px 16px;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .alert-form input[type="datetime-local"]:focus,
-        .alert-form input[type="text"]:focus,
-        .alert-form select:focus { border-color: #d4af37; }
+        .alert-form input[type="datetime-local"], .alert-form input[type="text"], .alert-form select { width: 100%; padding: 12px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; }
+        .alert-form input[type="datetime-local"]:focus, .alert-form input[type="text"]:focus, .alert-form select:focus { border-color: #d4af37; }
         .alert-form select option { background: #1e293b; color: #fff; }
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin: 0;
-            cursor: pointer;
-        }
-        .radio-group input[type="radio"] {
-            width: auto;
-            margin: 0;
-        }
-        .alert-list-item {
-            background: #0f1729;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .alert-list-item.inactive {
-            opacity: 0.5;
-        }
-        .alert-list-item .alert-msg {
-            color: #fff;
-            font-size: 0.95rem;
-            flex: 1;
-            min-width: 200px;
-        }
-        .alert-list-item .alert-meta {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
-        .alert-list-item .alert-actions {
-            display: flex;
-            gap: 8px;
-        }
+        .radio-group { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 8px; }
+        .radio-group label { display: flex; align-items: center; gap: 8px; color: #cbd5e1; font-size: 0.9rem; font-weight: 600; margin: 0; cursor: pointer; }
+        .radio-group input[type="radio"] { width: auto; margin: 0; }
+        .alert-list-item { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .alert-list-item.inactive { opacity: 0.5; }
+        .alert-list-item .alert-msg { color: #fff; font-size: 0.95rem; flex: 1; min-width: 200px; }
+        .alert-list-item .alert-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 0.75rem; color: #94a3b8; }
+        .alert-list-item .alert-actions { display: flex; gap: 8px; }
+        .template-item { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .template-item .tpl-msg { color: #fff; font-size: 0.9rem; flex: 1; min-width: 200px; }
+        .template-item .tpl-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: #94a3b8; margin-top: 6px; }
+        .template-item .tpl-actions { display: flex; gap: 8px; }
+        .checkbox-row { display: flex; align-items: center; gap: 10px; margin-top: 15px; cursor: pointer; }
+        .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #d4af37; }
+        .checkbox-row span { color: #cbd5e1; font-size: 0.9rem; font-weight: 600; }
+        #templateNameWrap { display: none; margin-top: 10px; }
 
-        /* ✅ TEMPLATE STYLES */
-        .template-item {
-            background: #0f1729;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .template-item .tpl-msg {
-            color: #fff;
-            font-size: 0.9rem;
-            flex: 1;
-            min-width: 200px;
-        }
-        .template-item .tpl-meta {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-            font-size: 0.72rem;
-            color: #94a3b8;
-            margin-top: 6px;
-        }
-        .template-item .tpl-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .checkbox-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-            cursor: pointer;
-        }
-        .checkbox-row input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: #d4af37;
-        }
-        .checkbox-row span {
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        #templateNameWrap {
-            display: none;
-            margin-top: 10px;
-        }
+        /* BANNER MANAGER STYLES */
+        .banner-form { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .banner-form label { display: block; color: #cbd5e1; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; margin-top: 12px; }
+        .banner-form input[type="text"], .banner-form input[type="datetime-local"], .banner-form select, .banner-form input[type="number"] { width: 100%; padding: 12px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; }
+        .banner-form input:focus, .banner-form select:focus { border-color: #d4af37; }
+        .banner-form select option { background: #1e293b; color: #fff; }
+        .banner-form .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .color-picker { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+        .color-picker label { display: flex; align-items: center; gap: 8px; cursor: pointer; background: #1e293b; padding: 8px 14px; border-radius: 8px; border: 2px solid transparent; margin: 0; transition: all 0.2s; }
+        .color-picker label:hover { border-color: #334155; }
+        .color-picker input[type="radio"] { display: none; }
+        .color-picker input[type="radio"]:checked + .color-dot { transform: scale(1.3); box-shadow: 0 0 0 2px #fff inset; }
+        .color-picker input[type="radio"]:checked ~ span { color: #d4af37; font-weight: 700; }
+        .color-dot { width: 18px; height: 18px; border-radius: 50%; display: inline-block; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.2s; }
+        .color-dot.gold { background: #d4af37; }
+        .color-dot.green { background: #10b981; }
+        .color-dot.red { background: #ef4444; }
+        .color-dot.blue { background: #60a5fa; }
+        .color-picker span { color: #cbd5e1; font-size: 0.85rem; font-weight: 600; }
+        .banner-preview { background: #1e293b; border: 2px dashed #334155; border-radius: 12px; padding: 15px 20px; margin-top: 15px; text-align: center; color: #fff; font-weight: 700; font-size: 0.95rem; overflow: hidden; position: relative; }
+        .banner-preview.scrolling { white-space: nowrap; }
+        .banner-preview.scrolling .banner-scroll-text { display: inline-block; animation: bannerPreviewScroll 8s linear infinite; padding-left: 100%; }
+        @keyframes bannerPreviewScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .banner-preview.static { text-align: center; }
+        .banner-preview.slide { animation: bannerSlideIn 0.8s ease-out; }
+        @keyframes bannerSlideIn { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+        .banner-list-item { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .banner-list-item.inactive { opacity: 0.5; }
+        .banner-list-item .banner-msg { flex: 1; min-width: 200px; padding: 10px 15px; border-radius: 8px; color: #fff; font-weight: 700; font-size: 0.9rem; text-align: center; }
+        .banner-list-item .banner-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: #94a3b8; margin-top: 8px; }
+        .banner-list-item .banner-actions { display: flex; gap: 8px; }
+        .banner-template-item { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .banner-template-item .bt-msg { flex: 1; min-width: 200px; padding: 8px 12px; border-radius: 6px; color: #fff; font-weight: 700; font-size: 0.85rem; text-align: center; }
+        .banner-template-item .bt-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: #94a3b8; margin-top: 6px; }
+        .banner-template-item .bt-actions { display: flex; gap: 8px; }
 
         @media (max-width: 768px) {
             .setting-row { grid-template-columns: 1fr; gap: 8px; }
             .alert-list-item { flex-direction: column; align-items: stretch; }
             .template-item { flex-direction: column; align-items: stretch; }
+            .banner-form .form-row-2 { grid-template-columns: 1fr; }
+            .banner-list-item { flex-direction: column; align-items: stretch; }
+            .banner-template-item { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -393,6 +251,99 @@
             </div>
 
             <div class="section">
+                <h2>🎯 Publicity Banner Manager</h2>
+                <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Publicity banners demo page aur client dashboard pe navbar ke neeche dikhenge. Multiple banners active hon to 5 sec rotation hoga.</p>
+
+                <div class="banner-form">
+                    <label>Message *</label>
+                    <input type="text" id="bannerMessage" placeholder="Banner message likhein... jaise '🎉 Special Offer: 50% OFF on renewals!'" maxlength="200" />
+
+                    <label>Target *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="bannerTarget" value="demo" /> 🎮 Demo only</label>
+                        <label><input type="radio" name="bannerTarget" value="clients" /> 👥 Clients only</label>
+                        <label><input type="radio" name="bannerTarget" value="both" checked /> 🌐 Both</label>
+                    </div>
+
+                    <label>Style *</label>
+                    <select id="bannerStyle">
+                        <option value="scrolling">🎞️ Scrolling (marquee right-to-left)</option>
+                        <option value="static" selected>📌 Static (centered text)</option>
+                        <option value="slide">➡️ Slide (slide-in hoke ruk jaye)</option>
+                    </select>
+
+                    <label>Color *</label>
+                    <div class="color-picker">
+                        <label>
+                            <input type="radio" name="bannerColor" value="gold" checked />
+                            <span class="color-dot gold"></span>
+                            <span>Gold</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="bannerColor" value="green" />
+                            <span class="color-dot green"></span>
+                            <span>Green</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="bannerColor" value="red" />
+                            <span class="color-dot red"></span>
+                            <span>Red</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="bannerColor" value="blue" />
+                            <span class="color-dot blue"></span>
+                            <span>Blue</span>
+                        </label>
+                    </div>
+
+                    <div class="form-row-2" style="margin-top:15px;">
+                        <div>
+                            <label>Start Time (optional)</label>
+                            <input type="datetime-local" id="bannerStartTime" />
+                        </div>
+                        <div>
+                            <label>End Time (optional)</label>
+                            <input type="datetime-local" id="bannerEndTime" />
+                        </div>
+                    </div>
+
+                    <label>Priority (0-10) *</label>
+                    <input type="number" id="bannerPriority" value="5" min="0" max="10" />
+                    <p style="color:#64748b; font-size:0.75rem; margin-top:5px;">Agar multiple banners active hon to high priority wala pehle dikhega. Same priority → 5 sec rotation.</p>
+
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="bannerClosable" />
+                        <span>❌ User banner close kar sakta hai (X button)</span>
+                    </label>
+
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="saveBannerAsTemplate" onchange="toggleBannerTemplateName()" />
+                        <span>💾 Save as Template (future mein reuse ke liye)</span>
+                    </label>
+
+                    <div id="bannerTemplateNameWrap" style="display:none;">
+                        <label>Template Name *</label>
+                        <input type="text" id="bannerTemplateName" placeholder="jaise 'Weekend Sale' ya 'VIP Notice'" />
+                    </div>
+
+                    <div class="banner-preview" id="bannerPreview">
+                        <span class="banner-scroll-text" id="bannerPreviewText">Yeh aap ka banner aisa dikhega</span>
+                    </div>
+
+                    <button class="btn-action btn-verify" onclick="saveBanner()" id="saveBannerBtn" style="margin-top:20px; padding:12px 30px; font-size:0.95rem;">💾 Save Banner</button>
+                    <button class="btn-action btn-unverify" onclick="resetBannerForm()" id="cancelBannerBtn" style="margin-top:20px; padding:12px 30px; font-size:0.95rem; display:none;">✖ Cancel Edit</button>
+                    <div id="bannerMessage2" style="margin-top:15px; font-size:0.9rem; display:none;"></div>
+                </div>
+
+                <h3 style="color:#d4af37; font-size:1rem; margin:25px 0 15px;">📋 Active Banners</h3>
+                <div id="bannersList"><div class="loading-state">⏳ Loading banners...</div></div>
+
+                <h3 style="color:#d4af37; font-size:1rem; margin:30px 0 15px;">💾 Saved Banner Templates (Last 100)</h3>
+                <p style="color:#94a3b8; font-size:0.8rem; margin-bottom:15px;">Yeh templates purane banners ko dobara use karne ke liye hain. Load karein → form fill ho jayega.</p>
+                <div id="bannerTemplatesList"><div class="loading-state">⏳ Loading templates...</div></div>
+            </div>
+
+            <div class="section">
                 <h2>⚙️ Settings</h2>
                 <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Site-wide settings — save karte hi poori site pe apply ho jayengi.</p>
                 <div id="settingsContainer"><div class="loading-state">⏳ Loading settings...</div></div>
@@ -410,7 +361,7 @@
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
     </div>
-        <!-- ✅ Supabase CDN + Config -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
@@ -418,7 +369,8 @@
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'nexi2026';
         let allUsers = [], allPayments = [], allSettings = [], allAlerts = [], allTemplates = [];
-        let editingAlertId = null;
+        let allBanners = [], allBannerTemplates = [];
+        let editingAlertId = null, editingBannerId = null;
 
         document.getElementById('adminUsername').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -461,31 +413,32 @@
         });
 
         // ================================================================
-        // TEMPLATE NAME — show/hide input
+        // TEMPLATE NAME toggles
         // ================================================================
         function toggleTemplateName() {
             const checked = document.getElementById('saveAsTemplate').checked;
             document.getElementById('templateNameWrap').style.display = checked ? 'block' : 'none';
         }
+        function toggleBannerTemplateName() {
+            const checked = document.getElementById('saveBannerAsTemplate').checked;
+            document.getElementById('bannerTemplateNameWrap').style.display = checked ? 'block' : 'none';
+        }
 
         // ================================================================
-        // ALERTS — Load, Render, Save, Edit, Delete
+        // ALERTS
         // ================================================================
         async function loadAlerts() {
             const container = document.getElementById('alertsList');
             container.innerHTML = '<div class="loading-state">⏳ Loading alerts...</div>';
-
             try {
                 const sb = initSupabase();
                 const { data, error } = await sb
                     .from('alerts')
                     .select('*')
                     .order('created_at', { ascending: false });
-
                 if (error) throw error;
                 allAlerts = data || [];
                 renderAlerts();
-
             } catch (err) {
                 console.error(err);
                 container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`;
@@ -494,22 +447,18 @@
 
         function renderAlerts() {
             const container = document.getElementById('alertsList');
-
             if (allAlerts.length === 0) {
                 container.innerHTML = '<div class="empty-state">No alerts yet. Naya alert banayein upar wale form se.</div>';
                 return;
             }
-
             container.innerHTML = allAlerts.map(a => {
                 const targetBadge = a.target === 'demo' ? '🎮 Demo' : a.target === 'clients' ? '👥 Clients' : '🌐 Both';
                 const targetClass = a.target;
                 const timeInfo = [];
                 if (a.start_time) timeInfo.push('Start: ' + new Date(a.start_time).toLocaleString());
                 if (a.end_time) timeInfo.push('End: ' + new Date(a.end_time).toLocaleString());
-
                 const reappearMap = { 0: 'Never', 30: '30s', 60: '1min', 300: '5min', 900: '15min', 3600: '1hr' };
                 const reappearLabel = reappearMap[a.reappear_seconds] || (a.reappear_seconds ? a.reappear_seconds + 's' : 'Never');
-
                 return `<div class="alert-list-item ${a.is_active ? '' : 'inactive'}">
                     <div class="alert-msg">
                         <strong>${a.message}</strong>
@@ -537,23 +486,11 @@
             const reappear = parseInt(document.getElementById('alertReappear').value) || 0;
             const saveAsTpl = document.getElementById('saveAsTemplate').checked;
             const tplName = document.getElementById('templateName').value.trim();
-
             const btn = document.getElementById('saveAlertBtn');
             const msg = document.getElementById('alertMessage2');
 
-            if (!message) {
-                msg.innerHTML = '❌ Message khali hai!';
-                msg.style.color = '#ef4444';
-                msg.style.display = 'block';
-                return;
-            }
-
-            if (saveAsTpl && !tplName) {
-                msg.innerHTML = '❌ Template name khali hai!';
-                msg.style.color = '#ef4444';
-                msg.style.display = 'block';
-                return;
-            }
+            if (!message) { msg.innerHTML = '❌ Message khali hai!'; msg.style.color = '#ef4444'; msg.style.display = 'block'; return; }
+            if (saveAsTpl && !tplName) { msg.innerHTML = '❌ Template name khali hai!'; msg.style.color = '#ef4444'; msg.style.display = 'block'; return; }
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
@@ -561,62 +498,39 @@
 
             try {
                 const sb = initSupabase();
-
                 const alertData = {
-                    message: message,
-                    target: target,
+                    message: message, target: target,
                     start_time: startTime ? new Date(startTime).toISOString() : null,
                     end_time: endTime ? new Date(endTime).toISOString() : null,
-                    reappear_seconds: reappear,
-                    is_active: true
+                    reappear_seconds: reappear, is_active: true
                 };
-
                 if (editingAlertId) {
-                    const { error } = await sb
-                        .from('alerts')
-                        .update(alertData)
-                        .eq('id', editingAlertId);
+                    const { error } = await sb.from('alerts').update(alertData).eq('id', editingAlertId);
                     if (error) throw error;
-
                     msg.innerHTML = '✅ Alert updated successfully!';
-                    msg.style.color = '#10b981';
                 } else {
-                    const { error } = await sb
-                        .from('alerts')
-                        .insert([alertData]);
+                    const { error } = await sb.from('alerts').insert([alertData]);
                     if (error) throw error;
-
                     msg.innerHTML = '✅ Alert saved successfully!';
-                    msg.style.color = '#10b981';
                 }
-
-                // Save as template (agar tick kiya) — helper use kar rahe hain
                 if (saveAsTpl && tplName) {
-                    const tplResult = await createTemplate({
-                        message: message,
-                        target: target,
-                        reappear_seconds: reappear,
-                        times_used: 0
+                    await createTemplate({
+                        message: message, target: target,
+                        reappear_seconds: reappear, times_used: 0
                     });
-                    if (tplResult && tplResult.error) {
-                        console.error('Template save error:', tplResult.error);
-                    }
                 }
-
+                msg.style.color = '#10b981';
                 msg.style.display = 'block';
                 setTimeout(() => { msg.style.display = 'none'; }, 3000);
-
                 resetAlertForm();
                 loadAlerts();
                 loadTemplates();
-
             } catch (err) {
                 console.error(err);
                 msg.innerHTML = '❌ Error: ' + err.message;
                 msg.style.color = '#ef4444';
                 msg.style.display = 'block';
             }
-
             btn.disabled = false;
             btn.innerHTML = '💾 Save Alert';
         }
@@ -624,27 +538,15 @@
         function editAlert(id) {
             const a = allAlerts.find(x => x.id === id);
             if (!a) return;
-
             editingAlertId = id;
             document.getElementById('alertMessage').value = a.message;
             document.querySelector(`input[name="alertTarget"][value="${a.target}"]`).checked = true;
-
-            if (a.start_time) {
-                document.getElementById('alertStartTime').value = new Date(a.start_time).toISOString().slice(0, 16);
-            } else {
-                document.getElementById('alertStartTime').value = '';
-            }
-            if (a.end_time) {
-                document.getElementById('alertEndTime').value = new Date(a.end_time).toISOString().slice(0, 16);
-            } else {
-                document.getElementById('alertEndTime').value = '';
-            }
-
+            document.getElementById('alertStartTime').value = a.start_time ? new Date(a.start_time).toISOString().slice(0, 16) : '';
+            document.getElementById('alertEndTime').value = a.end_time ? new Date(a.end_time).toISOString().slice(0, 16) : '';
             document.getElementById('alertReappear').value = String(a.reappear_seconds || 0);
             document.getElementById('saveAsTemplate').checked = false;
             document.getElementById('templateName').value = '';
             document.getElementById('templateNameWrap').style.display = 'none';
-
             document.getElementById('cancelAlertBtn').style.display = 'inline-block';
             document.getElementById('saveAlertBtn').innerHTML = '✎ Update Alert';
             window.scrollTo({ top: document.getElementById('alertMessage').offsetTop - 100, behavior: 'smooth' });
@@ -667,46 +569,31 @@
         async function toggleAlertActive(id, active) {
             try {
                 const sb = initSupabase();
-                const { error } = await sb
-                    .from('alerts')
-                    .update({ is_active: active, updated_at: new Date().toISOString() })
-                    .eq('id', id);
+                const { error } = await sb.from('alerts').update({ is_active: active, updated_at: new Date().toISOString() }).eq('id', id);
                 if (error) throw error;
                 loadAlerts();
-            } catch (err) {
-                console.error(err);
-                alert('❌ Error: ' + err.message);
-            }
+            } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
         async function removeAlert(id) {
             if (!confirm('Delete this alert?')) return;
             try {
                 const sb = initSupabase();
-                const { error } = await sb
-                    .from('alerts')
-                    .delete()
-                    .eq('id', id);
+                const { error } = await sb.from('alerts').delete().eq('id', id);
                 if (error) throw error;
                 loadAlerts();
-            } catch (err) {
-                console.error(err);
-                alert('❌ Error: ' + err.message);
-            }
+            } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
         // ================================================================
-        // TEMPLATES — Load, Render, Load into form, Delete
-        // (ab helpers use kar rahe hain supabase-config.js se)
+        // ALERT TEMPLATES
         // ================================================================
         async function loadTemplates() {
             const container = document.getElementById('templatesList');
             container.innerHTML = '<div class="loading-state">⏳ Loading templates...</div>';
-
             try {
                 allTemplates = await getAllTemplates(100);
                 renderTemplates();
-
             } catch (err) {
                 console.error(err);
                 container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`;
@@ -715,18 +602,15 @@
 
         function renderTemplates() {
             const container = document.getElementById('templatesList');
-
             if (allTemplates.length === 0) {
                 container.innerHTML = '<div class="empty-state">No templates yet. Jab aap alert banate waqt "Save as Template" tick karenge to yahan aayenge.</div>';
                 return;
             }
-
             container.innerHTML = allTemplates.map(t => {
                 const targetBadge = t.target === 'demo' ? '🎮 Demo' : t.target === 'clients' ? '👥 Clients' : '🌐 Both';
                 const targetClass = t.target;
                 const reappearMap = { 0: 'Never', 30: '30s', 60: '1min', 300: '5min', 900: '15min', 3600: '1hr' };
                 const reappearLabel = reappearMap[t.reappear_seconds] || (t.reappear_seconds ? t.reappear_seconds + 's' : 'Never');
-
                 return `<div class="template-item">
                     <div class="tpl-msg">
                         <strong>${t.message}</strong>
@@ -748,7 +632,6 @@
         async function loadTemplateIntoForm(id) {
             const t = allTemplates.find(x => x.id === id);
             if (!t) return;
-
             editingAlertId = null;
             document.getElementById('alertMessage').value = t.message;
             document.querySelector(`input[name="alertTarget"][value="${t.target}"]`).checked = true;
@@ -757,17 +640,9 @@
             document.getElementById('alertEndTime').value = '';
             document.getElementById('saveAsTemplate').checked = false;
             document.getElementById('templateNameWrap').style.display = 'none';
-
             document.getElementById('saveAlertBtn').innerHTML = '💾 Save Alert';
             document.getElementById('cancelAlertBtn').style.display = 'none';
-
-            // times_used increment + last_used_at update (helper se)
-            try {
-                await updateTemplateUsage(id, t.times_used);
-            } catch (err) {
-                console.error('update times_used error:', err);
-            }
-
+            try { await updateTemplateUsage(id, t.times_used); } catch (err) { console.error(err); }
             window.scrollTo({ top: document.getElementById('alertMessage').offsetTop - 100, behavior: 'smooth' });
             const msg = document.getElementById('alertMessage2');
             msg.innerHTML = '📥 Template loaded! Ab "Save Alert" dabayein.';
@@ -778,180 +653,361 @@
 
         async function removeTemplate(id) {
             if (!confirm('Delete this template?')) return;
-            try {
-                await deleteTemplate(id);
-                loadTemplates();
-            } catch (err) {
-                console.error(err);
-                alert('❌ Error: ' + err.message);
-            }
+            try { await deleteTemplate(id); loadTemplates(); } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
         // ================================================================
-        // SETTINGS — Load, Render, Save
+        // BANNER MANAGER
         // ================================================================
-        async function loadSettings() {
-            const container = document.getElementById('settingsContainer');
-            container.innerHTML = '<div class="loading-state">⏳ Loading settings...</div>';
-
-            try {
-                const sb = initSupabase();
-                const { data, error } = await sb
-                    .from('settings')
-                    .select('*')
-                    .order('category', { ascending: true })
-                    .order('display_order', { ascending: true });
-
-                if (error) throw error;
-                allSettings = data || [];
-                renderSettings();
-
-            } catch (err) {
-                console.error(err);
-                container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`;
-            }
+        function updateBannerPreview() {
+            const msg = document.getElementById('bannerMessage').value || 'Yeh aap ka banner aisa dikhega';
+            const style = document.getElementById('bannerStyle').value;
+            const color = document.querySelector('input[name="bannerColor"]:checked').value;
+            const preview = document.getElementById('bannerPreview');
+            const previewText = document.getElementById('bannerPreviewText');
+            preview.className = 'banner-preview ' + style;
+            previewText.innerText = msg;
+            const colorMap = {
+                gold: { bg: 'linear-gradient(135deg, #d4af37, #f0d060)', text: '#111827' },
+                green: { bg: 'linear-gradient(135deg, #10b981, #059669)', text: '#ffffff' },
+                red: { bg: 'linear-gradient(135deg, #ef4444, #dc2626)', text: '#ffffff' },
+                blue: { bg: 'linear-gradient(135deg, #60a5fa, #3b82f6)', text: '#ffffff' }
+            };
+            const c = colorMap[color] || colorMap.gold;
+            preview.style.background = c.bg;
+            preview.style.color = c.text;
         }
 
-        function renderSettings() {
-            const container = document.getElementById('settingsContainer');
+        async function loadBanners() {
+            const container = document.getElementById('bannersList');
+            container.innerHTML = '<div class="loading-state">⏳ Loading banners...</div>';
+            try { allBanners = await getAllBanners(); renderBanners(); }
+            catch (err) { console.error(err); container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`; }
+        }
 
-            if (allSettings.length === 0) {
-                container.innerHTML = '<div class="empty-state">No settings found</div>';
+        function renderBanners() {
+            const container = document.getElementById('bannersList');
+            if (allBanners.length === 0) {
+                container.innerHTML = '<div class="empty-state">No banners yet. Naya banner banayein upar wale form se.</div>';
                 return;
             }
-
-            const grouped = {};
-            allSettings.forEach(s => {
-                if (!grouped[s.category]) grouped[s.category] = [];
-                grouped[s.category].push(s);
-            });
-
-            const categoryIcons = {
-                general: '📁',
-                trading: '📊',
-                pricing: '💰',
-                payment: '💳',
-                contact: '📞'
-            };
-
-            let html = '';
-            for (const cat in grouped) {
-                const icon = categoryIcons[cat] || '📁';
-                html += `<div class="settings-category">
-                    <h3>${icon} ${cat.toUpperCase()}</h3>`;
-
-                grouped[cat].forEach(s => {
-                    const isBigNumber = (s.key === 'free_trades_per_day');
-                    html += `<div class="setting-row">
-                        <label>
-                            ${s.label}
-                            ${s.description ? `<span class="desc">${s.description}</span>` : ''}
-                        </label>
-                        <input 
-                            type="${s.input_type === 'number' ? 'number' : 'text'}"
-                            id="setting_${s.key}"
-                            data-key="${s.key}"
-                            value="${s.value || ''}"
-                            class="${isBigNumber ? 'big-number' : ''}"
-                            placeholder="${s.label}"
-                        />
-                    </div>`;
-                });
-
-                html += `</div>`;
-            }
-
-            container.innerHTML = html;
+            const colorMap = { gold: 'linear-gradient(135deg, #d4af37, #f0d060)', green: 'linear-gradient(135deg, #10b981, #059669)', red: 'linear-gradient(135deg, #ef4444, #dc2626)', blue: 'linear-gradient(135deg, #60a5fa, #3b82f6)' };
+            const textMap = { gold: '#111827', green: '#fff', red: '#fff', blue: '#fff' };
+            container.innerHTML = allBanners.map(b => {
+                const targetBadge = b.target === 'demo' ? '🎮 Demo' : b.target === 'clients' ? '👥 Clients' : '🌐 Both';
+                const targetClass = b.target;
+                const timeInfo = [];
+                if (b.start_time) timeInfo.push('Start: ' + new Date(b.start_time).toLocaleString());
+                if (b.end_time) timeInfo.push('End: ' + new Date(b.end_time).toLocaleString());
+                const styleIcon = b.style === 'scrolling' ? '🎞️' : b.style === 'slide' ? '➡️' : '📌';
+                const bg = colorMap[b.color] || colorMap.gold;
+                const txt = textMap[b.color] || textMap.gold;
+                return `<div class="banner-list-item ${b.is_active ? '' : 'inactive'}">
+                    <div style="flex:1; min-width:200px;">
+                        <div class="banner-msg" style="background:${bg}; color:${txt};">${b.message}</div>
+                        <div class="banner-meta">
+                            <span class="badge ${targetClass}">${targetBadge}</span>
+                            <span class="badge ${b.is_active ? 'active' : 'rejected'}">${b.is_active ? '✓ Active' : '✗ Inactive'}</span>
+                            <span>${styleIcon} ${b.style}</span>
+                            <span>🎨 ${b.color}</span>
+                            <span>⚡ Priority: ${b.priority || 5}</span>
+                            ${b.closable ? '<span>❌ Closable</span>' : ''}
+                            ${timeInfo.length > 0 ? '<span>' + timeInfo.join(' | ') + '</span>' : '<span>Always</span>'}
+                        </div>
+                    </div>
+                    <div class="banner-actions">
+                        <button class="btn-action btn-unverify" onclick="toggleBannerActive('${b.id}', ${!b.is_active})">${b.is_active ? '⏸ Deactivate' : '▶ Activate'}</button>
+                        <button class="btn-action btn-view" onclick="editBanner('${b.id}')">✎ Edit</button>
+                        <button class="btn-action btn-reject" onclick="removeBanner('${b.id}')">🗑</button>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
-        async function saveAllSettings() {
-            const btn = document.getElementById('saveSettingsBtn');
-            const msg = document.getElementById('settingsMessage');
+        async function saveBanner() {
+            const message = document.getElementById('bannerMessage').value.trim();
+            const target = document.querySelector('input[name="bannerTarget"]:checked').value;
+            const style = document.getElementById('bannerStyle').value;
+            const color = document.querySelector('input[name="bannerColor"]:checked').value;
+            const startTime = document.getElementById('bannerStartTime').value;
+            const endTime = document.getElementById('bannerEndTime').value;
+            const priority = parseInt(document.getElementById('bannerPriority').value) || 5;
+            const closable = document.getElementById('bannerClosable').checked;
+            const saveAsTpl = document.getElementById('saveBannerAsTemplate').checked;
+            const tplName = document.getElementById('bannerTemplateName').value.trim();
+            const btn = document.getElementById('saveBannerBtn');
+            const msg = document.getElementById('bannerMessage2');
+
+            if (!message) { msg.innerHTML = '❌ Banner message khali hai!'; msg.style.color = '#ef4444'; msg.style.display = 'block'; return; }
+            if (saveAsTpl && !tplName) { msg.innerHTML = '❌ Template name khali hai!'; msg.style.color = '#ef4444'; msg.style.display = 'block'; return; }
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             msg.style.display = 'none';
 
             try {
+                const bannerData = {
+                    message: message, target: target, style: style, color: color,
+                    start_time: startTime ? new Date(startTime).toISOString() : null,
+                    end_time: endTime ? new Date(endTime).toISOString() : null,
+                    priority: priority, closable: closable, is_active: true
+                };
+                if (editingBannerId) {
+                    const result = await updateBanner(editingBannerId, bannerData);
+                    if (result && result.error) throw result.error;
+                    msg.innerHTML = '✅ Banner updated successfully!';
+                } else {
+                    const result = await createBanner(bannerData);
+                    if (result && result.error) throw result.error;
+                    msg.innerHTML = '✅ Banner saved successfully!';
+                }
+                if (saveAsTpl && tplName) {
+                    await saveBannerTemplate({
+                        message: message, target: target,
+                        style: style, color: color, times_used: 0
+                    });
+                }
+                msg.style.color = '#10b981';
+                msg.style.display = 'block';
+                setTimeout(() => { msg.style.display = 'none'; }, 3000);
+                resetBannerForm();
+                loadBanners();
+                loadBannerTemplates();
+            } catch (err) {
+                console.error(err);
+                msg.innerHTML = '❌ Error: ' + (err.message || err);
+                msg.style.color = '#ef4444';
+                msg.style.display = 'block';
+            }
+            btn.disabled = false;
+            btn.innerHTML = '💾 Save Banner';
+        }
+
+        function editBanner(id) {
+            const b = allBanners.find(x => x.id === id);
+            if (!b) return;
+            editingBannerId = id;
+            document.getElementById('bannerMessage').value = b.message;
+            document.querySelector(`input[name="bannerTarget"][value="${b.target}"]`).checked = true;
+            document.getElementById('bannerStyle').value = b.style || 'static';
+            document.querySelector(`input[name="bannerColor"][value="${b.color || 'gold'}"]`).checked = true;
+            document.getElementById('bannerStartTime').value = b.start_time ? new Date(b.start_time).toISOString().slice(0, 16) : '';
+            document.getElementById('bannerEndTime').value = b.end_time ? new Date(b.end_time).toISOString().slice(0, 16) : '';
+            document.getElementById('bannerPriority').value = b.priority || 5;
+            document.getElementById('bannerClosable').checked = b.closable || false;
+            document.getElementById('saveBannerAsTemplate').checked = false;
+            document.getElementById('bannerTemplateName').value = '';
+            document.getElementById('bannerTemplateNameWrap').style.display = 'none';
+            updateBannerPreview();
+            document.getElementById('cancelBannerBtn').style.display = 'inline-block';
+            document.getElementById('saveBannerBtn').innerHTML = '✎ Update Banner';
+            window.scrollTo({ top: document.getElementById('bannerMessage').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function resetBannerForm() {
+            editingBannerId = null;
+            document.getElementById('bannerMessage').value = '';
+            document.querySelector('input[name="bannerTarget"][value="both"]').checked = true;
+            document.getElementById('bannerStyle').value = 'static';
+            document.querySelector('input[name="bannerColor"][value="gold"]').checked = true;
+            document.getElementById('bannerStartTime').value = '';
+            document.getElementById('bannerEndTime').value = '';
+            document.getElementById('bannerPriority').value = 5;
+            document.getElementById('bannerClosable').checked = false;
+            document.getElementById('saveBannerAsTemplate').checked = false;
+            document.getElementById('bannerTemplateName').value = '';
+            document.getElementById('bannerTemplateNameWrap').style.display = 'none';
+            document.getElementById('cancelBannerBtn').style.display = 'none';
+            document.getElementById('saveBannerBtn').innerHTML = '💾 Save Banner';
+            document.getElementById('bannerPreviewText').innerText = 'Yeh aap ka banner aisa dikhega';
+            updateBannerPreview();
+        }
+
+        async function toggleBannerActive(id, active) {
+            try {
+                const result = await updateBanner(id, { is_active: active });
+                if (result && result.error) throw result.error;
+                loadBanners();
+            } catch (err) { console.error(err); alert('❌ Error: ' + (err.message || err)); }
+        }
+
+        async function removeBanner(id) {
+            if (!confirm('Delete this banner?')) return;
+            try {
+                const result = await deleteBanner(id);
+                if (result && result.error) throw result.error;
+                loadBanners();
+            } catch (err) { console.error(err); alert('❌ Error: ' + (err.message || err)); }
+        }
+
+        // ================================================================
+        // BANNER TEMPLATES
+        // ================================================================
+        async function loadBannerTemplates() {
+            const container = document.getElementById('bannerTemplatesList');
+            container.innerHTML = '<div class="loading-state">⏳ Loading templates...</div>';
+            try { allBannerTemplates = await getBannerTemplates(100); renderBannerTemplates(); }
+            catch (err) { console.error(err); container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`; }
+        }
+
+        function renderBannerTemplates() {
+            const container = document.getElementById('bannerTemplatesList');
+            if (allBannerTemplates.length === 0) {
+                container.innerHTML = '<div class="empty-state">No banner templates yet. Jab aap banner banate waqt "Save as Template" tick karenge to yahan aayenge.</div>';
+                return;
+            }
+            const colorMap = { gold: 'linear-gradient(135deg, #d4af37, #f0d060)', green: 'linear-gradient(135deg, #10b981, #059669)', red: 'linear-gradient(135deg, #ef4444, #dc2626)', blue: 'linear-gradient(135deg, #60a5fa, #3b82f6)' };
+            const textMap = { gold: '#111827', green: '#fff', red: '#fff', blue: '#fff' };
+            container.innerHTML = allBannerTemplates.map(t => {
+                const targetBadge = t.target === 'demo' ? '🎮 Demo' : t.target === 'clients' ? '👥 Clients' : '🌐 Both';
+                const targetClass = t.target;
+                const bg = colorMap[t.color] || colorMap.gold;
+                const txt = textMap[t.color] || textMap.gold;
+                const styleIcon = t.style === 'scrolling' ? '🎞️' : t.style === 'slide' ? '➡️' : '📌';
+                return `<div class="banner-template-item">
+                    <div style="flex:1; min-width:200px;">
+                        <div class="bt-msg" style="background:${bg}; color:${txt};">${t.message}</div>
+                        <div class="bt-meta">
+                            <span class="badge ${targetClass}">${targetBadge}</span>
+                            <span>${styleIcon} ${t.style}</span>
+                            <span>🎨 ${t.color}</span>
+                            <span>✓ Used ${t.times_used || 0}x</span>
+                            ${t.last_used_at ? '<span>Last: ' + new Date(t.last_used_at).toLocaleDateString() + '</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="bt-actions">
+                        <button class="btn-action btn-view" onclick="loadBannerTemplateIntoForm('${t.id}')">📥 Load</button>
+                        <button class="btn-action btn-reject" onclick="removeBannerTemplate('${t.id}')">🗑</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function loadBannerTemplateIntoForm(id) {
+            const t = allBannerTemplates.find(x => x.id === id);
+            if (!t) return;
+            editingBannerId = null;
+            document.getElementById('bannerMessage').value = t.message;
+            document.querySelector(`input[name="bannerTarget"][value="${t.target}"]`).checked = true;
+            document.getElementById('bannerStyle').value = t.style || 'static';
+            document.querySelector(`input[name="bannerColor"][value="${t.color || 'gold'}"]`).checked = true;
+            document.getElementById('bannerStartTime').value = '';
+            document.getElementById('bannerEndTime').value = '';
+            document.getElementById('bannerPriority').value = 5;
+            document.getElementById('bannerClosable').checked = false;
+            document.getElementById('saveBannerAsTemplate').checked = false;
+            document.getElementById('bannerTemplateNameWrap').style.display = 'none';
+            document.getElementById('saveBannerBtn').innerHTML = '💾 Save Banner';
+            document.getElementById('cancelBannerBtn').style.display = 'none';
+            updateBannerPreview();
+            try { await updateBannerTemplateUsage(id, t.times_used); } catch (err) { console.error(err); }
+            window.scrollTo({ top: document.getElementById('bannerMessage').offsetTop - 100, behavior: 'smooth' });
+            const msg = document.getElementById('bannerMessage2');
+            msg.innerHTML = '📥 Template loaded! Ab "Save Banner" dabayein.';
+            msg.style.color = '#60a5fa';
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
+
+        async function removeBannerTemplate(id) {
+            if (!confirm('Delete this banner template?')) return;
+            try {
+                const result = await deleteBannerTemplate(id);
+                if (result && result.error) throw result.error;
+                loadBannerTemplates();
+            } catch (err) { console.error(err); alert('❌ Error: ' + (err.message || err)); }
+        }
+
+        // ================================================================
+        // SETTINGS
+        // ================================================================
+        async function loadSettings() {
+            const container = document.getElementById('settingsContainer');
+            container.innerHTML = '<div class="loading-state">⏳ Loading settings...</div>';
+            try {
+                const sb = initSupabase();
+                const { data, error } = await sb.from('settings').select('*').order('category', { ascending: true }).order('display_order', { ascending: true });
+                if (error) throw error;
+                allSettings = data || [];
+                renderSettings();
+            } catch (err) { console.error(err); container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`; }
+        }
+
+        function renderSettings() {
+            const container = document.getElementById('settingsContainer');
+            if (allSettings.length === 0) { container.innerHTML = '<div class="empty-state">No settings found</div>'; return; }
+            const grouped = {};
+            allSettings.forEach(s => { if (!grouped[s.category]) grouped[s.category] = []; grouped[s.category].push(s); });
+            const categoryIcons = { general: '📁', trading: '📊', pricing: '💰', payment: '💳', contact: '📞' };
+            let html = '';
+            for (const cat in grouped) {
+                const icon = categoryIcons[cat] || '📁';
+                html += `<div class="settings-category"><h3>${icon} ${cat.toUpperCase()}</h3>`;
+                grouped[cat].forEach(s => {
+                    const isBigNumber = (s.key === 'free_trades_per_day');
+                    html += `<div class="setting-row">
+                        <label>${s.label}${s.description ? `<span class="desc">${s.description}</span>` : ''}</label>
+                        <input type="${s.input_type === 'number' ? 'number' : 'text'}" id="setting_${s.key}" data-key="${s.key}" value="${s.value || ''}" class="${isBigNumber ? 'big-number' : ''}" placeholder="${s.label}" />
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        async function saveAllSettings() {
+            const btn = document.getElementById('saveSettingsBtn');
+            const msg = document.getElementById('settingsMessage');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            msg.style.display = 'none';
+            try {
                 const sb = initSupabase();
                 const inputs = document.querySelectorAll('[data-key]');
                 let updated = 0;
                 let errors = [];
-
                 for (const input of inputs) {
                     const key = input.dataset.key;
                     const value = input.value.trim();
                     const original = allSettings.find(s => s.key === key);
-
                     if (original && original.value !== value) {
-                        const { error } = await sb
-                            .from('settings')
-                            .update({ value: value, updated_at: new Date().toISOString() })
-                            .eq('key', key);
-
-                        if (error) {
-                            errors.push(`${key}: ${error.message}`);
-                        } else {
-                            updated++;
-                            original.value = value;
-                        }
+                        const { error } = await sb.from('settings').update({ value: value, updated_at: new Date().toISOString() }).eq('key', key);
+                        if (error) { errors.push(`${key}: ${error.message}`); }
+                        else { updated++; original.value = value; }
                     }
                 }
-
-                if (errors.length > 0) {
-                    msg.innerHTML = `⚠️ ${updated} updated, ${errors.length} errors:<br>${errors.join('<br>')}`;
-                    msg.style.color = '#fbbf24';
-                } else {
-                    msg.innerHTML = `✅ ${updated} setting${updated !== 1 ? 's' : ''} saved successfully!`;
-                    msg.style.color = '#10b981';
-                }
+                if (errors.length > 0) { msg.innerHTML = `⚠️ ${updated} updated, ${errors.length} errors:<br>${errors.join('<br>')}`; msg.style.color = '#fbbf24'; }
+                else { msg.innerHTML = `✅ ${updated} setting${updated !== 1 ? 's' : ''} saved successfully!`; msg.style.color = '#10b981'; }
                 msg.style.display = 'block';
-
                 setTimeout(() => { msg.style.display = 'none'; }, 4000);
-
-            } catch (err) {
-                console.error(err);
-                msg.innerHTML = '❌ Error: ' + err.message;
-                msg.style.color = '#ef4444';
-                msg.style.display = 'block';
-            }
-
+            } catch (err) { console.error(err); msg.innerHTML = '❌ Error: ' + err.message; msg.style.color = '#ef4444'; msg.style.display = 'block'; }
             btn.disabled = false;
             btn.innerHTML = '💾 Save All Changes';
         }
 
         // ================================================================
-        // LOAD DATA from Supabase
+        // LOAD DATA
         // ================================================================
         async function loadData() {
             document.getElementById('paymentsBody').innerHTML = '<tr><td colspan="10" class="loading-state">⏳ Loading...</td></tr>';
             document.getElementById('usersBody').innerHTML = '<tr><td colspan="9" class="loading-state">⏳ Loading...</td></tr>';
-
             try {
                 const sb = initSupabase();
                 if (!sb) throw new Error('Supabase init failed');
-
-                const { data: users, error: uErr } = await sb
-                    .from('users')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                const { data: users, error: uErr } = await sb.from('users').select('*').order('created_at', { ascending: false });
                 if (uErr) throw uErr;
                 allUsers = users || [];
-
-                const { data: payments, error: pErr } = await sb
-                    .from('payments')
-                    .select('*, users(name, email, phone)')
-                    .order('created_at', { ascending: false });
+                const { data: payments, error: pErr } = await sb.from('payments').select('*, users(name, email, phone)').order('created_at', { ascending: false });
                 if (pErr) throw pErr;
                 allPayments = payments || [];
-
                 updateStats();
                 renderPayments();
                 renderUsers();
                 loadSettings();
                 loadAlerts();
                 loadTemplates();
-
+                loadBanners();
+                loadBannerTemplates();
             } catch (err) {
                 console.error(err);
                 document.getElementById('paymentsBody').innerHTML = `<tr><td colspan="10" class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</td></tr>`;
@@ -970,10 +1026,7 @@
 
         function renderPayments() {
             const tbody = document.getElementById('paymentsBody');
-            if (allPayments.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No payments</td></tr>';
-                return;
-            }
+            if (allPayments.length === 0) { tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No payments</td></tr>'; return; }
             tbody.innerHTML = allPayments.map((p, i) => {
                 const u = p.users || {};
                 return `<tr>
@@ -986,16 +1039,7 @@
                     <td><span class="badge ${p.type === 'renewal' ? 'renewal' : 'new'}">${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New'}</span></td>
                     <td>${p.screenshot_url ? `<button class="btn-action btn-view" onclick="viewScreenshot(${i})"><i class="fas fa-eye"></i></button>` : '--'}</td>
                     <td><span class="badge ${p.status}">${p.status}</span></td>
-                    <td>
-                        ${p.status === 'pending' ? `
-                            <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
-                            <button class="btn-action btn-reject" onclick="rejectPayment(${i})">✗</button>
-                        ` : p.status === 'approved' ? `
-                            <button class="btn-action btn-unverify" onclick="unverifyPayment(${i})">↺ Unverify</button>
-                        ` : p.status === 'rejected' ? `
-                            <button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>
-                        ` : '--'}
-                    </td>
+                    <td>${p.status === 'pending' ? `<button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button><button class="btn-action btn-reject" onclick="rejectPayment(${i})">✗</button>` : p.status === 'approved' ? `<button class="btn-action btn-unverify" onclick="unverifyPayment(${i})">↺ Unverify</button>` : p.status === 'rejected' ? `<button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>` : '--'}</td>
                 </tr>`;
             }).join('');
         }
@@ -1013,128 +1057,63 @@
                 <div>🆔 Binance UID: <strong style="color:#d4af37; font-family:monospace;">${p.payer_uid || '--'}</strong></div>
                 <div>📅 Date: ${new Date(p.created_at).toLocaleString()}</div>
                 <div>📊 Type: <strong>${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New Registration'}</strong></div>
-                <div>📌 Status: <strong style="color:${p.status === 'approved' ? '#10b981' : p.status === 'rejected' ? '#ef4444' : '#fbbf24'};">${p.status.toUpperCase()}</strong></div>
-            `;
+                <div>📌 Status: <strong style="color:${p.status === 'approved' ? '#10b981' : p.status === 'rejected' ? '#ef4444' : '#fbbf24'};">${p.status.toUpperCase()}</strong></div>`;
             document.getElementById('screenshotModal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('screenshotModal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('screenshotModal').style.display = 'none'; }
 
         async function verifyPayment(index) {
             const p = allPayments[index];
             if (!p) return;
-
             const today = new Date();
             const newExpiry = new Date(today);
             newExpiry.setMonth(newExpiry.getMonth() + 1);
-
             const todayStr = today.toISOString();
             const expiryStr = newExpiry.toISOString();
-
             try {
                 const sb = initSupabase();
-
-                const { error: uErr } = await sb
-                    .from('users')
-                    .update({
-                        status: 'active',
-                        subscription_start: todayStr,
-                        subscription_end: expiryStr
-                    })
-                    .eq('id', p.user_id);
+                const { error: uErr } = await sb.from('users').update({ status: 'active', subscription_start: todayStr, subscription_end: expiryStr }).eq('id', p.user_id);
                 if (uErr) throw uErr;
-
-                const { error: pErr } = await sb
-                    .from('payments')
-                    .update({
-                        status: 'approved',
-                        verified_by: 'admin',
-                        verified_at: new Date().toISOString()
-                    })
-                    .eq('id', p.id);
+                const { error: pErr } = await sb.from('payments').update({ status: 'approved', verified_by: 'admin', verified_at: new Date().toISOString() }).eq('id', p.id);
                 if (pErr) throw pErr;
-
-                await sb.from('admin_logs').insert([{
-                    admin_id: 'admin',
-                    action: 'verify_payment',
-                    target_user: p.user_id,
-                    meta: { payment_id: p.id, amount: p.amount, type: p.type }
-                }]);
-
+                await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'verify_payment', target_user: p.user_id, meta: { payment_id: p.id, amount: p.amount, type: p.type } }]);
                 const u = p.users || {};
                 alert(`✅ VERIFIED!\n\nUser: ${u.name}\nNew Expiry: ${expiryStr.split('T')[0]}\nSecret Key: ${allUsers.find(x => x.id === p.user_id)?.secret_key || '--'}`);
-
                 loadData();
-
-            } catch (err) {
-                console.error(err);
-                alert('❌ Error: ' + err.message);
-            }
+            } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
         async function unverifyPayment(index) {
             const p = allPayments[index];
             if (!p) return;
             if (!confirm(`Unverify payment for ${p.users?.name}?\n\nThis will mark user as expired.`)) return;
-
             try {
                 const sb = initSupabase();
-
                 await sb.from('users').update({ status: 'expired' }).eq('id', p.user_id);
                 await sb.from('payments').update({ status: 'pending', verified_by: null, verified_at: null }).eq('id', p.id);
-
-                await sb.from('admin_logs').insert([{
-                    admin_id: 'admin',
-                    action: 'unverify_payment',
-                    target_user: p.user_id,
-                    meta: { payment_id: p.id }
-                }]);
-
+                await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'unverify_payment', target_user: p.user_id, meta: { payment_id: p.id } }]);
                 alert('↺ Payment UNVERIFIED!');
                 loadData();
-
-            } catch (err) {
-                console.error(err);
-                alert('❌ Error: ' + err.message);
-            }
+            } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
         async function rejectPayment(index) {
             const p = allPayments[index];
             if (!p) return;
             if (!confirm('Reject this payment?')) return;
-
             try {
                 const sb = initSupabase();
-                await sb.from('payments').update({
-                    status: 'rejected',
-                    verified_by: 'admin',
-                    verified_at: new Date().toISOString()
-                }).eq('id', p.id);
-
-                await sb.from('admin_logs').insert([{
-                    admin_id: 'admin',
-                    action: 'reject_payment',
-                    target_user: p.user_id,
-                    meta: { payment_id: p.id }
-                }]);
-
+                await sb.from('payments').update({ status: 'rejected', verified_by: 'admin', verified_at: new Date().toISOString() }).eq('id', p.id);
+                await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'reject_payment', target_user: p.user_id, meta: { payment_id: p.id } }]);
                 loadData();
-            } catch (err) {
-                console.error(err);
-                alert('❌ Error: ' + err.message);
-            }
+            } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
         function renderUsers() {
             const tbody = document.getElementById('usersBody');
             const today = new Date().toISOString().split('T')[0];
-            if (allUsers.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No users</td></tr>';
-                return;
-            }
+            if (allUsers.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No users</td></tr>'; return; }
             tbody.innerHTML = allUsers.map((u, i) => {
                 const isActive = u.status === 'active' && u.subscription_end && u.subscription_end.split('T')[0] >= today;
                 const expiry = u.subscription_end ? u.subscription_end.split('T')[0] : '--';
@@ -1156,20 +1135,28 @@
             const u = allUsers.find(x => x.id === id);
             if (!u) return;
             if (!confirm(`Delete ${u.name}? Saare payments bhi delete honge.`)) return;
-
             try {
                 const sb = initSupabase();
                 await sb.from('users').delete().eq('id', id);
                 alert('🗑 User deleted');
                 loadData();
-            } catch (err) {
-                console.error(err);
-                alert('❌ Error: ' + err.message);
-            }
+            } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
         document.getElementById('screenshotModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
+        });
+
+        // ================================================================
+        // INIT — banner preview setup
+        // ================================================================
+        window.addEventListener('load', () => {
+            updateBannerPreview();
+            document.getElementById('bannerMessage').addEventListener('input', updateBannerPreview);
+            document.getElementById('bannerStyle').addEventListener('change', updateBannerPreview);
+            document.querySelectorAll('input[name="bannerColor"]').forEach(el => {
+                el.addEventListener('change', updateBannerPreview);
+            });
         });
     </script>
 </body>

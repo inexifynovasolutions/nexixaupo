@@ -8,6 +8,8 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0e17; color: #f8fafc; }
+
+        /* NAVBAR */
         .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
         .logo span { color: #fff; }
@@ -16,90 +18,31 @@
         .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
 
+        /* ✅ PUBLICITY BANNER */
+        #publicityBanner { display: none; position: sticky; top: 70px; z-index: 99; width: 100%; overflow: hidden; font-weight: 700; font-size: 0.95rem; transition: all 0.3s ease; }
+        #publicityBanner.style-gold { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; }
+        #publicityBanner.style-green { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; }
+        #publicityBanner.style-red { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; }
+        #publicityBanner.style-blue { background: linear-gradient(135deg, #60a5fa, #3b82f6); color: #ffffff; }
+        #publicityBanner .pb-content { position: relative; padding: 12px 50px 12px 20px; text-align: center; }
+        #publicityBanner .pb-close { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); background: rgba(0, 0, 0, 0.2); border: none; color: inherit; font-size: 1.2rem; font-weight: 700; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; line-height: 1; padding: 0; }
+        #publicityBanner .pb-close:hover { background: rgba(0, 0, 0, 0.4); transform: translateY(-50%) rotate(90deg) scale(1.1); }
+        #publicityBanner.pb-scrolling .pb-content { padding: 12px 0; white-space: nowrap; overflow: hidden; text-align: left; }
+        #publicityBanner.pb-scrolling .pb-scroll-text { display: inline-block; animation: pbMarquee 25s linear infinite; padding-left: 100%; }
+        @keyframes pbMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        #publicityBanner.pb-slide .pb-content { animation: pbSlideIn 0.8s ease-out; }
+        @keyframes pbSlideIn { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+        #publicityBanner.pb-static .pb-content { animation: pbFadeIn 0.6s ease-out; }
+        @keyframes pbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         /* ✅ ALERT SPEECH BUBBLE */
-        #alertBubble {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 500;
-            max-width: 90%;
-            width: 500px;
-            animation: alertSlideIn 0.5s ease-out;
-        }
-
-        @keyframes alertSlideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        .alert-bubble-content {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: #ffffff;
-            padding: 20px 50px 20px 25px;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: 700;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
-            position: relative;
-            border: 2px solid #34d399;
-            animation: alertPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes alertPulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); }
-            50% { box-shadow: 0 10px 50px rgba(16, 185, 129, 0.9), 0 0 25px rgba(16, 185, 129, 0.6); }
-        }
-
-        .alert-bubble-close {
-            position: absolute;
-            top: 8px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: #ffffff;
-            font-size: 1.4rem;
-            font-weight: 700;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            line-height: 1;
-            padding: 0;
-        }
-
-        .alert-bubble-close:hover {
-            background: #ef4444;
-            transform: rotate(90deg) scale(1.1);
-        }
-
-        .alert-bubble-tail {
-            position: absolute;
-            bottom: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 18px solid transparent;
-            border-right: 18px solid transparent;
-            border-top: 20px solid #059669;
-        }
-
-        @media (max-width: 768px) {
-            #alertBubble { width: 90%; top: 85px; }
-            .alert-bubble-content { font-size: 0.9rem; padding: 16px 45px 16px 20px; }
-        }
+        #alertBubble { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 9999; max-width: 90%; width: 500px; animation: alertSlideIn 0.5s ease-out; }
+        @keyframes alertSlideIn { from { opacity: 0; transform: translateX(-50%) translateY(-30px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .alert-bubble-content { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; padding: 20px 50px 20px 25px; border-radius: 15px; font-size: 1rem; font-weight: 700; text-align: center; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); position: relative; border: 2px solid #34d399; animation: alertPulse 2s ease-in-out infinite; }
+        @keyframes alertPulse { 0%, 100% { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 10px 50px rgba(16, 185, 129, 0.9), 0 0 25px rgba(16, 185, 129, 0.6); } }
+        .alert-bubble-close { position: absolute; top: 8px; right: 10px; background: rgba(255, 255, 255, 0.2); border: none; color: #ffffff; font-size: 1.4rem; font-weight: 700; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; line-height: 1; padding: 0; }
+        .alert-bubble-close:hover { background: #ef4444; transform: rotate(90deg) scale(1.1); }
+        .alert-bubble-tail { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 20px solid #059669; }
 
         .welcome-card { background: linear-gradient(135deg, #1a2332, #0f1729); border: 2px solid #d4af37; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
         .welcome-card h1 { color: #d4af37; font-size: 1.8rem; margin-bottom: 5px; }
@@ -155,7 +98,14 @@
         .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0e17; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 9999; }
         .loading-screen .spinner { font-size: 3rem; color: #d4af37; animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-        @media (max-width: 768px) { .balance-panel, .mini-stats { grid-template-columns: 1fr; } }
+
+        @media (max-width: 768px) {
+            .balance-panel, .mini-stats { grid-template-columns: 1fr; }
+            #publicityBanner { top: 60px; font-size: 0.82rem; }
+            #publicityBanner .pb-content { padding: 10px 42px 10px 15px; }
+            #alertBubble { width: 90%; top: 85px; }
+            .alert-bubble-content { font-size: 0.9rem; padding: 16px 45px 16px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -182,6 +132,9 @@
             <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </nav>
+
+    <!-- ✅ PUBLICITY BANNER -->
+    <div id="publicityBanner" style="display:none;"></div>
 
     <div class="container" id="mainContainer" style="display:none;">
 
@@ -271,7 +224,100 @@
         const $ = id => document.getElementById(id);
 
         // ================================================================
-        // ✅ ALERT BUBBLE — Client alerts with RE-APPEAR logic
+        // PUBLICITY BANNER — Fetch active banners + 5 sec rotation
+        // ================================================================
+        let activeBanners = [];
+        let currentBannerIndex = 0;
+        let bannerRotationTimer = null;
+        let bannerClosedIds = JSON.parse(localStorage.getItem('closedBannerIds') || '[]');
+
+        async function loadPublicityBanners() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                const banners = await getActiveBanners('clients');
+
+                const visible = banners.filter(b => {
+                    if (b.closable && bannerClosedIds.includes(b.id)) return false;
+                    return true;
+                });
+
+                visible.sort((a, b) => (b.priority || 5) - (a.priority || 5));
+
+                if (visible.length === 0) {
+                    document.getElementById('publicityBanner').style.display = 'none';
+                    if (bannerRotationTimer) clearInterval(bannerRotationTimer);
+                    return;
+                }
+
+                activeBanners = visible;
+                currentBannerIndex = 0;
+                showBanner(activeBanners[0]);
+
+                if (bannerRotationTimer) clearInterval(bannerRotationTimer);
+                if (activeBanners.length > 1) {
+                    bannerRotationTimer = setInterval(() => {
+                        currentBannerIndex = (currentBannerIndex + 1) % activeBanners.length;
+                        showBanner(activeBanners[currentBannerIndex]);
+                    }, 5000);
+                }
+
+            } catch (err) {
+                console.error('loadPublicityBanners error:', err);
+            }
+        }
+
+        function showBanner(banner) {
+            const el = document.getElementById('publicityBanner');
+            if (!el) return;
+
+            el.className = '';
+            el.classList.add('style-' + (banner.color || 'gold'));
+
+            const styleClass = banner.style === 'scrolling' ? 'pb-scrolling'
+                             : banner.style === 'slide' ? 'pb-slide'
+                             : 'pb-static';
+            el.classList.add(styleClass);
+
+            let innerHTML = '';
+            const closeBtn = banner.closable
+                ? `<button class="pb-close" onclick="closeBanner('${banner.id}')" title="Close">×</button>`
+                : '';
+
+            if (banner.style === 'scrolling') {
+                innerHTML = `<div class="pb-content"><span class="pb-scroll-text">${banner.message}</span>${closeBtn}</div>`;
+            } else {
+                innerHTML = `<div class="pb-content">${banner.message}${closeBtn}</div>`;
+            }
+
+            el.innerHTML = innerHTML;
+            el.style.display = 'block';
+        }
+
+        function closeBanner(id) {
+            const el = document.getElementById('publicityBanner');
+            if (el) el.style.display = 'none';
+
+            if (!bannerClosedIds.includes(id)) {
+                bannerClosedIds.push(id);
+                localStorage.setItem('closedBannerIds', JSON.stringify(bannerClosedIds));
+            }
+
+            activeBanners = activeBanners.filter(b => b.id !== id);
+            if (activeBanners.length > 0) {
+                currentBannerIndex = 0;
+                setTimeout(() => showBanner(activeBanners[0]), 500);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            loadPublicityBanners();
+            setInterval(loadPublicityBanners, 30000);
+        });
+
+        // ================================================================
+        // ALERT BUBBLE — Client alerts with RE-APPEAR logic
         // ================================================================
         let currentAlertId = null;
 
@@ -305,7 +351,6 @@
                 const alert = active[0];
                 const reappearSec = parseInt(alert.reappear_seconds) || 0;
 
-                // ✅ Re-appear check
                 const closedAtRaw = localStorage.getItem('alertClosedAt_' + alert.id);
                 if (closedAtRaw) {
                     if (reappearSec === 0) {
@@ -340,11 +385,11 @@
 
         window.addEventListener('load', () => {
             loadActiveAlert();
-            setInterval(loadActiveAlert, 15000); // 15 sec check (re-appear ke liye)
+            setInterval(loadActiveAlert, 15000);
         });
 
         // ================================================================
-        //  LOAD: Fetch fresh user data from Supabase
+        // LOAD: Fetch fresh user data from Supabase
         // ================================================================
         window.addEventListener('load', async () => {
             const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
