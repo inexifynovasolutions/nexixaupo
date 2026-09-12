@@ -9,95 +9,210 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0e17; color: #f8fafc; overflow-x: hidden; }
 
-        /* WELCOME OVERLAY */
+        /* ================================================================ */
+        /* ✅ WELCOME OVERLAY                                                 */
+        /* ================================================================ */
         #welcomeOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: radial-gradient(circle at center, #1a2332 0%, #0a0e17 70%);
-            z-index: 99999; display: flex; align-items: center; justify-content: center;
-            flex-direction: column; text-align: center; padding: 20px;
-            opacity: 1; transition: opacity 0.6s ease-out; overflow: hidden;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            opacity: 1;
+            transition: opacity 0.6s ease-out;
+            overflow: hidden;
         }
-        #welcomeOverlay.fade-out { opacity: 0; pointer-events: none; }
-        .welcome-particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+
+        #welcomeOverlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
         .welcome-particles .particle {
-            position: absolute; width: 4px; height: 4px; background: #d4af37;
-            border-radius: 50%; box-shadow: 0 0 10px #d4af37, 0 0 20px #d4af37;
-            opacity: 0.6; animation: particleFloat linear infinite;
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #d4af37;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #d4af37, 0 0 20px #d4af37;
+            opacity: 0.6;
+            animation: particleFloat linear infinite;
         }
+
         @keyframes particleFloat {
-            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
             10% { opacity: 0.6; }
             90% { opacity: 0.6; }
-            100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
+            100% {
+                transform: translateY(-10vh) translateX(50px);
+                opacity: 0;
+            }
         }
+
         .welcome-logo {
-            font-size: 1.8rem; font-weight: 900; color: #d4af37; margin-bottom: 40px;
-            opacity: 0; animation: fadeInDown 0.8s ease-out 0.3s forwards;
-            z-index: 2; position: relative;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #d4af37;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease-out 0.3s forwards;
+            z-index: 2;
+            position: relative;
         }
+
         .welcome-logo span { color: #fff; }
+
         .welcome-title {
-            font-size: 3rem; font-weight: 900; color: #ffffff; margin-bottom: 15px;
-            letter-spacing: 1px; z-index: 2; position: relative; min-height: 1.2em;
-            opacity: 0; animation: fadeInUp 0.5s ease-out 1.2s forwards;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            z-index: 2;
+            position: relative;
+            min-height: 1.2em;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out 1.2s forwards;
         }
+
         .welcome-title .typewriter {
-            display: inline-block; border-right: 3px solid #d4af37;
-            padding-right: 5px; animation: blinkCursor 0.8s step-end infinite;
+            display: inline-block;
+            border-right: 3px solid #d4af37;
+            padding-right: 5px;
+            animation: blinkCursor 0.8s step-end infinite;
         }
+
         @keyframes blinkCursor {
             0%, 100% { border-color: #d4af37; }
             50% { border-color: transparent; }
         }
+
         .welcome-subtitle {
-            font-size: 1.8rem; font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 700;
             background: linear-gradient(90deg, #ffffff, #d4af37, #ffffff, #d4af37, #ffffff);
             background-size: 200% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; margin-bottom: 50px; letter-spacing: 1px;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 50px;
+            letter-spacing: 1px;
             opacity: 0;
-            animation: fadeInUp 0.8s ease-out 2.5s forwards, goldShimmer 3s linear 2.5s infinite;
-            z-index: 2; position: relative;
+            animation: 
+                fadeInUp 0.8s ease-out 2.5s forwards,
+                goldShimmer 3s linear 2.5s infinite;
+            z-index: 2;
+            position: relative;
         }
+
         @keyframes goldShimmer {
             0% { background-position: 0% center; }
             100% { background-position: 200% center; }
         }
+
         .welcome-start-btn {
             background: linear-gradient(135deg, #d4af37, #f0d060);
-            color: #111827; padding: 18px 50px; border: none; border-radius: 12px;
-            font-size: 1.3rem; font-weight: 900; cursor: pointer; letter-spacing: 1px;
+            color: #111827;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            cursor: pointer;
+            letter-spacing: 1px;
             opacity: 0;
-            animation: fadeInUp 0.8s ease-out 3.2s forwards, buttonPulse 2s ease-in-out 4s infinite;
+            animation: 
+                fadeInUp 0.8s ease-out 3.2s forwards,
+                buttonPulse 2s ease-in-out 4s infinite;
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-            z-index: 2; position: relative; transition: all 0.3s;
+            z-index: 2;
+            position: relative;
+            transition: all 0.3s;
         }
-        .welcome-start-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6); }
+
+        .welcome-start-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6);
+        }
+
         @keyframes buttonPulse {
             0%, 100% { box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4); }
             50% { box-shadow: 0 10px 50px rgba(212, 175, 55, 0.8), 0 0 30px rgba(212, 175, 55, 0.5); }
         }
+
         .welcome-tagline {
-            font-size: 1rem; color: #94a3b8; font-style: italic; margin-top: 40px;
-            letter-spacing: 2px; opacity: 0;
+            font-size: 1rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: 40px;
+            letter-spacing: 2px;
+            opacity: 0;
             animation: fadeInUp 0.8s ease-out 4s forwards;
-            z-index: 2; position: relative;
+            z-index: 2;
+            position: relative;
         }
+
         .welcome-close-btn {
-            position: absolute; top: 25px; right: 25px; width: 50px; height: 50px;
-            border-radius: 50%; background: rgba(212, 175, 55, 0.15);
-            border: 2px solid #d4af37; color: #d4af37; font-size: 1.6rem;
-            font-weight: 700; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; transition: all 0.3s ease; line-height: 1;
-            padding: 0; z-index: 10;
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.15);
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            font-size: 1.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            line-height: 1;
+            padding: 0;
+            z-index: 10;
         }
+
         .welcome-close-btn:hover {
-            background: #ef4444; border-color: #ef4444; color: #fff;
+            background: #ef4444;
+            border-color: #ef4444;
+            color: #fff;
             transform: rotate(90deg) scale(1.1);
             box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
         }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 768px) {
             .welcome-logo { font-size: 1.4rem; margin-bottom: 30px; }
             .welcome-title { font-size: 2rem; }
@@ -105,6 +220,7 @@
             .welcome-start-btn { padding: 15px 40px; font-size: 1.1rem; }
             .welcome-close-btn { width: 42px; height: 42px; font-size: 1.4rem; top: 15px; right: 15px; }
         }
+
         @media (max-width: 480px) {
             .welcome-logo { font-size: 1.1rem; }
             .welcome-title { font-size: 1.6rem; }
@@ -113,7 +229,9 @@
             .welcome-tagline { font-size: 0.8rem; }
         }
 
-        /* NAVBAR */
+        /* ================================================================ */
+        /* BAQI SITE STYLES                                                  */
+        /* ================================================================ */
         .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
         .logo span { color: #fff; }
@@ -124,71 +242,142 @@
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 8px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
         .btn-outline:hover { background: #d4af37; color: #111827; }
         .btn-primary { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; padding: 10px 25px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
-        .btn-admin { background: transparent; border: 2px solid #ef4444; color: #ef4444; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; font-size: 0.85rem; }
+
+        .btn-admin {
+            background: transparent;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
         .btn-admin:hover { background: #ef4444; color: #fff; }
 
-        /* ALERT SPEECH BUBBLE */
+        /* ✅ ALERT SPEECH BUBBLE */
         #alertBubble {
-            position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
-            z-index: 500; max-width: 90%; width: 500px;
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 500;
+            max-width: 90%;
+            width: 500px;
             animation: alertSlideIn 0.5s ease-out;
         }
+
         @keyframes alertSlideIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
+
         .alert-bubble-content {
             background: linear-gradient(135deg, #10b981, #059669);
-            color: #ffffff; padding: 20px 50px 20px 25px; border-radius: 15px;
-            font-size: 1rem; font-weight: 700; text-align: center;
+            color: #ffffff;
+            padding: 20px 50px 20px 25px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
             box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
-            position: relative; border: 2px solid #34d399;
+            position: relative;
+            border: 2px solid #34d399;
             animation: alertPulse 2s ease-in-out infinite;
         }
+
         @keyframes alertPulse {
             0%, 100% { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); }
             50% { box-shadow: 0 10px 50px rgba(16, 185, 129, 0.9), 0 0 25px rgba(16, 185, 129, 0.6); }
         }
+
         .alert-bubble-close {
-            position: absolute; top: 8px; right: 10px;
-            background: rgba(255, 255, 255, 0.2); border: none; color: #ffffff;
-            font-size: 1.4rem; font-weight: 700; width: 30px; height: 30px;
-            border-radius: 50%; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; transition: all 0.2s; line-height: 1; padding: 0;
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+            padding: 0;
         }
-        .alert-bubble-close:hover { background: #ef4444; transform: rotate(90deg) scale(1.1); }
+
+        .alert-bubble-close:hover {
+            background: #ef4444;
+            transform: rotate(90deg) scale(1.1);
+        }
+
         .alert-bubble-tail {
-            position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 18px solid transparent;
-            border-right: 18px solid transparent; border-top: 20px solid #059669;
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 20px solid #059669;
         }
+
         @media (max-width: 768px) {
             #alertBubble { width: 90%; top: 85px; }
             .alert-bubble-content { font-size: 0.9rem; padding: 16px 45px 16px 20px; }
         }
 
-        /* RISK TICKER */
+        /* ✅ RISK MANAGEMENT TICKER */
         .risk-ticker {
             background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
-            border-top: 1px solid #ef4444; border-bottom: 1px solid #ef4444;
-            overflow: hidden; padding: 10px 0; position: sticky; top: 70px; z-index: 99;
+            border-top: 1px solid #ef4444;
+            border-bottom: 1px solid #ef4444;
+            overflow: hidden;
+            padding: 10px 0;
+            position: sticky;
+            top: 70px;
+            z-index: 99;
         }
+
         .risk-ticker-content {
-            display: inline-block; white-space: nowrap; color: #fecaca;
-            font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;
-            animation: riskScroll 60s linear infinite; padding-left: 100%;
+            display: inline-block;
+            white-space: nowrap;
+            color: #fecaca;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            animation: riskScroll 60s linear infinite;
+            padding-left: 100%;
         }
+
         @keyframes riskScroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-100%); }
         }
-        .risk-ticker:hover .risk-ticker-content { animation-play-state: paused; }
+
+        .risk-ticker:hover .risk-ticker-content {
+            animation-play-state: paused;
+        }
+
         @media (max-width: 768px) {
             .risk-ticker { top: 60px; padding: 8px 0; }
             .risk-ticker-content { font-size: 0.75rem; animation-duration: 45s; }
         }
 
-        /* HERO */
         .hero { padding: 80px 40px; text-align: center; background: radial-gradient(circle at center, #1a2332 0%, #0a0e17 100%); }
         .hero h1 { font-size: 3.5rem; font-weight: 900; color: #d4af37; margin-bottom: 15px; line-height: 1.2; }
         .hero h1 span { color: #fff; }
@@ -199,15 +388,16 @@
         .hero-stat .num { font-size: 2.5rem; font-weight: 900; color: #d4af37; }
         .hero-stat .label { color: #94a3b8; font-size: 0.9rem; }
 
-        /* DEMO */
         .demo-section { padding: 40px; max-width: 1400px; margin: 0 auto; }
         .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .demo-header h2 { font-size: 2rem; color: #d4af37; }
         .free-badge { background: #10b981; color: #fff; padding: 8px 20px; border-radius: 30px; font-weight: 700; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
         .upgrade-banner { background: linear-gradient(135deg, #1a2332, #0f1729); border: 2px solid #d4af37; border-radius: 15px; padding: 20px 30px; margin: 20px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         .upgrade-banner .text { font-size: 1.1rem; color: #f8fafc; }
         .upgrade-banner .text strong { color: #d4af37; }
+
         .demo-dashboard { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; }
         .demo-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .demo-stat { background: #1e293b; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #334155; }
@@ -217,24 +407,50 @@
         .demo-stat .value.green { color: #10b981; }
         .demo-stat .value.yellow { color: #fbbf24; }
 
-        /* FREE TRADES */
+        /* ✅ FREE TRADES LEFT — Animated Number */
         .free-trades-value {
-            font-size: 3rem; font-weight: 900; color: #fbbf24; display: inline-block;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #fbbf24;
+            display: inline-block;
             text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-            transform-origin: center; will-change: transform;
-            animation: quickSpin 1s linear 0s 1 forwards, heartbeatLoop 30s ease-in-out 1s infinite;
+            transform-origin: center;
+            will-change: transform;
+            animation: 
+                quickSpin 1s linear 0s 1 forwards,
+                heartbeatLoop 30s ease-in-out 1s infinite;
         }
+
         @keyframes quickSpin {
             0% { transform: rotate(0deg) scale(1); }
             100% { transform: rotate(360deg) scale(1); }
         }
+
         @keyframes heartbeatLoop {
-            0% { transform: rotate(360deg) scale(1); text-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
-            1% { transform: rotate(360deg) scale(1.35); text-shadow: 0 0 35px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.8); }
-            2% { transform: rotate(360deg) scale(1); text-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
-            3% { transform: rotate(360deg) scale(1.35); text-shadow: 0 0 35px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.8); }
-            4% { transform: rotate(360deg) scale(1); text-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
-            100% { transform: rotate(360deg) scale(1); text-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+            0% {
+                transform: rotate(360deg) scale(1);
+                text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+            }
+            1% {
+                transform: rotate(360deg) scale(1.35);
+                text-shadow: 0 0 35px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.8);
+            }
+            2% {
+                transform: rotate(360deg) scale(1);
+                text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+            }
+            3% {
+                transform: rotate(360deg) scale(1.35);
+                text-shadow: 0 0 35px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.8);
+            }
+            4% {
+                transform: rotate(360deg) scale(1);
+                text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+                text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+            }
         }
 
         .demo-sr-panel { display: flex; justify-content: space-between; background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
@@ -245,7 +461,6 @@
         .demo-table th { background: #1e293b; color: #d4af37; padding: 10px; text-align: center; font-size: 0.85rem; }
         .demo-table td { padding: 10px; text-align: center; border-bottom: 1px solid #1e293b; font-size: 0.85rem; }
 
-        /* FEATURES */
         .features { padding: 80px 40px; max-width: 1400px; margin: 0 auto; }
         .features h2 { text-align: center; font-size: 2.5rem; color: #d4af37; margin-bottom: 50px; }
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
@@ -255,7 +470,6 @@
         .feature-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
         .feature-card p { color: #94a3b8; font-size: 0.9rem; }
 
-        /* PRICING */
         .pricing { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
         .pricing h2 { text-align: center; font-size: 2.5rem; color: #d4af37; margin-bottom: 50px; }
         .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
@@ -269,7 +483,6 @@
         .price-card ul li { padding: 8px 0; color: #cbd5e1; font-size: 0.9rem; }
         .price-card ul li i { color: #10b981; margin-right: 10px; }
 
-        /* MODAL + FOOTER */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: #111827; border: 3px solid #d4af37; border-radius: 20px; padding: 35px; max-width: 500px; width: 100%; text-align: center; }
         .modal-content h2 { color: #d4af37; font-size: 1.8rem; margin-bottom: 15px; }
@@ -279,25 +492,36 @@
 
         .footer { background: #111827; padding: 40px; text-align: center; color: #94a3b8; border-top: 1px solid #334155; margin-top: 40px; }
         .footer strong { color: #d4af37; }
+
         .nexify-glow {
-            color: #ffffff; font-weight: 900; font-size: 1.6rem; letter-spacing: 1.5px;
-            display: inline-block; font-family: 'Segoe UI', Roboto, sans-serif;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 1.6rem;
+            letter-spacing: 1.5px;
+            display: inline-block;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(90deg, #ffffff, #d4af37, #ffffff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; background-size: 200% auto;
-            animation: nexifyShimmer 3s linear infinite, nexifyHeartbeat 1.5s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: 
+                nexifyShimmer 3s linear infinite,
+                nexifyHeartbeat 1.5s ease-in-out infinite;
             transform-origin: center;
         }
+
         @keyframes nexifyShimmer {
             0% { background-position: 0% center; }
             100% { background-position: 200% center; }
         }
+
         @keyframes nexifyHeartbeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.08); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.08); }
-            70% { transform: scale(1); }
+            0%   { transform: scale(1); }
+            14%  { transform: scale(1.08); }
+            28%  { transform: scale(1); }
+            42%  { transform: scale(1.08); }
+            70%  { transform: scale(1); }
             100% { transform: scale(1); }
         }
 
@@ -316,18 +540,25 @@
 </head>
 <body>
 
-    <!-- WELCOME OVERLAY -->
+    <!-- ✅ WELCOME OVERLAY -->
     <div id="welcomeOverlay">
         <div class="welcome-particles" id="welcomeParticles"></div>
         <button class="welcome-close-btn" onclick="closeWelcome()" title="Close">&times;</button>
+
         <div class="welcome-logo">🚀 Nexi<span> Rocket-XauPo</span></div>
-        <div class="welcome-title"><span class="typewriter" id="typewriterText"></span></div>
+
+        <div class="welcome-title">
+            <span class="typewriter" id="typewriterText"></span>
+        </div>
+
         <div class="welcome-subtitle">Trade safely with Nexi</div>
+
         <button class="welcome-start-btn" onclick="closeWelcome()">Let's Start →</button>
+
         <div class="welcome-tagline">✨ AI-Powered Gold Trading ✨</div>
     </div>
 
-    <!-- ALERT BUBBLE -->
+    <!-- ✅ ALERT SPEECH BUBBLE -->
     <div id="alertBubble" style="display: none;">
         <div class="alert-bubble-content">
             <button class="alert-bubble-close" onclick="closeAlertBubble()">×</button>
@@ -345,7 +576,9 @@
             <a onclick="scrollToSection('pricing')">Pricing</a>
         </div>
         <div class="nav-buttons" id="navButtons">
-            <a href="admin.html" class="btn-admin" title="Admin Panel"><i class="fas fa-user-shield"></i> Admin</a>
+            <a href="admin.html" class="btn-admin" title="Admin Panel">
+                <i class="fas fa-user-shield"></i> Admin
+            </a>
             <button class="btn-outline" id="navSignInBtn" onclick="goToSignIn()">Sign In</button>
             <button class="btn-primary" id="navGetStartedBtn" onclick="goToRegister()">Get Started</button>
         </div>
@@ -381,10 +614,12 @@
             <h2>🔥 Live Trading Demo</h2>
             <div class="free-badge"><i class="fas fa-gift"></i> FREE: <span id="freeTradesBadge">3</span> Trades/Day</div>
         </div>
+
         <div class="upgrade-banner">
             <div class="text">⚠️ <strong>Free users get only <span id="upgradeFreeTrades">3</span> trades per day.</strong> Want unlimited?</div>
             <button class="btn-primary" onclick="goToRegister()"><i class="fas fa-crown"></i> Register for $<span id="upgradePrice">3</span></button>
         </div>
+
         <div class="demo-dashboard">
             <div class="demo-stats">
                 <div class="demo-stat"><div class="label">💰 Balance</div><div class="value gold" id="demoBalance">$300.00</div></div>
@@ -395,15 +630,18 @@
                 </div>
                 <div class="demo-stat"><div class="label">📊 Status</div><div class="value" id="demoStatus" style="color:#94a3b8;">⏳ Ready</div></div>
             </div>
+
             <div class="demo-sr-panel">
                 <div><span>🛡️ Support:</span> <strong style="color:#ef4444;" id="demoSupport">--</strong></div>
                 <div><span>📊 Price:</span> <strong style="color:#d4af37;" id="demoPrice">--</strong></div>
                 <div><span>🚀 Resistance:</span> <strong style="color:#10b981;" id="demoResistance">--</strong></div>
             </div>
+
             <div class="demo-controls">
                 <button class="btn-primary" onclick="startDemo()" id="btnDemoStart"><i class="fas fa-play"></i> START DEMO</button>
                 <button class="btn-outline" onclick="stopDemo()" id="btnDemoStop" disabled><i class="fas fa-stop"></i> STOP</button>
             </div>
+
             <table class="demo-table">
                 <thead><tr><th>#</th><th>Type</th><th>Entry</th><th>Current</th><th>SL</th><th>TP</th><th>P/L</th></tr></thead>
                 <tbody id="demoTableBody"><tr><td colspan="7" style="text-align:center; padding:20px; color:#94a3b8;">Click START DEMO to begin</td></tr></tbody>
@@ -477,6 +715,7 @@
         </div>
     </div>
 
+    <!-- ✅ Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
@@ -485,7 +724,9 @@
         function goToSignIn() { window.location.href = 'signin.html'; }
         function scrollToSection(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
 
-        // WELCOME OVERLAY
+        // ================================================================
+        // ✅ WELCOME OVERLAY LOGIC
+        // ================================================================
         function closeWelcome() {
             const overlay = document.getElementById('welcomeOverlay');
             if (overlay) {
@@ -543,15 +784,12 @@
             }
         });
 
-        // ✅ ALERT BUBBLE (with re-appear)
+        // ================================================================
+        // ✅ ALERT BUBBLE — Admin message display
+        // ================================================================
         let currentAlertId = null;
-        let currentAlertReappearSec = 0;
-        let alertReappearTimeout = null;
-        let alertRefreshInterval = null;
 
         async function loadActiveAlert() {
-            if (alertReappearTimeout) return;
-
             try {
                 const sb = initSupabase();
                 if (!sb) return;
@@ -580,12 +818,17 @@
 
                 const alert = active[0];
 
-                if (currentAlertId === alert.id) return;
+                const closedAlertId = sessionStorage.getItem('closedAlertId');
+                if (closedAlertId === alert.id) {
+                    document.getElementById('alertBubble').style.display = 'none';
+                    return;
+                }
 
-                currentAlertId = alert.id;
-                currentAlertReappearSec = alert.reappear_seconds || 0;
-                document.getElementById('alertBubbleText').innerText = alert.message;
-                document.getElementById('alertBubble').style.display = 'block';
+                if (currentAlertId !== alert.id) {
+                    currentAlertId = alert.id;
+                    document.getElementById('alertBubbleText').innerText = alert.message;
+                    document.getElementById('alertBubble').style.display = 'block';
+                }
 
             } catch (err) {
                 console.error('loadActiveAlert error:', err);
@@ -594,24 +837,19 @@
 
         function closeAlertBubble() {
             document.getElementById('alertBubble').style.display = 'none';
-
-            if (currentAlertReappearSec > 0) {
-                if (alertReappearTimeout) clearTimeout(alertReappearTimeout);
-                alertReappearTimeout = setTimeout(() => {
-                    alertReappearTimeout = null;
-                    document.getElementById('alertBubble').style.display = 'block';
-                }, currentAlertReappearSec * 1000);
+            if (currentAlertId) {
+                sessionStorage.setItem('closedAlertId', currentAlertId);
             }
         }
 
         window.addEventListener('load', () => {
             loadActiveAlert();
-            alertRefreshInterval = setInterval(() => {
-                if (!alertReappearTimeout) loadActiveAlert();
-            }, 30000);
+            setInterval(loadActiveAlert, 30000);
         });
 
-        // DYNAMIC SETTINGS
+        // ================================================================
+        // ✅ DYNAMIC SETTINGS
+        // ================================================================
         let settingsCache = {};
         let freeTradesLimit = 3;
 
@@ -619,26 +857,41 @@
             try {
                 const sb = initSupabase();
                 if (!sb) return;
-                const { data, error } = await sb.from('settings').select('key, value');
+
+                const { data, error } = await sb
+                    .from('settings')
+                    .select('key, value');
+
                 if (error) throw error;
+
                 settingsCache = {};
                 (data || []).forEach(s => { settingsCache[s.key] = s.value; });
+
                 applySettingsToUI();
-            } catch (err) { console.error('loadDynamicSettings:', err); }
+
+            } catch (err) {
+                console.error('loadDynamicSettings error:', err);
+            }
         }
 
         function applySettingsToUI() {
             const freeTrades = settingsCache.free_trades_per_day || '3';
             const firstPrice = settingsCache.first_month_price || '3';
             const renewalPrice = settingsCache.renewal_price || '5';
+
             freeTradesLimit = parseInt(freeTrades) || 3;
 
             const ids = {
-                'heroFreeTrades': freeTrades, 'freeTradesBadge': freeTrades,
-                'upgradeFreeTrades': freeTrades, 'upgradePrice': firstPrice,
-                'freeCardTrades': freeTrades, 'firstMonthPrice': firstPrice,
-                'renewalPrice': renewalPrice, 'modalFreeTrades': freeTrades,
-                'modalPrice': firstPrice, 'modalPrice2': firstPrice
+                'heroFreeTrades': freeTrades,
+                'freeTradesBadge': freeTrades,
+                'upgradeFreeTrades': freeTrades,
+                'upgradePrice': firstPrice,
+                'freeCardTrades': freeTrades,
+                'firstMonthPrice': firstPrice,
+                'renewalPrice': renewalPrice,
+                'modalFreeTrades': freeTrades,
+                'modalPrice': firstPrice,
+                'modalPrice2': firstPrice
             };
 
             for (const id in ids) {
@@ -658,7 +911,9 @@
             setInterval(loadDynamicSettings, 30000);
         });
 
-        // DEMO
+        // ================================================================
+        // DEMO LOGIC
+        // ================================================================
         let demoBalance = 300, demoFloating = 0, freeTradesLeft = 3, demoRunning = false, demoPrice = 0, demoTrade = null, demoInterval = null, demoTradeCounter = 0;
 
         async function getDemoPrice() {
@@ -762,6 +1017,7 @@
             if (user) {
                 const signInBtn = document.getElementById('navSignInBtn');
                 const getStartedBtn = document.getElementById('navGetStartedBtn');
+
                 if (signInBtn) {
                     signInBtn.innerText = '📊 Dashboard';
                     signInBtn.onclick = () => window.location.href = 'dashboard.html';
