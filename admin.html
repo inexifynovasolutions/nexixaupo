@@ -63,85 +63,162 @@
         .modal-content .details { text-align: left; color: #cbd5e1; font-size: 0.9rem; line-height: 1.8; margin: 15px 0; }
         .modal-content .details strong { color: #fff; }
 
-        /* SETTINGS */
-        .settings-category { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
-        .settings-category h3 { color: #d4af37; font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-        .setting-row { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; align-items: center; padding: 10px 0; border-bottom: 1px solid #1e293b; }
-        .setting-row:last-child { border-bottom: none; }
-        .setting-row label { color: #cbd5e1; font-size: 0.9rem; font-weight: 600; }
-        .setting-row .desc { display: block; color: #64748b; font-size: 0.75rem; font-weight: normal; margin-top: 3px; }
-        .setting-row input { width: 100%; padding: 10px 14px; background: #1e293b; border: 2px solid #334155; border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; }
-        .setting-row input:focus { border-color: #d4af37; }
-        .setting-row input.big-number { font-size: 1.8rem; font-weight: 900; color: #d4af37; text-align: center; padding: 15px; }
-
-        /* ALERT FORM */
-        .alert-form { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .alert-form label { display: block; color: #cbd5e1; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; margin-top: 12px; }
-        .alert-form textarea { width: 100%; padding: 12px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; min-height: 80px; font-family: inherit; resize: vertical; }
-        .alert-form textarea:focus { border-color: #d4af37; }
-        .alert-form input[type="datetime-local"],
-        .alert-form input[type="number"],
-        .alert-form select { width: 100%; padding: 12px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; }
-        .alert-form input:focus, .alert-form select:focus { border-color: #d4af37; }
-        .radio-group { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 8px; }
-        .radio-group label { display: flex; align-items: center; gap: 8px; color: #cbd5e1; font-size: 0.9rem; font-weight: 600; margin: 0; cursor: pointer; }
-        .radio-group input[type="radio"] { width: auto; margin: 0; }
-
-        /* TEMPLATE HISTORY */
-        .template-btn-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .template-list {
-            max-height: 300px;
-            overflow-y: auto;
-            background: #0a0e17;
+        /* ✅ SETTINGS STYLES */
+        .settings-category {
+            background: #0f1729;
             border: 1px solid #334155;
-            border-radius: 10px;
-            padding: 10px;
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 15px;
-            display: none;
         }
-        .template-list.open { display: block; }
-        .template-item {
+        .settings-category h3 {
+            color: #d4af37;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+        .setting-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 15px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+        .setting-row label {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .setting-row .desc {
+            display: block;
+            color: #64748b;
+            font-size: 0.75rem;
+            font-weight: normal;
+            margin-top: 3px;
+        }
+        .setting-row input {
+            width: 100%;
+            padding: 10px 14px;
             background: #1e293b;
-            border: 1px solid #334155;
+            border: 2px solid #334155;
             border-radius: 8px;
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
         }
-        .template-item:hover {
-            background: #334155;
+        .setting-row input:focus {
             border-color: #d4af37;
         }
-        .template-item .tpl-message {
-            color: #fff;
-            font-size: 0.85rem;
-            flex: 1;
-            text-align: left;
-        }
-        .template-item .tpl-meta {
-            color: #64748b;
-            font-size: 0.7rem;
-            white-space: nowrap;
+        .setting-row input.big-number {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-align: center;
+            padding: 15px;
         }
 
-        /* ALERT LIST */
-        .alert-list-item { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
-        .alert-list-item.inactive { opacity: 0.5; }
-        .alert-list-item .alert-msg { color: #fff; font-size: 0.95rem; flex: 1; min-width: 200px; text-align: left; }
-        .alert-list-item .alert-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 0.75rem; color: #94a3b8; }
-        .alert-list-item .alert-actions { display: flex; gap: 8px; }
+        /* ✅ ALERT MANAGER STYLES */
+        .alert-form {
+            background: #0f1729;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .alert-form label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            margin-top: 12px;
+        }
+        .alert-form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            min-height: 80px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        .alert-form textarea:focus { border-color: #d4af37; }
+        .alert-form input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .alert-form input[type="datetime-local"]:focus { border-color: #d4af37; }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0;
+            cursor: pointer;
+        }
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+        .alert-list-item {
+            background: #0f1729;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .alert-list-item.inactive {
+            opacity: 0.5;
+        }
+        .alert-list-item .alert-msg {
+            color: #fff;
+            font-size: 0.95rem;
+            flex: 1;
+            min-width: 200px;
+        }
+        .alert-list-item .alert-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        .alert-list-item .alert-actions {
+            display: flex;
+            gap: 8px;
+        }
 
         @media (max-width: 768px) {
             .setting-row { grid-template-columns: 1fr; gap: 8px; }
@@ -205,18 +282,8 @@
                 <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Alert messages demo page aur client dashboard pe speech bubble mein dikhenge.</p>
 
                 <div class="alert-form">
-                    <div class="template-btn-row">
-                        <label style="margin:0;">Message *</label>
-                        <button class="btn-action btn-view" onclick="toggleTemplatesList()" type="button" style="padding:8px 16px;">
-                            📚 Saved Messages
-                        </button>
-                    </div>
+                    <label>Message *</label>
                     <textarea id="alertMessage" placeholder="Alert message likhein... jaise 'Don't trade at Risk time'"></textarea>
-
-                    <!-- Template History List -->
-                    <div class="template-list" id="templateList">
-                        <div class="loading-state" style="padding:20px;">Loading...</div>
-                    </div>
 
                     <label>Target *</label>
                     <div class="radio-group">
@@ -224,16 +291,6 @@
                         <label><input type="radio" name="alertTarget" value="clients" /> 👥 Clients only</label>
                         <label><input type="radio" name="alertTarget" value="both" checked /> 🌐 Both</label>
                     </div>
-
-                    <label>Re-appear after close (seconds) *</label>
-                    <select id="alertReappear">
-                        <option value="0">Never (stay closed)</option>
-                        <option value="30">30 seconds</option>
-                        <option value="60" selected>1 minute</option>
-                        <option value="300">5 minutes</option>
-                        <option value="900">15 minutes</option>
-                        <option value="3600">1 hour</option>
-                    </select>
 
                     <label>Start Time (optional)</label>
                     <input type="datetime-local" id="alertStartTime" />
@@ -276,7 +333,7 @@
     <script>
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'nexi2026';
-        let allUsers = [], allPayments = [], allSettings = [], allAlerts = [], alertTemplates = [];
+        let allUsers = [], allPayments = [], allSettings = [], allAlerts = [];
         let editingAlertId = null;
 
         document.getElementById('adminUsername').addEventListener('keydown', function(e) {
@@ -320,62 +377,7 @@
         });
 
         // ================================================================
-        // TEMPLATE HISTORY — Load + Display
-        // ================================================================
-        async function loadTemplates() {
-            try {
-                const sb = initSupabase();
-                const { data, error } = await sb
-                    .from('alert_templates')
-                    .select('*')
-                    .order('last_used_at', { ascending: false })
-                    .limit(100);
-
-                if (error) throw error;
-                alertTemplates = data || [];
-            } catch (err) {
-                console.error(err);
-                alertTemplates = [];
-            }
-        }
-
-        function renderTemplateList() {
-            const list = document.getElementById('templateList');
-
-            if (alertTemplates.length === 0) {
-                list.innerHTML = '<div class="empty-state" style="padding:20px; font-size:0.85rem;">No saved messages yet.</div>';
-                return;
-            }
-
-            list.innerHTML = alertTemplates.map(t => `
-                <div class="template-item" onclick="loadTemplate('${t.id}')">
-                    <div class="tpl-message">${t.message}</div>
-                    <div class="tpl-meta">Used ${t.times_used}× • ${t.target}</div>
-                </div>
-            `).join('');
-        }
-
-        function loadTemplate(id) {
-            const t = alertTemplates.find(x => x.id === id);
-            if (!t) return;
-            document.getElementById('alertMessage').value = t.message;
-            document.querySelector(`input[name="alertTarget"][value="${t.target}"]`).checked = true;
-            document.getElementById('alertReappear').value = t.reappear_seconds || 60;
-            document.getElementById('templateList').classList.remove('open');
-        }
-
-        function toggleTemplatesList() {
-            const list = document.getElementById('templateList');
-            if (list.classList.contains('open')) {
-                list.classList.remove('open');
-            } else {
-                list.classList.add('open');
-                renderTemplateList();
-            }
-        }
-
-        // ================================================================
-        // ALERTS — Load, Render, Save
+        // ALERTS — Load, Render, Save, Edit, Delete
         // ================================================================
         async function loadAlerts() {
             const container = document.getElementById('alertsList');
@@ -408,19 +410,17 @@
 
             container.innerHTML = allAlerts.map(a => {
                 const targetBadge = a.target === 'demo' ? '🎮 Demo' : a.target === 'clients' ? '👥 Clients' : '🌐 Both';
+                const targetClass = a.target;
                 const timeInfo = [];
                 if (a.start_time) timeInfo.push('Start: ' + new Date(a.start_time).toLocaleString());
                 if (a.end_time) timeInfo.push('End: ' + new Date(a.end_time).toLocaleString());
-
-                const reappearText = a.reappear_seconds > 0 ? `Re-appear: ${a.reappear_seconds}s` : 'Never re-appear';
 
                 return `<div class="alert-list-item ${a.is_active ? '' : 'inactive'}">
                     <div class="alert-msg">
                         <strong>${a.message}</strong>
                         <div class="alert-meta" style="margin-top:8px;">
-                            <span class="badge ${a.target}">${targetBadge}</span>
+                            <span class="badge ${targetClass}">${targetBadge}</span>
                             <span class="badge ${a.is_active ? 'active' : 'rejected'}">${a.is_active ? '✓ Active' : '✗ Inactive'}</span>
-                            <span>⏱ ${reappearText}</span>
                             ${timeInfo.length > 0 ? '<span>' + timeInfo.join(' | ') + '</span>' : '<span>Always</span>'}
                         </div>
                     </div>
@@ -436,7 +436,6 @@
         async function saveAlert() {
             const message = document.getElementById('alertMessage').value.trim();
             const target = document.querySelector('input[name="alertTarget"]:checked').value;
-            const reappearSeconds = parseInt(document.getElementById('alertReappear').value) || 0;
             const startTime = document.getElementById('alertStartTime').value;
             const endTime = document.getElementById('alertEndTime').value;
 
@@ -460,32 +459,37 @@
                 const alertData = {
                     message: message,
                     target: target,
-                    reappear_seconds: reappearSeconds,
                     start_time: startTime ? new Date(startTime).toISOString() : null,
                     end_time: endTime ? new Date(endTime).toISOString() : null,
                     is_active: true
                 };
 
                 if (editingAlertId) {
-                    const { error } = await sb.from('alerts').update(alertData).eq('id', editingAlertId);
+                    // Update
+                    const { error } = await sb
+                        .from('alerts')
+                        .update(alertData)
+                        .eq('id', editingAlertId);
                     if (error) throw error;
+
                     msg.innerHTML = '✅ Alert updated successfully!';
+                    msg.style.color = '#10b981';
                 } else {
-                    const { error } = await sb.from('alerts').insert([alertData]);
+                    // Create
+                    const { error } = await sb
+                        .from('alerts')
+                        .insert([alertData]);
                     if (error) throw error;
+
                     msg.innerHTML = '✅ Alert saved successfully!';
+                    msg.style.color = '#10b981';
                 }
 
-                // ✅ Save template (history) — background mein
-                await saveAlertTemplate(alertData);
-
-                msg.style.color = '#10b981';
                 msg.style.display = 'block';
                 setTimeout(() => { msg.style.display = 'none'; }, 3000);
 
                 resetAlertForm();
                 loadAlerts();
-                loadTemplates();
 
             } catch (err) {
                 console.error(err);
@@ -505,7 +509,6 @@
             editingAlertId = id;
             document.getElementById('alertMessage').value = a.message;
             document.querySelector(`input[name="alertTarget"][value="${a.target}"]`).checked = true;
-            document.getElementById('alertReappear').value = a.reappear_seconds || 0;
 
             if (a.start_time) {
                 document.getElementById('alertStartTime').value = new Date(a.start_time).toISOString().slice(0, 16);
@@ -527,18 +530,19 @@
             editingAlertId = null;
             document.getElementById('alertMessage').value = '';
             document.querySelector('input[name="alertTarget"][value="both"]').checked = true;
-            document.getElementById('alertReappear').value = '60';
             document.getElementById('alertStartTime').value = '';
             document.getElementById('alertEndTime').value = '';
             document.getElementById('cancelAlertBtn').style.display = 'none';
             document.getElementById('saveAlertBtn').innerHTML = '💾 Save Alert';
-            document.getElementById('templateList').classList.remove('open');
         }
 
         async function toggleAlertActive(id, active) {
             try {
                 const sb = initSupabase();
-                const { error } = await sb.from('alerts').update({ is_active: active, updated_at: new Date().toISOString() }).eq('id', id);
+                const { error } = await sb
+                    .from('alerts')
+                    .update({ is_active: active, updated_at: new Date().toISOString() })
+                    .eq('id', id);
                 if (error) throw error;
                 loadAlerts();
             } catch (err) {
@@ -551,7 +555,10 @@
             if (!confirm('Delete this alert?')) return;
             try {
                 const sb = initSupabase();
-                const { error } = await sb.from('alerts').delete().eq('id', id);
+                const { error } = await sb
+                    .from('alerts')
+                    .delete()
+                    .eq('id', id);
                 if (error) throw error;
                 loadAlerts();
             } catch (err) {
@@ -561,7 +568,7 @@
         }
 
         // ================================================================
-        // SETTINGS
+        // SETTINGS — Load, Render, Save
         // ================================================================
         async function loadSettings() {
             const container = document.getElementById('settingsContainer');
@@ -569,10 +576,16 @@
 
             try {
                 const sb = initSupabase();
-                const { data, error } = await sb.from('settings').select('*').order('category', { ascending: true }).order('display_order', { ascending: true });
+                const { data, error } = await sb
+                    .from('settings')
+                    .select('*')
+                    .order('category', { ascending: true })
+                    .order('display_order', { ascending: true });
+
                 if (error) throw error;
                 allSettings = data || [];
                 renderSettings();
+
             } catch (err) {
                 console.error(err);
                 container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`;
@@ -581,6 +594,7 @@
 
         function renderSettings() {
             const container = document.getElementById('settingsContainer');
+
             if (allSettings.length === 0) {
                 container.innerHTML = '<div class="empty-state">No settings found</div>';
                 return;
@@ -592,27 +606,48 @@
                 grouped[s.category].push(s);
             });
 
-            const categoryIcons = { general: '📁', trading: '📊', pricing: '💰', payment: '💳', contact: '📞' };
+            const categoryIcons = {
+                general: '📁',
+                trading: '📊',
+                pricing: '💰',
+                payment: '💳',
+                contact: '📞'
+            };
 
             let html = '';
             for (const cat in grouped) {
                 const icon = categoryIcons[cat] || '📁';
-                html += `<div class="settings-category"><h3>${icon} ${cat.toUpperCase()}</h3>`;
+                html += `<div class="settings-category">
+                    <h3>${icon} ${cat.toUpperCase()}</h3>`;
+
                 grouped[cat].forEach(s => {
                     const isBigNumber = (s.key === 'free_trades_per_day');
                     html += `<div class="setting-row">
-                        <label>${s.label}${s.description ? `<span class="desc">${s.description}</span>` : ''}</label>
-                        <input type="${s.input_type === 'number' ? 'number' : 'text'}" id="setting_${s.key}" data-key="${s.key}" value="${s.value || ''}" class="${isBigNumber ? 'big-number' : ''}" placeholder="${s.label}" />
+                        <label>
+                            ${s.label}
+                            ${s.description ? `<span class="desc">${s.description}</span>` : ''}
+                        </label>
+                        <input 
+                            type="${s.input_type === 'number' ? 'number' : 'text'}"
+                            id="setting_${s.key}"
+                            data-key="${s.key}"
+                            value="${s.value || ''}"
+                            class="${isBigNumber ? 'big-number' : ''}"
+                            placeholder="${s.label}"
+                        />
                     </div>`;
                 });
+
                 html += `</div>`;
             }
+
             container.innerHTML = html;
         }
 
         async function saveAllSettings() {
             const btn = document.getElementById('saveSettingsBtn');
             const msg = document.getElementById('settingsMessage');
+
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             msg.style.display = 'none';
@@ -629,21 +664,31 @@
                     const original = allSettings.find(s => s.key === key);
 
                     if (original && original.value !== value) {
-                        const { error } = await sb.from('settings').update({ value: value, updated_at: new Date().toISOString() }).eq('key', key);
-                        if (error) errors.push(`${key}: ${error.message}`);
-                        else { updated++; original.value = value; }
+                        const { error } = await sb
+                            .from('settings')
+                            .update({ value: value, updated_at: new Date().toISOString() })
+                            .eq('key', key);
+
+                        if (error) {
+                            errors.push(`${key}: ${error.message}`);
+                        } else {
+                            updated++;
+                            original.value = value;
+                        }
                     }
                 }
 
                 if (errors.length > 0) {
-                    msg.innerHTML = `⚠️ ${updated} updated, ${errors.length} errors`;
+                    msg.innerHTML = `⚠️ ${updated} updated, ${errors.length} errors:<br>${errors.join('<br>')}`;
                     msg.style.color = '#fbbf24';
                 } else {
                     msg.innerHTML = `✅ ${updated} setting${updated !== 1 ? 's' : ''} saved successfully!`;
                     msg.style.color = '#10b981';
                 }
                 msg.style.display = 'block';
+
                 setTimeout(() => { msg.style.display = 'none'; }, 4000);
+
             } catch (err) {
                 console.error(err);
                 msg.innerHTML = '❌ Error: ' + err.message;
@@ -656,7 +701,7 @@
         }
 
         // ================================================================
-        // LOAD ALL DATA
+        // LOAD DATA from Supabase
         // ================================================================
         async function loadData() {
             document.getElementById('paymentsBody').innerHTML = '<tr><td colspan="10" class="loading-state">⏳ Loading...</td></tr>';
@@ -666,11 +711,17 @@
                 const sb = initSupabase();
                 if (!sb) throw new Error('Supabase init failed');
 
-                const { data: users, error: uErr } = await sb.from('users').select('*').order('created_at', { ascending: false });
+                const { data: users, error: uErr } = await sb
+                    .from('users')
+                    .select('*')
+                    .order('created_at', { ascending: false });
                 if (uErr) throw uErr;
                 allUsers = users || [];
 
-                const { data: payments, error: pErr } = await sb.from('payments').select('*, users(name, email, phone)').order('created_at', { ascending: false });
+                const { data: payments, error: pErr } = await sb
+                    .from('payments')
+                    .select('*, users(name, email, phone)')
+                    .order('created_at', { ascending: false });
                 if (pErr) throw pErr;
                 allPayments = payments || [];
 
@@ -679,7 +730,6 @@
                 renderUsers();
                 loadSettings();
                 loadAlerts();
-                loadTemplates();
 
             } catch (err) {
                 console.error(err);
@@ -742,7 +792,7 @@
                 <div>🆔 Binance UID: <strong style="color:#d4af37; font-family:monospace;">${p.payer_uid || '--'}</strong></div>
                 <div>📅 Date: ${new Date(p.created_at).toLocaleString()}</div>
                 <div>📊 Type: <strong>${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New Registration'}</strong></div>
-                <div>📌 Status: <strong>${p.status.toUpperCase()}</strong></div>
+                <div>📌 Status: <strong style="color:${p.status === 'approved' ? '#10b981' : p.status === 'rejected' ? '#ef4444' : '#fbbf24'};">${p.status.toUpperCase()}</strong></div>
             `;
             document.getElementById('screenshotModal').style.display = 'flex';
         }
@@ -754,20 +804,49 @@
         async function verifyPayment(index) {
             const p = allPayments[index];
             if (!p) return;
+
             const today = new Date();
             const newExpiry = new Date(today);
             newExpiry.setMonth(newExpiry.getMonth() + 1);
+
             const todayStr = today.toISOString();
             const expiryStr = newExpiry.toISOString();
 
             try {
                 const sb = initSupabase();
-                await sb.from('users').update({ status: 'active', subscription_start: todayStr, subscription_end: expiryStr }).eq('id', p.user_id);
-                await sb.from('payments').update({ status: 'approved', verified_by: 'admin', verified_at: new Date().toISOString() }).eq('id', p.id);
-                await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'verify_payment', target_user: p.user_id, meta: { payment_id: p.id, amount: p.amount, type: p.type } }]);
+
+                const { error: uErr } = await sb
+                    .from('users')
+                    .update({
+                        status: 'active',
+                        subscription_start: todayStr,
+                        subscription_end: expiryStr
+                    })
+                    .eq('id', p.user_id);
+                if (uErr) throw uErr;
+
+                const { error: pErr } = await sb
+                    .from('payments')
+                    .update({
+                        status: 'approved',
+                        verified_by: 'admin',
+                        verified_at: new Date().toISOString()
+                    })
+                    .eq('id', p.id);
+                if (pErr) throw pErr;
+
+                await sb.from('admin_logs').insert([{
+                    admin_id: 'admin',
+                    action: 'verify_payment',
+                    target_user: p.user_id,
+                    meta: { payment_id: p.id, amount: p.amount, type: p.type }
+                }]);
+
                 const u = p.users || {};
                 alert(`✅ VERIFIED!\n\nUser: ${u.name}\nNew Expiry: ${expiryStr.split('T')[0]}\nSecret Key: ${allUsers.find(x => x.id === p.user_id)?.secret_key || '--'}`);
+
                 loadData();
+
             } catch (err) {
                 console.error(err);
                 alert('❌ Error: ' + err.message);
@@ -777,14 +856,24 @@
         async function unverifyPayment(index) {
             const p = allPayments[index];
             if (!p) return;
-            if (!confirm(`Unverify payment for ${p.users?.name}?`)) return;
+            if (!confirm(`Unverify payment for ${p.users?.name}?\n\nThis will mark user as expired.`)) return;
+
             try {
                 const sb = initSupabase();
+
                 await sb.from('users').update({ status: 'expired' }).eq('id', p.user_id);
                 await sb.from('payments').update({ status: 'pending', verified_by: null, verified_at: null }).eq('id', p.id);
-                await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'unverify_payment', target_user: p.user_id, meta: { payment_id: p.id } }]);
+
+                await sb.from('admin_logs').insert([{
+                    admin_id: 'admin',
+                    action: 'unverify_payment',
+                    target_user: p.user_id,
+                    meta: { payment_id: p.id }
+                }]);
+
                 alert('↺ Payment UNVERIFIED!');
                 loadData();
+
             } catch (err) {
                 console.error(err);
                 alert('❌ Error: ' + err.message);
@@ -795,10 +884,22 @@
             const p = allPayments[index];
             if (!p) return;
             if (!confirm('Reject this payment?')) return;
+
             try {
                 const sb = initSupabase();
-                await sb.from('payments').update({ status: 'rejected', verified_by: 'admin', verified_at: new Date().toISOString() }).eq('id', p.id);
-                await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'reject_payment', target_user: p.user_id, meta: { payment_id: p.id } }]);
+                await sb.from('payments').update({
+                    status: 'rejected',
+                    verified_by: 'admin',
+                    verified_at: new Date().toISOString()
+                }).eq('id', p.id);
+
+                await sb.from('admin_logs').insert([{
+                    admin_id: 'admin',
+                    action: 'reject_payment',
+                    target_user: p.user_id,
+                    meta: { payment_id: p.id }
+                }]);
+
                 loadData();
             } catch (err) {
                 console.error(err);
@@ -833,7 +934,8 @@
         async function deleteUser(id) {
             const u = allUsers.find(x => x.id === id);
             if (!u) return;
-            if (!confirm(`Delete ${u.name}?`)) return;
+            if (!confirm(`Delete ${u.name}? Saare payments bhi delete honge.`)) return;
+
             try {
                 const sb = initSupabase();
                 await sb.from('users').delete().eq('id', id);
