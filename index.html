@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Nexi Rocket-XauPo Pro Max | AI Gold Trading Robot</title>
+    <title>Nexi Rocket-XauPo | Expert Analysis + AI Precision</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -63,7 +64,7 @@
         @keyframes pbFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* ALERT BUBBLE */
-        #alertBubble { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 9999; max-width: 90%; width: 500px; animation: alertSlideIn 0.5s ease-out; }
+        #alertBubble { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 10000; max-width: 90%; width: 500px; animation: alertSlideIn 0.5s ease-out; }
         @keyframes alertSlideIn { from { opacity: 0; transform: translateX(-50%) translateY(-30px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         .alert-bubble-content { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; padding: 20px 50px 20px 25px; border-radius: 15px; font-size: 1rem; font-weight: 700; text-align: center; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); position: relative; border: 2px solid #34d399; animation: alertPulse 2s ease-in-out infinite; }
         @keyframes alertPulse { 0%, 100% { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 10px 50px rgba(16, 185, 129, 0.9), 0 0 25px rgba(16, 185, 129, 0.6); } }
@@ -87,6 +88,11 @@
         .hero-stat { text-align: center; }
         .hero-stat .num { font-size: 2.5rem; font-weight: 900; color: #d4af37; }
         .hero-stat .label { color: #94a3b8; font-size: 0.9rem; }
+
+        /* ✅ TOP DISCLAIMER STRIP (hero ke neeche) */
+        .top-disclaimer { background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d); border-top: 2px solid #ef4444; border-bottom: 2px solid #ef4444; padding: 14px 20px; text-align: center; color: #fecaca; font-size: 0.85rem; font-weight: 600; line-height: 1.6; }
+        .top-disclaimer strong { color: #fff; font-weight: 900; }
+        .top-disclaimer .icon { color: #fbbf24; margin-right: 6px; }
 
         /* DEMO */
         .demo-section { padding: 40px; max-width: 1400px; margin: 0 auto; }
@@ -115,6 +121,37 @@
         .demo-table { width: 100%; border-collapse: collapse; }
         .demo-table th { background: #1e293b; color: #d4af37; padding: 10px; text-align: center; font-size: 0.85rem; }
         .demo-table td { padding: 10px; text-align: center; border-bottom: 1px solid #1e293b; font-size: 0.85rem; }
+
+        /* REAL PERFORMANCE STATS */
+        .real-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 40px; max-width: 1200px; margin: 0 auto; }
+        .real-stat-card { background: linear-gradient(135deg, #111827, #0f1729); border: 2px solid #334155; border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s; }
+        .real-stat-card:hover { border-color: #d4af37; transform: translateY(-5px); }
+        .real-stat-card .icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .real-stat-card .label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .real-stat-card .value { font-size: 2.2rem; font-weight: 900; color: #d4af37; }
+        .real-stat-card .value.green { color: #10b981; }
+        .real-stat-card .value.blue { color: #60a5fa; }
+        .real-stat-card .sub { color: #64748b; font-size: 0.75rem; margin-top: 5px; }
+
+        /* UPCOMING SIGNALS */
+        .signals-section { padding: 40px; max-width: 1400px; margin: 0 auto; }
+        .signals-section h2 { text-align: center; font-size: 2rem; color: #d4af37; margin-bottom: 15px; }
+        .signals-section .subtitle { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-bottom: 30px; }
+        .signal-row { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .signal-row .product-info { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 200px; }
+        .signal-row .product-logo { font-size: 2rem; }
+        .signal-row .product-name { font-size: 1.1rem; font-weight: 700; color: #fff; }
+        .signal-row .product-symbol { color: #94a3b8; font-size: 0.8rem; font-family: monospace; }
+        .signal-row .signal-details { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.85rem; }
+        .signal-row .signal-details > div { text-align: center; }
+        .signal-row .signal-details .label { color: #94a3b8; font-size: 0.7rem; text-transform: uppercase; }
+        .signal-row .signal-details .value { color: #fff; font-weight: 700; margin-top: 3px; }
+        .signal-row .signal-details .value.green { color: #10b981; }
+        .signal-row .signal-details .value.red { color: #ef4444; }
+        .signal-row .signal-badge { padding: 6px 15px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+        .signal-row .signal-badge.buy { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .signal-row .signal-badge.sell { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .signal-row .signal-time { color: #60a5fa; font-size: 0.8rem; font-weight: 600; }
 
         /* FEATURES */
         .features { padding: 80px 40px; max-width: 1400px; margin: 0 auto; }
@@ -149,8 +186,10 @@
         .modal-buttons { display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
 
         /* FOOTER */
-        .footer { background: #111827; padding: 40px; text-align: center; color: #94a3b8; border-top: 1px solid #334155; margin-top: 40px; }
+        .footer { background: #111827; padding: 40px 20px; text-align: center; color: #94a3b8; border-top: 1px solid #334155; margin-top: 40px; }
         .footer strong { color: #d4af37; }
+        .footer .disclaimer { max-width: 900px; margin: 25px auto 0; padding: 20px; background: #0f1729; border-left: 4px solid #ef4444; border-radius: 8px; text-align: left; font-size: 0.8rem; line-height: 1.6; color: #cbd5e1; }
+        .footer .disclaimer strong { color: #ef4444; }
         .nexify-glow { color: #ffffff; font-weight: 900; font-size: 1.6rem; letter-spacing: 1.5px; display: inline-block; font-family: 'Segoe UI', Roboto, sans-serif; background: linear-gradient(90deg, #ffffff, #d4af37, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% auto; animation: nexifyShimmer 3s linear infinite, nexifyHeartbeat 1.5s ease-in-out infinite; transform-origin: center; }
         @keyframes nexifyShimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
         @keyframes nexifyHeartbeat { 0% { transform: scale(1); } 14% { transform: scale(1.08); } 28% { transform: scale(1); } 42% { transform: scale(1.08); } 70% { transform: scale(1); } 100% { transform: scale(1); } }
@@ -161,7 +200,7 @@
             .hero { padding: 50px 20px; }
             .hero h1 { font-size: 2rem; }
             .hero p { font-size: 1rem; }
-            .demo-section, .features, .pricing { padding: 40px 20px; }
+            .demo-section, .features, .pricing, .signals-section, .real-stats { padding: 40px 20px; }
             .price-card.featured { transform: scale(1); }
             .btn-admin { padding: 6px 12px; font-size: 0.75rem; }
             .free-trades-value { font-size: 2.2rem; }
@@ -176,6 +215,8 @@
             .alert-bubble-content { font-size: 0.9rem; padding: 16px 45px 16px 20px; }
             .risk-ticker { top: 60px; padding: 8px 0; }
             .risk-ticker-content { font-size: 0.75rem; animation-duration: 45s; }
+            .signal-row { flex-direction: column; align-items: stretch; }
+            .top-disclaimer { font-size: 0.75rem; padding: 12px 15px; }
         }
 
         @media (max-width: 480px) {
@@ -200,11 +241,11 @@
             <span class="typewriter" id="typewriterText"></span>
         </div>
 
-        <div class="welcome-subtitle">Trade safely with Nexi</div>
+        <div class="welcome-subtitle">Trade smartly with Nexi XauPo</div>
 
         <button class="welcome-start-btn" onclick="closeWelcome()">Let's Start →</button>
 
-        <div class="welcome-tagline">✨ AI-Powered Gold Trading ✨</div>
+        <div class="welcome-tagline">✨ Expert Analysis + AI Precision ✨</div>
     </div>
 
     <!-- ✅ ALERT SPEECH BUBBLE -->
@@ -221,6 +262,8 @@
         <a href="index.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
         <div class="nav-links">
             <a onclick="scrollToSection('demo')">Live Demo</a>
+            <a onclick="scrollToSection('signals')">Signals</a>
+            <a onclick="scrollToSection('performance')">Performance</a>
             <a onclick="scrollToSection('features')">Features</a>
             <a onclick="scrollToSection('pricing')">Pricing</a>
         </div>
@@ -250,14 +293,50 @@
     </div>
 
     <section class="hero">
-        <div class="hero-badge"><i class="fas fa-circle" style="font-size:0.5rem; color:#10b981;"></i> Live Trading Active</div>
-        <h1>AI-Powered <span>Gold Trading</span> Robot</h1>
-        <p>Watch our AI trade gold in real-time. Start with just $100. No experience needed.</p>
+        <div class="hero-badge"><i class="fas fa-circle" style="font-size:0.5rem; color:#10b981;"></i> Live Analysis Active</div>
+        <h1>Expert <span>Gold Trading</span> Signals</h1>
+        <p>Professional analysis with AI precision. Start with just $100. No experience needed.</p>
         <button class="btn-primary" onclick="scrollToSection('demo')" style="font-size:1.2rem; padding:15px 40px;"><i class="fas fa-play"></i> Try Free Demo (<span id="heroFreeTrades">3</span> Trades)</button>
         <div class="hero-stats">
-            <div class="hero-stat"><div class="num" id="liveUsers">1,247</div><div class="label">Active Traders</div></div>
-            <div class="hero-stat"><div class="num">68%</div><div class="label">Win Rate</div></div>
-            <div class="hero-stat"><div class="num">$42K+</div><div class="label">Total Profit</div></div>
+            <div class="hero-stat"><div class="num" id="heroTotalSignals">--</div><div class="label">Signals Shared</div></div>
+            <div class="hero-stat"><div class="num" id="heroWinRate">--</div><div class="label">Win Rate</div></div>
+            <div class="hero-stat"><div class="num" id="heroActiveClients">--</div><div class="label">Active Clients</div></div>
+        </div>
+    </section>
+
+    <!-- ✅ TOP DISCLAIMER (hero ke bilkul neeche) -->
+    <div class="top-disclaimer">
+        <span class="icon">⚠️</span><strong>Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. You may lose some or all of your capital. All signals and analysis are for educational purposes only and do not constitute financial advice. You are solely responsible for your own trading decisions.
+    </div>
+
+    <!-- ✅ REAL PERFORMANCE SECTION (Settings se on/off hoga) -->
+    <section class="real-stats" id="performance" style="display:none;">
+        <div class="real-stat-card" id="statCardWinRate">
+            <div class="icon">🎯</div>
+            <div class="label">Win Rate</div>
+            <div class="value green" id="statWinRate">0%</div>
+            <div class="sub" id="statWinRateSub">Based on closed trades</div>
+        </div>
+        <div class="real-stat-card" id="statCardVisitors">
+            <div class="icon">👥</div>
+            <div class="label">Visitors Today</div>
+            <div class="value blue" id="statVisitors">1000</div>
+            <div class="sub">Active community</div>
+        </div>
+        <div class="real-stat-card" id="statCardClients">
+            <div class="icon">📊</div>
+            <div class="label">Active Clients</div>
+            <div class="value" id="statClients">0</div>
+            <div class="sub">Registered traders</div>
+        </div>
+    </section>
+
+    <!-- ✅ UPCOMING SIGNALS SECTION -->
+    <section class="signals-section" id="signals" style="display:none;">
+        <h2>🎯 Upcoming Trade Signals</h2>
+        <p class="subtitle">Yeh signals expert trader ne di hain — jab actual trade HIT hoga to ye live ban jayengi.</p>
+        <div id="signalsList">
+            <div style="text-align:center; padding:30px; color:#64748b;">⏳ Loading signals...</div>
         </div>
     </section>
 
@@ -304,11 +383,11 @@
     <section class="features" id="features">
         <h2>Why Choose Nexi Rocket-XauPo?</h2>
         <div class="features-grid">
-            <div class="feature-card"><i class="fas fa-robot"></i><h3>AI-Powered</h3><p>Advanced algorithms analyze 24/7</p></div>
-            <div class="feature-card"><i class="fas fa-chart-line"></i><h3>Real-Time</h3><p>Live gold prices with instant signals</p></div>
+            <div class="feature-card"><i class="fas fa-user-tie"></i><h3>Expert Analysis</h3><p>Professional human trader insights</p></div>
+            <div class="feature-card"><i class="fas fa-chart-line"></i><h3>Real-Time Data</h3><p>Live gold prices with instant signals</p></div>
+            <div class="feature-card"><i class="fas fa-brain"></i><h3>AI Precision</h3><p>AI tools enhance every analysis</p></div>
             <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Risk Management</h3><p>Auto SL/TP with dynamic stops</p></div>
             <div class="feature-card"><i class="fas fa-mobile-alt"></i><h3>Works Everywhere</h3><p>Desktop, tablet, mobile</p></div>
-            <div class="feature-card"><i class="fas fa-bolt"></i><h3>Fast Execution</h3><p>Entries within milliseconds</p></div>
             <div class="feature-card"><i class="fas fa-headset"></i><h3>24/7 Support</h3><p>WhatsApp & Telegram</p></div>
         </div>
     </section>
@@ -332,7 +411,7 @@
                 <ul>
                     <li><i class="fas fa-check"></i> Unlimited trades</li>
                     <li><i class="fas fa-check"></i> Full history</li>
-                    <li><i class="fas fa-check"></i> Advanced AI</li>
+                    <li><i class="fas fa-check"></i> Expert signals</li>
                     <li><i class="fas fa-check"></i> WhatsApp support</li>
                 </ul>
                 <button class="btn-primary" style="width:100%;" onclick="goToRegister()">Register Now</button>
@@ -353,6 +432,10 @@
     <footer class="footer">
         <p>A product is Published and Designed By <strong class="nexify-glow">NexifyNova</strong></p>
         <p style="font-size:0.8rem; margin-top:10px;">© 2026 All Rights Reserved.</p>
+
+        <div class="disclaimer">
+            <strong>⚠️ Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. You may lose some or all of your capital. All signals and analysis provided by Nexi XauPo are for educational purposes only and do not constitute financial advice. You are solely responsible for your own trading decisions. Nexi XauPo is not liable for any losses incurred.
+        </div>
     </footer>
 
     <div class="modal" id="freeTradesModal">
@@ -374,6 +457,9 @@
         function goToRegister() { window.location.href = 'register.html'; }
         function goToSignIn() { window.location.href = 'signin.html'; }
         function scrollToSection(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
+
+        // Visitors floor (kam az kam itna dikhaye)
+        const VISITORS_FLOOR = 1000;
 
         // ================================================================
         // WELCOME OVERLAY
@@ -429,14 +515,12 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const overlay = document.getElementById('welcomeOverlay');
-                if (overlay && overlay.style.display !== 'none') {
-                    closeWelcome();
-                }
+                if (overlay && overlay.style.display !== 'none') closeWelcome();
             }
         });
 
         // ================================================================
-        // PUBLICITY BANNER — Fetch active banners + 5 sec rotation
+        // PUBLICITY BANNER
         // ================================================================
         let activeBanners = [];
         let currentBannerIndex = 0;
@@ -450,13 +534,11 @@
 
                 const banners = await getActiveBanners('demo');
 
-                // Filter closed banners (agar closable hain)
                 const visible = banners.filter(b => {
                     if (b.closable && bannerClosedIds.includes(b.id)) return false;
                     return true;
                 });
 
-                // Sort by priority (high first)
                 visible.sort((a, b) => (b.priority || 5) - (a.priority || 5));
 
                 if (visible.length === 0) {
@@ -469,7 +551,6 @@
                 currentBannerIndex = 0;
                 showBanner(activeBanners[0]);
 
-                // Rotation: agar 1 se zyada banners hain to har 5 sec next
                 if (bannerRotationTimer) clearInterval(bannerRotationTimer);
                 if (activeBanners.length > 1) {
                     bannerRotationTimer = setInterval(() => {
@@ -477,17 +558,13 @@
                         showBanner(activeBanners[currentBannerIndex]);
                     }, 5000);
                 }
-
-            } catch (err) {
-                console.error('loadPublicityBanners error:', err);
-            }
+            } catch (err) { console.error('loadPublicityBanners:', err); }
         }
 
         function showBanner(banner) {
             const el = document.getElementById('publicityBanner');
             if (!el) return;
 
-            // Reset classes
             el.className = '';
             el.classList.add('style-' + (banner.color || 'gold'));
 
@@ -496,7 +573,6 @@
                              : 'pb-static';
             el.classList.add(styleClass);
 
-            // HTML based on style
             let innerHTML = '';
             const closeBtn = banner.closable
                 ? `<button class="pb-close" onclick="closeBanner('${banner.id}')" title="Close">×</button>`
@@ -515,14 +591,10 @@
         function closeBanner(id) {
             const el = document.getElementById('publicityBanner');
             if (el) el.style.display = 'none';
-
-            // Save to localStorage so it doesn't reappear
             if (!bannerClosedIds.includes(id)) {
                 bannerClosedIds.push(id);
                 localStorage.setItem('closedBannerIds', JSON.stringify(bannerClosedIds));
             }
-
-            // Remove from active list and rotate to next
             activeBanners = activeBanners.filter(b => b.id !== id);
             if (activeBanners.length > 0) {
                 currentBannerIndex = 0;
@@ -532,11 +604,11 @@
 
         window.addEventListener('load', () => {
             loadPublicityBanners();
-            setInterval(loadPublicityBanners, 30000); // refresh every 30 sec
+            setInterval(loadPublicityBanners, 30000);
         });
 
         // ================================================================
-        // ALERT BUBBLE — with RE-APPEAR logic
+        // ALERT BUBBLE (with re-appear)
         // ================================================================
         let currentAlertId = null;
 
@@ -551,7 +623,6 @@
                     .eq('is_active', true)
                     .in('target', ['demo', 'both'])
                     .order('created_at', { ascending: false });
-
                 if (error) throw error;
 
                 const now = new Date();
@@ -569,8 +640,8 @@
 
                 const alert = active[0];
                 const reappearSec = parseInt(alert.reappear_seconds) || 0;
-
                 const closedAtRaw = localStorage.getItem('alertClosedAt_' + alert.id);
+
                 if (closedAtRaw) {
                     if (reappearSec === 0) {
                         document.getElementById('alertBubble').style.display = 'none';
@@ -589,10 +660,7 @@
                     document.getElementById('alertBubbleText').innerText = alert.message;
                     document.getElementById('alertBubble').style.display = 'block';
                 }
-
-            } catch (err) {
-                console.error('loadActiveAlert error:', err);
-            }
+            } catch (err) { console.error('loadActiveAlert:', err); }
         }
 
         function closeAlertBubble() {
@@ -618,20 +686,14 @@
                 const sb = initSupabase();
                 if (!sb) return;
 
-                const { data, error } = await sb
-                    .from('settings')
-                    .select('key, value');
-
+                const { data, error } = await sb.from('settings').select('key, value');
                 if (error) throw error;
 
                 settingsCache = {};
                 (data || []).forEach(s => { settingsCache[s.key] = s.value; });
 
                 applySettingsToUI();
-
-            } catch (err) {
-                console.error('loadDynamicSettings error:', err);
-            }
+            } catch (err) { console.error('loadDynamicSettings:', err); }
         }
 
         function applySettingsToUI() {
@@ -669,6 +731,236 @@
         window.addEventListener('load', () => {
             loadDynamicSettings();
             setInterval(loadDynamicSettings, 30000);
+        });
+
+        // ================================================================
+        // ✅ REAL PERFORMANCE STATS (with 1000+ visitor counter + animation)
+        // ================================================================
+        let realStatsCache = {
+            winRate: '--',
+            visitors: VISITORS_FLOOR,
+            clients: 0,
+            totalSignals: 0,
+            showWinRate: true,
+            showVisitors: true,
+            showClients: true
+        };
+
+        let visitorsAnimFrame = null;
+
+        async function loadRealStats() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                const showWinRate = (settingsCache.show_win_rate || 'true') === 'true';
+                const showVisitors = (settingsCache.show_visitors || 'true') === 'true';
+                const showClients = (settingsCache.show_clients || 'true') === 'true';
+
+                realStatsCache.showWinRate = showWinRate;
+                realStatsCache.showVisitors = showVisitors;
+                realStatsCache.showClients = showClients;
+
+                let winRate = '--';
+                let visitors = VISITORS_FLOOR;
+                let clients = 0;
+                let totalSignals = 0;
+
+                // Win rate from daily_stats
+                if (showWinRate) {
+                    const { data: dailyData } = await sb
+                        .from('daily_stats')
+                        .select('win_trades, total_trades, stat_date')
+                        .order('stat_date', { ascending: false })
+                        .limit(30);
+
+                    if (dailyData && dailyData.length > 0) {
+                        let totWins = 0, totTrades = 0;
+                        dailyData.forEach(d => {
+                            totWins += parseInt(d.win_trades) || 0;
+                            totTrades += parseInt(d.total_trades) || 0;
+                        });
+                        if (totTrades > 0) winRate = ((totWins / totTrades) * 100).toFixed(1) + '%';
+                        else winRate = '0%';
+                    } else {
+                        winRate = '0%';
+                    }
+                }
+
+                // Visitors from visits table (today) — with floor
+                if (showVisitors) {
+                    const today = new Date().toISOString().split('T')[0];
+                    const { count } = await sb
+                        .from('visits')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('visited_date', today);
+                    const realCount = count || 0;
+                    visitors = Math.max(VISITORS_FLOOR, realCount);
+                }
+
+                // Clients from users table (active)
+                if (showClients) {
+                    const { count } = await sb
+                        .from('users')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('status', 'active');
+                    clients = count || 0;
+                }
+
+                // Total signals
+                const { count: sigCount } = await sb
+                    .from('signals')
+                    .select('*', { count: 'exact', head: true });
+                totalSignals = sigCount || 0;
+
+                realStatsCache.winRate = winRate;
+                realStatsCache.visitors = visitors;
+                realStatsCache.clients = clients;
+                realStatsCache.totalSignals = totalSignals;
+
+                applyRealStatsToUI();
+            } catch (err) { console.error('loadRealStats:', err); }
+        }
+
+        function animateVisitorCount(targetNum, element) {
+            if (!element) return;
+            // Cancel previous animation
+            if (visitorsAnimFrame) cancelAnimationFrame(visitorsAnimFrame);
+
+            // Start from 1000 (floor) and increase by 1 until target
+            let current = VISITORS_FLOOR;
+            element.innerText = current;
+
+            if (targetNum <= VISITORS_FLOOR) return;
+
+            const totalSteps = targetNum - VISITORS_FLOOR;
+            const stepDelay = Math.max(20, Math.min(80, Math.floor(2000 / totalSteps)));
+
+            function tick() {
+                current++;
+                element.innerText = current;
+                if (current < targetNum) {
+                    visitorsAnimFrame = setTimeout(tick, stepDelay);
+                }
+            }
+            visitorsAnimFrame = setTimeout(tick, 200);
+        }
+
+        function applyRealStatsToUI() {
+            const s = realStatsCache;
+
+            // Hero stats
+            const heroSignalsEl = document.getElementById('heroTotalSignals');
+            const heroWinEl = document.getElementById('heroWinRate');
+            const heroClientsEl = document.getElementById('heroActiveClients');
+
+            if (heroSignalsEl) heroSignalsEl.innerText = s.totalSignals > 0 ? s.totalSignals : '--';
+            if (heroWinEl) heroWinEl.innerText = s.winRate;
+            if (heroClientsEl) heroClientsEl.innerText = s.clients > 0 ? s.clients : '--';
+
+            // Real stats section
+            const realStatsSec = document.getElementById('performance');
+            if (realStatsSec) {
+                if (s.showWinRate || s.showVisitors || s.showClients) {
+                    realStatsSec.style.display = 'grid';
+                } else {
+                    realStatsSec.style.display = 'none';
+                }
+            }
+
+            const winCard = document.getElementById('statCardWinRate');
+            const visCard = document.getElementById('statCardVisitors');
+            const cliCard = document.getElementById('statCardClients');
+
+            if (winCard) winCard.style.display = s.showWinRate ? 'block' : 'none';
+            if (visCard) visCard.style.display = s.showVisitors ? 'block' : 'none';
+            if (cliCard) cliCard.style.display = s.showClients ? 'block' : 'none';
+
+            const statWinRateEl = document.getElementById('statWinRate');
+            const statVisitorsEl = document.getElementById('statVisitors');
+            const statClientsEl = document.getElementById('statClients');
+
+            if (statWinRateEl) statWinRateEl.innerText = s.winRate;
+            if (statVisitorsEl) animateVisitorCount(s.visitors, statVisitorsEl);
+            if (statClientsEl) statClientsEl.innerText = s.clients;
+        }
+
+        window.addEventListener('load', () => {
+            // Delayed to ensure settings loaded
+            setTimeout(() => {
+                loadRealStats();
+                setInterval(loadRealStats, 60000);
+            }, 1500);
+        });
+
+        // ================================================================
+        // UPCOMING SIGNALS
+        // ================================================================
+        const PRODUCT_INFO = {
+            'XAUUSD': { icon: '🥇', name: 'Gold' },
+            'BTCUSD': { icon: '₿', name: 'Bitcoin' },
+            'XAGUSD': { icon: '🥈', name: 'Silver' },
+            'ETHUSD': { icon: 'Ξ', name: 'Ethereum' },
+            'EURUSD': { icon: '💶', name: 'EUR/USD' },
+            'GBPUSD': { icon: '💷', name: 'GBP/USD' },
+            'USDJPY': { icon: '💴', name: 'USD/JPY' },
+            'AUDUSD': { icon: '🇦🇺', name: 'AUD/USD' }
+        };
+
+        async function loadUpcomingSignals() {
+            const container = document.getElementById('signalsList');
+            const section = document.getElementById('signals');
+            if (!container || !section) return;
+
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                const { data, error } = await sb
+                    .from('signals')
+                    .select('*')
+                    .eq('is_active', true)
+                    .in('target', ['demo', 'both'])
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    section.style.display = 'none';
+                    return;
+                }
+
+                section.style.display = 'block';
+                container.innerHTML = data.map(s => {
+                    const info = PRODUCT_INFO[s.product] || { icon: '📊', name: s.product };
+                    const timeInfo = s.expected_time
+                        ? '<div class="signal-time">⏰ ' + new Date(s.expected_time).toLocaleString() + '</div>'
+                        : '';
+                    return `<div class="signal-row">
+                        <div class="product-info">
+                            <div class="product-logo">${info.icon}</div>
+                            <div>
+                                <div class="product-name">${info.name}</div>
+                                <div class="product-symbol">${s.product}</div>
+                            </div>
+                            <div class="signal-badge ${s.type === 'BUY' ? 'buy' : 'sell'}">${s.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</div>
+                        </div>
+                        <div class="signal-details">
+                            <div><div class="label">Entry</div><div class="value">$${parseFloat(s.entry).toFixed(2)}</div></div>
+                            <div><div class="label">TP</div><div class="value green">$${parseFloat(s.tp).toFixed(2)}</div></div>
+                            <div><div class="label">SL</div><div class="value red">$${parseFloat(s.sl).toFixed(2)}</div></div>
+                            ${timeInfo}
+                        </div>
+                    </div>`;
+                }).join('');
+
+            } catch (err) { console.error('loadUpcomingSignals:', err); }
+        }
+
+        window.addEventListener('load', () => {
+            loadUpcomingSignals();
+            setInterval(loadUpcomingSignals, 30000);
         });
 
         // ================================================================
@@ -764,14 +1056,37 @@
 
         function closeModal() { document.getElementById('freeTradesModal').style.display = 'none'; }
 
-        setInterval(() => {
-            const el = document.getElementById('liveUsers');
-            if (el) {
-                const current = parseInt(el.innerText.replace(',', ''));
-                el.innerText = (current + Math.floor(Math.random() * 10) - 3).toLocaleString();
-            }
-        }, 5000);
+        // ================================================================
+        // VISIT TRACKING
+        // ================================================================
+        async function logVisit() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
 
+                const today = new Date().toISOString().split('T')[0];
+                const lastVisit = localStorage.getItem('nexiLastVisit');
+
+                if (lastVisit === today) return;
+
+                const ua = navigator.userAgent || '';
+                await sb.from('visits').insert([{
+                    page: 'index',
+                    user_agent: ua,
+                    visited_date: today
+                }]);
+
+                localStorage.setItem('nexiLastVisit', today);
+            } catch (err) { console.error('logVisit:', err); }
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(logVisit, 2000);
+        });
+
+        // ================================================================
+        // NAV BUTTONS (logged-in state)
+        // ================================================================
         window.addEventListener('load', () => {
             const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
             if (user) {
@@ -795,4 +1110,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
