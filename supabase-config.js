@@ -106,6 +106,11 @@ async function getSetting(key, defaultValue = null) {
     return data ? data.value : defaultValue;
 }
 
+// ✅ NEW: Alias with default (same as getSetting)
+async function getSettingWithDefault(key, defaultValue = null) {
+    return await getSetting(key, defaultValue);
+}
+
 async function getAllSettings() {
     const sb = initSupabase();
     const { data, error } = await sb
@@ -143,7 +148,6 @@ async function getFreeTradesPerDay() {
     _cachedFreeTrades = parseInt(val) || 3;
     return _cachedFreeTrades;
 }
-
 // ============================================================
 // HELPER FUNCTIONS — Alerts
 // ============================================================
@@ -299,7 +303,7 @@ async function deleteTemplate(id) {
 }
 
 // ============================================================
-// HELPER FUNCTIONS — Publicity Banners (Step 5 — ready for use)
+// HELPER FUNCTIONS — Publicity Banners
 // ============================================================
 
 async function getActiveBanners(target = 'both') {
@@ -389,7 +393,7 @@ async function deleteBanner(id) {
 }
 
 // ============================================================
-// HELPER FUNCTIONS — Banner Templates (Step 5)
+// HELPER FUNCTIONS — Banner Templates
 // ============================================================
 
 async function getBannerTemplates(limit = 100) {
@@ -451,5 +455,331 @@ async function deleteBannerTemplate(id) {
     }
     return { success: true };
 }
+// ============================================================
+// HELPER FUNCTIONS — Visits (NEW)
+// ============================================================
 
-console.log('✅ supabase-config.js loaded');
+async function logVisit(page = 'index', ipAddress = null) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: 'Supabase init failed' };
+
+        const today = new Date().toISOString().split('T')[0];
+        const ua = navigator.userAgent || '';
+
+        const payload = {
+            page: page,
+            user_agent: ua,
+            visited_date: today
+        };
+        if (ipAddress) payload.ip_address = ipAddress;
+
+        const { data, error } = await sb
+            .from('visits')
+            .insert([payload])
+            .select()
+            .single();
+
+        if (error) {
+            console.error('logVisit error:', error);
+            return { error };
+        }
+        return { data };
+    } catch (err) {
+        console.error('logVisit exception:', err);
+        return { error: err };
+    }
+}
+
+async function getTodayVisits() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return 0;
+
+        const today = new Date().toISOString().split('T')[0];
+        const { count, error } = await sb
+            .from('visits')
+            .select('*', { count: 'exact', head: true })
+            .eq('visited_date', today);
+
+        if (error) {
+            console.error('getTodayVisits error:', error);
+            return 0;
+        }
+        return count || 0;
+    } catch (err) {
+        console.error('getTodayVisits exception:', err);
+        return 0;
+    }
+}
+
+async function getVisitsGroupedByDate(limit = 30) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return [];
+
+        const { data, error } = await sb
+            .from('visits')
+            .select('visited_date, ip_address')
+            .order('visited_date', { ascending: false })
+            .limit(5000);
+
+        if (error) {
+            console.error('getVisitsGroupedByDate error:', error);
+            return [];
+        }
+
+        const grouped = {};
+        (data || []).forEach(v => {
+            if (!v.visited_date) return;
+            if (!grouped[v.visited_date]) grouped[v.visited_date] = { total: 0, ips: new Set() };
+            grouped[v.visited_date].total++;
+            if (v.ip_address) grouped[v.visited_date].ips.add(v.ip_address);
+        });
+
+        return Object.keys(grouped)
+            .sort()
+            .reverse()
+            .slice(0, limit)
+            .map(date => ({
+                stat_date: date,
+                total_visits: grouped[date].total,
+                unique_visitors: grouped[date].ips.size
+            }));
+    } catch (err) {
+        console.error('getVisitsGroupedByDate exception:', err);
+        return [];
+    }
+}
+
+// ============================================================
+// HELPER FUNCTIONS — Daily Stats (NEW)
+// ============================================================
+
+async function getDailyStats(limit = 30) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return [];
+
+        const { data, error } = await sb
+            .from('daily_stats')
+            .select('*')
+            .order('stat_date', { ascending: false })
+            .limit(limit);
+
+        if (error) {
+            console.error('getDailyStats error:', error);
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.error('getDailyStats exception:', err);
+        return [];
+    }
+}
+
+async function saveDailyStats(statsData) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: 'Supabase init failed' };
+
+        const payload = {
+            ...statsData,
+            updated_at: new Date().toISOString()
+        };
+
+        const { data, error } = await sb
+            .from('daily_stats')
+            .upsert([payload], { onConflict: 'stat_date' })
+            .select()
+            .single();
+
+        if (error) {
+            console.error('saveDailyStats error:', error);
+            return { error };
+        }
+        return { data };
+    } catch (err) {
+        console.error('saveDailyStats exception:', err);
+        return { error: err };
+    }
+}
+
+async function getOverallWinRate(days = 30) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return '0%';
+
+        const { data, error } = await sb
+            .from('daily_stats')
+            .select('win_trades, total_trades')
+            .order('stat_date', { ascending: false })
+            .limit(days);
+
+        if (error) {
+            console.error('getOverallWinRate error:', error);
+            return '0%';
+        }
+
+        let totWins = 0, totTrades = 0;
+        (data || []).forEach(d => {
+            totWins += parseInt(d.win_trades) || 0;
+            totTrades += parseInt(d.total_trades) || 0;
+        });
+
+        return totTrades > 0 ? ((totWins / totTrades) * 100).toFixed(1) + '%' : '0%';
+    } catch (err) {
+        console.error('getOverallWinRate exception:', err);
+        return '0%';
+    }
+}
+
+// ============================================================
+// HELPER FUNCTIONS — Signals (NEW)
+// ============================================================
+
+async function getActiveSignals(target = 'clients', limit = 10) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return [];
+
+        let query = sb
+            .from('signals')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(limit);
+
+        if (target === 'demo') {
+            query = query.in('target', ['demo', 'both']);
+        } else if (target === 'clients') {
+            query = query.in('target', ['clients', 'both']);
+        }
+
+        const { data, error } = await query;
+        if (error) {
+            console.error('getActiveSignals error:', error);
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.error('getActiveSignals exception:', err);
+        return [];
+    }
+}
+
+async function getAllSignals() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return [];
+
+        const { data, error } = await sb
+            .from('signals')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('getAllSignals error:', error);
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.error('getAllSignals exception:', err);
+        return [];
+    }
+}
+
+async function getTotalSignalsCount() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return 0;
+
+        const { count, error } = await sb
+            .from('signals')
+            .select('*', { count: 'exact', head: true });
+
+        if (error) {
+            console.error('getTotalSignalsCount error:', error);
+            return 0;
+        }
+        return count || 0;
+    } catch (err) {
+        console.error('getTotalSignalsCount exception:', err);
+        return 0;
+    }
+}
+
+// ============================================================
+// HELPER FUNCTIONS — Clients Count (NEW)
+// ============================================================
+
+async function getActiveClientsCount() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return 0;
+
+        const { count, error } = await sb
+            .from('users')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'active');
+
+        if (error) {
+            console.error('getActiveClientsCount error:', error);
+            return 0;
+        }
+        return count || 0;
+    } catch (err) {
+        console.error('getActiveClientsCount exception:', err);
+        return 0;
+    }
+}
+
+async function getTotalClientsCount() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return 0;
+
+        const { count, error } = await sb
+            .from('users')
+            .select('*', { count: 'exact', head: true });
+
+        if (error) {
+            console.error('getTotalClientsCount error:', error);
+            return 0;
+        }
+        return count || 0;
+    } catch (err) {
+        console.error('getTotalClientsCount exception:', err);
+        return 0;
+    }
+}
+
+// ============================================================
+// HELPER FUNCTIONS — Trades (NEW — for stats recalculation)
+// ============================================================
+
+async function getTradesBetween(startISO, endISO) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return [];
+
+        const { data, error } = await sb
+            .from('trades')
+            .select('profit, exit, created_at')
+            .gte('created_at', startISO)
+            .lte('created_at', endISO)
+            .not('exit', 'is', null);
+
+        if (error) {
+            console.error('getTradesBetween error:', error);
+            return [];
+        }
+        return data || [];
+    } catch (err) {
+        console.error('getTradesBetween exception:', err);
+        return [];
+    }
+}
+
+// ============================================================
+console.log('✅ supabase-config.js loaded — v2 (with stats/visits/signals helpers)');
