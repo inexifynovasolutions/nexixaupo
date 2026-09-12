@@ -16,41 +16,86 @@
         .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
 
-        /* ALERT SPEECH BUBBLE */
+        /* ✅ ALERT SPEECH BUBBLE */
         #alertBubble {
-            position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
-            z-index: 500; max-width: 90%; width: 500px;
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 500;
+            max-width: 90%;
+            width: 500px;
             animation: alertSlideIn 0.5s ease-out;
         }
+
         @keyframes alertSlideIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
+
         .alert-bubble-content {
             background: linear-gradient(135deg, #10b981, #059669);
-            color: #ffffff; padding: 20px 50px 20px 25px; border-radius: 15px;
-            font-size: 1rem; font-weight: 700; text-align: center;
+            color: #ffffff;
+            padding: 20px 50px 20px 25px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
             box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
-            position: relative; border: 2px solid #34d399;
+            position: relative;
+            border: 2px solid #34d399;
             animation: alertPulse 2s ease-in-out infinite;
         }
+
         @keyframes alertPulse {
             0%, 100% { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); }
             50% { box-shadow: 0 10px 50px rgba(16, 185, 129, 0.9), 0 0 25px rgba(16, 185, 129, 0.6); }
         }
+
         .alert-bubble-close {
-            position: absolute; top: 8px; right: 10px;
-            background: rgba(255, 255, 255, 0.2); border: none; color: #ffffff;
-            font-size: 1.4rem; font-weight: 700; width: 30px; height: 30px;
-            border-radius: 50%; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; transition: all 0.2s; line-height: 1; padding: 0;
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+            padding: 0;
         }
-        .alert-bubble-close:hover { background: #ef4444; transform: rotate(90deg) scale(1.1); }
+
+        .alert-bubble-close:hover {
+            background: #ef4444;
+            transform: rotate(90deg) scale(1.1);
+        }
+
         .alert-bubble-tail {
-            position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 18px solid transparent;
-            border-right: 18px solid transparent; border-top: 20px solid #059669;
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 20px solid #059669;
         }
+
         @media (max-width: 768px) {
             #alertBubble { width: 90%; top: 85px; }
             .alert-bubble-content { font-size: 0.9rem; padding: 16px 45px 16px 20px; }
@@ -115,11 +160,13 @@
 </head>
 <body>
 
+    <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="spinner"><i class="fas fa-circle-notch"></i></div>
         <p style="color:#94a3b8; margin-top:20px;">Loading your account...</p>
     </div>
 
+    <!-- ✅ ALERT SPEECH BUBBLE -->
     <div id="alertBubble" style="display: none;">
         <div class="alert-bubble-content">
             <button class="alert-bubble-close" onclick="closeAlertBubble()">×</button>
@@ -137,43 +184,51 @@
     </nav>
 
     <div class="container" id="mainContainer" style="display:none;">
+
         <div class="welcome-card">
             <h1>Welcome, <span id="welcomeName">Trader</span>! 🎉</h1>
             <p>Your AI trading robot is ready. Start making profits today.</p>
         </div>
+
         <div class="stats-grid">
             <div class="stat-card"><div class="label">💰 Capital</div><div class="value" id="statCapital">$0.00</div></div>
             <div class="stat-card"><div class="label">📅 Subscription</div><div class="value green" id="statSubscription">Active</div></div>
             <div class="stat-card"><div class="label">📊 Expiry</div><div class="value" id="statExpiry" style="font-size:1.1rem;">--</div></div>
             <div class="stat-card"><div class="label">🔑 Status</div><div class="value green">✅ Verified</div></div>
         </div>
+
         <div class="robot-section">
             <div class="robot-header">
                 <h2>🤖 AI Trading Robot</h2>
                 <span class="robot-status stopped" id="robotStatusBadge">⏹️ STOPPED</span>
             </div>
+
             <div class="balance-panel">
                 <div class="balance-box"><div class="label">💰 Base Balance</div><div class="value" id="baseBalance">$0.00</div></div>
                 <div class="balance-box"><div class="label">📈 Floating P/L</div><div class="value" id="floatingPL" style="color:#10b981;">+$0.00</div></div>
                 <div class="balance-box highlight"><div class="label">⚡ Effective Balance</div><div class="value" id="effectiveBalance">$0.00</div></div>
             </div>
+
             <div class="control-panel">
                 <label style="color:#94a3b8; font-size:0.9rem;">💵 Capital ($):</label>
                 <input type="number" id="capitalInput" value="300" min="100" step="10" />
                 <button class="btn-start" onclick="startRobot()" id="btnStart"><i class="fas fa-play"></i> START</button>
                 <button class="btn-stop" onclick="stopRobot()" id="btnStop" disabled><i class="fas fa-stop"></i> STOP</button>
             </div>
+
             <div class="sr-panel">
                 <div><span>🛡️ Support:</span> <strong style="color:#ef4444;" id="fixedSupport">--</strong></div>
                 <div><span>📊 Price:</span> <strong style="color:#d4af37;" id="livePrice">--</strong></div>
                 <div><span>🚀 Resistance:</span> <strong style="color:#10b981;" id="fixedResistance">--</strong></div>
             </div>
+
             <div class="mini-stats">
                 <div class="mini-stat"><div class="label">📊 Strategy</div><div class="value" id="activeStrategy">--</div></div>
                 <div class="mini-stat"><div class="label">🧠 AI Signal</div><div class="value" id="aiSignal">--</div></div>
                 <div class="mini-stat"><div class="label">📈 RSI</div><div class="value" id="rsiDisplay">--</div></div>
                 <div class="mini-stat"><div class="label">🎯 Status</div><div class="value" id="aiStatus">Idle</div></div>
             </div>
+
             <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">⚡ Current Open Entry</h3>
             <div class="table-wrap">
                 <table>
@@ -182,6 +237,7 @@
                 </table>
             </div>
             <div id="progressContainer"></div>
+
             <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">📜 Trade History (Last 50)</h3>
             <div class="table-wrap">
                 <table>
@@ -190,6 +246,7 @@
                 </table>
             </div>
         </div>
+
         <div class="info-card">
             <h3>👤 Account Information</h3>
             <div class="info-row"><span class="key">Full Name</span><span class="val" id="infoName">--</span></div>
@@ -198,8 +255,10 @@
             <div class="info-row"><span class="key">Secret Key</span><span class="val gold mono" id="infoKey">--</span></div>
             <div class="info-row"><span class="key">Subscription End</span><span class="val green" id="infoEnd">--</span></div>
         </div>
+
     </div>
 
+    <!-- ✅ Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
@@ -212,15 +271,12 @@
         const MIN_TRADE_INTERVAL = 15000;
         const $ = id => document.getElementById(id);
 
-        // ✅ ALERT BUBBLE (with re-appear) — clients target
+        // ================================================================
+        // ✅ ALERT BUBBLE — Client alerts
+        // ================================================================
         let currentAlertId = null;
-        let currentAlertReappearSec = 0;
-        let alertReappearTimeout = null;
-        let alertRefreshInterval = null;
 
         async function loadActiveAlert() {
-            if (alertReappearTimeout) return;
-
             try {
                 const sb = initSupabase();
                 if (!sb) return;
@@ -248,12 +304,18 @@
                 }
 
                 const alert = active[0];
-                if (currentAlertId === alert.id) return;
 
-                currentAlertId = alert.id;
-                currentAlertReappearSec = alert.reappear_seconds || 0;
-                $('alertBubbleText').innerText = alert.message;
-                $('alertBubble').style.display = 'block';
+                const closedAlertId = sessionStorage.getItem('closedAlertId');
+                if (closedAlertId === alert.id) {
+                    $('alertBubble').style.display = 'none';
+                    return;
+                }
+
+                if (currentAlertId !== alert.id) {
+                    currentAlertId = alert.id;
+                    $('alertBubbleText').innerText = alert.message;
+                    $('alertBubble').style.display = 'block';
+                }
 
             } catch (err) {
                 console.error('loadActiveAlert error:', err);
@@ -262,24 +324,19 @@
 
         function closeAlertBubble() {
             $('alertBubble').style.display = 'none';
-
-            if (currentAlertReappearSec > 0) {
-                if (alertReappearTimeout) clearTimeout(alertReappearTimeout);
-                alertReappearTimeout = setTimeout(() => {
-                    alertReappearTimeout = null;
-                    $('alertBubble').style.display = 'block';
-                }, currentAlertReappearSec * 1000);
+            if (currentAlertId) {
+                sessionStorage.setItem('closedAlertId', currentAlertId);
             }
         }
 
         window.addEventListener('load', () => {
             loadActiveAlert();
-            alertRefreshInterval = setInterval(() => {
-                if (!alertReappearTimeout) loadActiveAlert();
-            }, 30000);
+            setInterval(loadActiveAlert, 30000);
         });
 
-        // LOAD USER
+        // ================================================================
+        //  LOAD: Fetch fresh user data from Supabase
+        // ================================================================
         window.addEventListener('load', async () => {
             const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
             if (!session || !session.id) {
@@ -287,11 +344,17 @@
                 window.location.replace('signin.html');
                 return;
             }
+
             try {
                 const sb = initSupabase();
                 if (!sb) throw new Error('Supabase init failed');
 
-                const { data: user, error } = await sb.from('users').select('*').eq('id', session.id).maybeSingle();
+                const { data: user, error } = await sb
+                    .from('users')
+                    .select('*')
+                    .eq('id', session.id)
+                    .maybeSingle();
+
                 if (error) throw error;
                 if (!user) {
                     alert('❌ User not found!');
@@ -299,12 +362,14 @@
                     window.location.replace('signin.html');
                     return;
                 }
+
                 if (user.status !== 'active') {
                     alert('⚠️ Account status: ' + user.status);
                     localStorage.removeItem('nexiCurrentUser');
                     window.location.replace(user.status === 'pending' ? 'signin.html' : 'renewal.html');
                     return;
                 }
+
                 const today = new Date().toISOString().split('T')[0];
                 const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
                 if (!expiry || expiry < today) {
@@ -314,10 +379,17 @@
                 }
 
                 currentUser = user;
+
                 const sessionUser = {
-                    id: user.id, fullName: user.name, email: user.email, phone: user.phone,
-                    secretKey: user.secret_key, startingCapital: parseFloat(user.capital),
-                    subscriptionStart: user.subscription_start, subscriptionEnd: expiry, status: user.status
+                    id: user.id,
+                    fullName: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    secretKey: user.secret_key,
+                    startingCapital: parseFloat(user.capital),
+                    subscriptionStart: user.subscription_start,
+                    subscriptionEnd: expiry,
+                    status: user.status
                 };
                 localStorage.setItem('nexiCurrentUser', JSON.stringify(sessionUser));
 
@@ -333,8 +405,10 @@
                 $('capitalInput').value = parseFloat(user.capital);
 
                 await loadTradeHistory();
+
                 $('loadingScreen').style.display = 'none';
                 $('mainContainer').style.display = 'block';
+
             } catch (err) {
                 console.error(err);
                 alert('❌ Error loading account: ' + err.message);
@@ -345,25 +419,43 @@
         async function loadTradeHistory() {
             try {
                 const sb = initSupabase();
-                const { data, error } = await sb.from('trades').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(50);
+                const { data, error } = await sb
+                    .from('trades')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
                 if (error) throw error;
                 tradeHistory = (data || []).map(t => ({
-                    id: t.id.slice(0, 6), type: t.type.toUpperCase(),
-                    entry: parseFloat(t.entry), exit: parseFloat(t.exit || 0),
-                    profit: parseFloat(t.profit), balance: parseFloat(t.balance),
+                    id: t.id.slice(0, 6),
+                    type: t.type.toUpperCase(),
+                    entry: parseFloat(t.entry),
+                    exit: parseFloat(t.exit || 0),
+                    profit: parseFloat(t.profit),
+                    balance: parseFloat(t.balance),
                     date: t.created_at.split('T')[0]
                 }));
                 renderHistory();
-            } catch (err) { console.error('loadTradeHistory:', err); }
+            } catch (err) {
+                console.error('loadTradeHistory:', err);
+            }
         }
 
         function startRobot() {
             const capital = parseFloat($('capitalInput').value);
-            if (isNaN(capital) || capital < 100) { alert('❌ Minimum $100!'); return; }
+            if (isNaN(capital) || capital < 100) {
+                alert('❌ Minimum $100!');
+                return;
+            }
             baseBalance = capital;
-            tradeCounter = 0; priceHistory = []; isTradeOpen = false;
-            currentTrade = null; isSupportSet = false; isRobotRunning = true;
-            $('btnStart').disabled = true; $('btnStop').disabled = false;
+            tradeCounter = 0;
+            priceHistory = [];
+            isTradeOpen = false;
+            currentTrade = null;
+            isSupportSet = false;
+            isRobotRunning = true;
+            $('btnStart').disabled = true;
+            $('btnStop').disabled = false;
             $('robotStatusBadge').className = 'robot-status running';
             $('robotStatusBadge').innerHTML = '🟢 RUNNING';
             $('capitalInput').disabled = true;
@@ -375,7 +467,8 @@
             isRobotRunning = false;
             if (robotInterval) clearInterval(robotInterval);
             if (isTradeOpen && currentTrade) closeTrade(currentPrice);
-            $('btnStart').disabled = false; $('btnStop').disabled = true;
+            $('btnStart').disabled = false;
+            $('btnStop').disabled = true;
             $('robotStatusBadge').className = 'robot-status stopped';
             $('robotStatusBadge').innerHTML = '⏹️ STOPPED';
             $('capitalInput').disabled = false;
@@ -387,7 +480,9 @@
                 const resp = await fetch('https://api.gold-api.com/price/XAU');
                 const data = await resp.json();
                 currentPrice = data.price ? parseFloat(data.price) : 4400 + (Math.random() - 0.5) * 6;
-            } catch (e) { currentPrice = 4400 + (Math.random() - 0.5) * 6; }
+            } catch (e) {
+                currentPrice = 4400 + (Math.random() - 0.5) * 6;
+            }
             $('livePrice').innerText = '$' + currentPrice.toFixed(2);
             if (!isSupportSet) {
                 FIXED_SUPPORT = currentPrice - 5;
@@ -409,10 +504,27 @@
             if (!isRobotRunning || !isSupportSet) return;
             if (isTradeOpen) { checkTradeClose(); return; }
             if (Date.now() - lastTradeTime < MIN_TRADE_INTERVAL) return;
-            if (currentPrice > FIXED_RESISTANCE && rsi > 45) { $('activeStrategy').innerText = 'Breakout BUY'; openTrade('BUY', currentPrice); return; }
-            if (currentPrice < FIXED_SUPPORT && rsi < 55) { $('activeStrategy').innerText = 'Breakdown SELL'; openTrade('SELL', currentPrice); return; }
-            if (currentPrice < FIXED_SUPPORT + 1.5 && rsi < 40) { $('activeStrategy').innerText = 'Bounce BUY'; openTrade('BUY', currentPrice); return; }
-            if (currentPrice > FIXED_RESISTANCE - 1.5 && rsi > 60) { $('activeStrategy').innerText = 'Bounce SELL'; openTrade('SELL', currentPrice); return; }
+
+            if (currentPrice > FIXED_RESISTANCE && rsi > 45) {
+                $('activeStrategy').innerText = 'Breakout BUY';
+                openTrade('BUY', currentPrice);
+                return;
+            }
+            if (currentPrice < FIXED_SUPPORT && rsi < 55) {
+                $('activeStrategy').innerText = 'Breakdown SELL';
+                openTrade('SELL', currentPrice);
+                return;
+            }
+            if (currentPrice < FIXED_SUPPORT + 1.5 && rsi < 40) {
+                $('activeStrategy').innerText = 'Bounce BUY';
+                openTrade('BUY', currentPrice);
+                return;
+            }
+            if (currentPrice > FIXED_RESISTANCE - 1.5 && rsi > 60) {
+                $('activeStrategy').innerText = 'Bounce SELL';
+                openTrade('SELL', currentPrice);
+                return;
+            }
             $('activeStrategy').innerText = 'Waiting';
             $('aiSignal').innerText = 'Waiting';
             $('aiStatus').innerText = '⏳ Waiting';
@@ -420,15 +532,18 @@
 
         function openTrade(type, price) {
             if (isTradeOpen) return;
-            isTradeOpen = true; tradeCounter++;
-            lastTradeTime = Date.now(); rangeStartTime = Date.now();
+            isTradeOpen = true;
+            tradeCounter++;
+            lastTradeTime = Date.now();
+            rangeStartTime = Date.now();
             let sl, tp;
             if (type === 'BUY') { sl = price * 0.997; tp = price * 1.008; }
             else { sl = price * 1.003; tp = price * 0.992; }
-            currentTrade = { id: tradeCounter, type, entry: price, sl, tp };
+            currentTrade = { id: tradeCounter, type: type, entry: price, sl: sl, tp: tp };
             $('aiStatus').innerText = '🟢 Trade Open: ' + type;
             $('aiSignal').innerText = type + ' Signal';
-            updateBalance(); updateLiveTable();
+            updateBalance();
+            updateLiveTable();
         }
 
         function checkTradeClose() {
@@ -444,33 +559,65 @@
 
         async function closeTrade(exitPrice) {
             const lotSize = 0.01;
-            let profit = currentTrade.type === 'BUY' ? (exitPrice - currentTrade.entry) * lotSize * 100 : (currentTrade.entry - exitPrice) * lotSize * 100;
+            let profit = currentTrade.type === 'BUY' ?
+                (exitPrice - currentTrade.entry) * lotSize * 100 :
+                (currentTrade.entry - exitPrice) * lotSize * 100;
             baseBalance += profit;
             const profitFixed = parseFloat(profit.toFixed(2));
             const balanceFixed = parseFloat(baseBalance.toFixed(2));
+
             alert((profit >= 0 ? '🎯 Profit: +$' : '🛑 Loss: -$') + Math.abs(profit).toFixed(2) + '\nBalance: $' + baseBalance.toFixed(2));
+
             try {
                 const sb = initSupabase();
-                await sb.from('trades').insert([{ user_id: currentUser.id, type: currentTrade.type.toLowerCase(), entry: parseFloat(currentTrade.entry.toFixed(4)), exit: parseFloat(exitPrice.toFixed(4)), profit: profitFixed, balance: balanceFixed }]);
-                await sb.from('users').update({ capital: balanceFixed }).eq('id', currentUser.id);
+                await sb.from('trades').insert([{
+                    user_id: currentUser.id,
+                    type: currentTrade.type.toLowerCase(),
+                    entry: parseFloat(currentTrade.entry.toFixed(4)),
+                    exit: parseFloat(exitPrice.toFixed(4)),
+                    profit: profitFixed,
+                    balance: balanceFixed
+                }]);
+
+                await sb.from('users')
+                    .update({ capital: balanceFixed })
+                    .eq('id', currentUser.id);
+
                 currentUser.capital = balanceFixed;
                 const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
                 session.startingCapital = balanceFixed;
                 localStorage.setItem('nexiCurrentUser', JSON.stringify(session));
                 $('statCapital').innerText = '$' + balanceFixed.toFixed(2);
-            } catch (err) { console.error('Trade save error:', err); }
-            tradeHistory.unshift({ id: String(currentTrade.id).padStart(3, '0'), type: currentTrade.type, entry: currentTrade.entry, exit: exitPrice, profit: profitFixed, balance: balanceFixed, date: new Date().toISOString().split('T')[0] });
+
+            } catch (err) {
+                console.error('Trade save error:', err);
+            }
+
+            tradeHistory.unshift({
+                id: String(currentTrade.id).padStart(3, '0'),
+                type: currentTrade.type,
+                entry: currentTrade.entry,
+                exit: exitPrice,
+                profit: profitFixed,
+                balance: balanceFixed,
+                date: new Date().toISOString().split('T')[0]
+            });
             if (tradeHistory.length > 50) tradeHistory.pop();
             renderHistory();
-            isTradeOpen = false; currentTrade = null;
+
+            isTradeOpen = false;
+            currentTrade = null;
             $('aiStatus').innerText = '⏳ Idle';
-            updateBalance(); updateLiveTable();
+            updateBalance();
+            updateLiveTable();
         }
 
         function updateBalance() {
             let floatingPL = 0;
             if (isTradeOpen && currentTrade) {
-                floatingPL = currentTrade.type === 'BUY' ? (currentPrice - currentTrade.entry) * 0.01 * 100 : (currentTrade.entry - currentPrice) * 0.01 * 100;
+                floatingPL = currentTrade.type === 'BUY' ?
+                    (currentPrice - currentTrade.entry) * 0.01 * 100 :
+                    (currentTrade.entry - currentPrice) * 0.01 * 100;
             }
             $('baseBalance').innerText = '$' + baseBalance.toFixed(2);
             $('floatingPL').innerText = (floatingPL >= 0 ? '+' : '') + '$' + floatingPL.toFixed(2);
@@ -485,7 +632,9 @@
                 $('progressContainer').innerHTML = '';
                 return;
             }
-            const floatingPL = currentTrade.type === 'BUY' ? (currentPrice - currentTrade.entry) * 0.01 * 100 : (currentTrade.entry - currentPrice) * 0.01 * 100;
+            const floatingPL = currentTrade.type === 'BUY' ?
+                (currentPrice - currentTrade.entry) * 0.01 * 100 :
+                (currentTrade.entry - currentPrice) * 0.01 * 100;
             const isProfit = floatingPL >= 0;
             tbody.innerHTML = `<tr>
                 <td>#${currentTrade.id}</td>
@@ -500,7 +649,12 @@
             const max = Math.max(currentTrade.sl, currentTrade.tp);
             let pos = ((currentPrice - min) / (max - min)) * 100;
             pos = Math.max(0, Math.min(100, pos));
-            $('progressContainer').innerHTML = `<div class="progress-wrap"><div class="progress-track"><div class="progress-fill" style="width:${pos}%;"></div></div></div>`;
+            $('progressContainer').innerHTML = `
+                <div class="progress-wrap">
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width:${pos}%;"></div>
+                    </div>
+                </div>`;
         }
 
         function renderHistory() {
