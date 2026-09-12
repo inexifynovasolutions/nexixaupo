@@ -20,6 +20,8 @@
     { "source": "/signin", "destination": "/signin.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/renewal", "destination": "/renewal.html" }
+    { "source": "/renewal", "destination": "/renewal.html" },
+    { "source": "/trading-room", "destination": "/trading-room.html" },
+    { "source": "/statistics-room", "destination": "/statistics-room.html" }
   ]
 }
