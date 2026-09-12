@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Trading Room | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; }
+
+        /* LOGIN SCREEN (same as admin) */
+        .login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0e17; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .login-card { background: #111827; border: 2px solid #d4af37; border-radius: 20px; padding: 40px; max-width: 400px; width: 100%; text-align: center; }
+        .login-card h1 { color: #d4af37; margin-bottom: 10px; }
+        .login-card p { color: #94a3b8; margin-bottom: 25px; font-size: 0.9rem; }
+        .login-card input { width: 100%; padding: 14px 18px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 1rem; margin-bottom: 15px; outline: none; }
+        .login-card input:focus { border-color: #d4af37; }
+        .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .login-error { color: #ef4444; margin-top: 10px; font-size: 0.85rem; display: none; }
+
+        /* NAVBAR */
+        .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
+        .logo span { color: #fff; }
+        .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .admin-badge { background: #dc2626; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .room-badge { background: #10b981; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .btn-nav { background: #334155; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+        .btn-nav:hover { background: #475569; }
+        .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+        .btn-logout:hover { background: #dc2626; }
+
+        /* CONTAINER */
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .section { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .section h2 { color: #d4af37; font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section h2 .badge-new { background: #10b981; color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+
+        /* FORM STYLES */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; color: #cbd5e1; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #d4af37; }
+        .form-group select option { background: #1e293b; color: #fff; }
+        .form-group textarea { min-height: 70px; resize: vertical; }
+
+        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+
+        /* RADIO GROUP */
+        .radio-group { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 6px; }
+        .radio-group label { display: flex; align-items: center; gap: 8px; color: #cbd5e1; font-size: 0.9rem; font-weight: 600; margin: 0; cursor: pointer; }
+        .radio-group input[type="radio"] { width: auto; margin: 0; }
+
+        /* BUTTONS */
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; padding: 12px 28px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: #fff; padding: 12px 28px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-success:hover { transform: translateY(-2px); }
+        .btn-danger { background: #ef4444; color: #fff; padding: 8px 16px; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-warning { background: #f59e0b; color: #fff; padding: 8px 16px; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+        .btn-warning:hover { background: #d97706; }
+        .btn-info { background: #60a5fa; color: #fff; padding: 8px 16px; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+        .btn-info:hover { background: #3b82f6; }
+        .btn-secondary { background: #334155; color: #fff; padding: 12px 28px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+        .btn-secondary:hover { background: #475569; }
+        .btn-cancel-edit { display: none; margin-left: 10px; }
+
+        /* INFO MESSAGE */
+        .info-msg { margin-top: 12px; font-size: 0.9rem; padding: 10px 15px; border-radius: 8px; display: none; }
+        .info-msg.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
+        .info-msg.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; display: block; }
+        .info-msg.warning { background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; display: block; }
+
+        /* SR SETTINGS CARD */
+        .sr-card { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+        .sr-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+        .sr-preview > div {
+            text-align: center;
+            padding: 15px;
+            background: #1e293b;
+            border-radius: 10px;
+        }
+        .sr-preview .label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 5px; }
+        .sr-preview .value { font-size: 1.3rem; font-weight: 900; }
+        .sr-preview .value.support { color: #ef4444; }
+        .sr-preview .value.resistance { color: #10b981; }
+        .sr-preview .value.current { color: #d4af37; }
+
+        /* SIGNAL / TRADE LIST ITEMS */
+        .signal-item, .trade-item {
+            background: #0f1729;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .signal-item .item-info, .trade-item .item-info {
+            flex: 1;
+            min-width: 250px;
+        }
+        .signal-item .product-name, .trade-item .product-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .signal-item .product-logo, .trade-item .product-logo { font-size: 1.5rem; }
+        .signal-item .item-meta, .trade-item .item-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .signal-item .item-meta strong, .trade-item .item-meta strong { color: #fff; }
+        .signal-item .item-meta .buy { color: #10b981; }
+        .signal-item .item-meta .sell { color: #ef4444; }
+        .item-actions { display: flex; gap: 8px; }
+
+        /* BADGES */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+        .badge.buy { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge.sell { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge.waiting { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+        .badge.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge.demo { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
+        .badge.clients { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+        .badge.both { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 30px; color: #64748b; font-size: 0.9rem; }
+        .loading-state { text-align: center; padding: 30px; color: #d4af37; font-size: 0.9rem; }
+
+        /* HIT BUTTON SPECIAL */
+        .btn-hit { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 900; cursor: pointer; animation: hitPulse 1.5s ease-in-out infinite; }
+        .btn-hit:hover { transform: scale(1.05); }
+        @keyframes hitPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
+
+        /* PRODUCT PREVIEW (in Manual Trade) */
+        .product-preview {
+            background: #1e293b;
+            border: 2px dashed #334155;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .product-preview .icon { font-size: 2.5rem; margin-bottom: 5px; }
+        .product-preview .name { color: #fff; font-weight: 700; font-size: 1rem; }
+        .product-preview .symbol { color: #94a3b8; font-size: 0.8rem; font-family: monospace; margin-top: 3px; }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
+            .form-row-2, .form-row-3, .sr-preview { grid-template-columns: 1fr; }
+            .signal-item, .trade-item { flex-direction: column; align-items: stretch; }
+            .item-actions { justify-content: flex-end; }
+            .container { padding: 20px 12px; }
+            .section { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <h1>📊 Trading Room</h1>
+            <p>Admin access only</p>
+            <input type="text" id="adminUsername" placeholder="Username" />
+            <input type="password" id="adminPassword" placeholder="Password" />
+            <button onclick="adminLogin()">Login</button>
+            <div class="login-error" id="loginError">❌ Invalid credentials!</div>
+        </div>
+    </div>
+
+    <div id="tradingRoom" style="display: none;">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="admin.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
+            <div class="nav-right">
+                <span class="admin-badge">🔐 ADMIN</span>
+                <span class="room-badge">📊 TRADING ROOM</span>
+                <a href="admin.html" class="btn-nav"><i class="fas fa-arrow-left"></i> Back to Admin</a>
+                <button class="btn-logout" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+
+            <!-- ============================================================ -->
+            <!-- SECTION 1: SUPPORT / RESISTANCE SETTINGS                      -->
+            <!-- ============================================================ -->
+            <div class="section">
+                <h2>⚙️ Support / Resistance Settings</h2>
+                <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Yeh values demo page aur client dashboard pe dikhengi. Auto-calculate ya manually set karein.</p>
+
+                <div class="sr-card">
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Support Price ($) *</label>
+                            <input type="number" id="srSupport" value="0" step="0.01" min="0" />
+                        </div>
+                        <div class="form-group">
+                            <label>Resistance Price ($) *</label>
+                            <input type="number" id="srResistance" value="0" step="0.01" min="0" />
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="saveSRSettings()" id="saveSRBtn">
+                        <i class="fas fa-save"></i> Save S/R Settings
+                    </button>
+                    <button class="btn-secondary" onclick="autoCalculateSR()" style="margin-left:10px;">
+                        <i class="fas fa-magic"></i> Auto-Calculate from Live Price
+                    </button>
+
+                    <div class="info-msg" id="srMessage"></div>
+
+                    <div class="sr-preview">
+                        <div>
+                            <div class="label">🛡️ Support</div>
+                            <div class="value support" id="srPreviewSupport">0.00</div>
+                        </div>
+                        <div>
+                            <div class="label">📊 Current Live Price</div>
+                            <div class="value current" id="srPreviewCurrent">--</div>
+                        </div>
+                        <div>
+                            <div class="label">🚀 Resistance</div>
+                            <div class="value resistance" id="srPreviewResistance">0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 2: TRADE SIGNALS MANAGER                              -->
+            <!-- ============================================================ -->
+            <div class="section">
+                <h2>🎯 Trade Signals Manager <span class="badge-new">NEW</span></h2>
+                <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Yeh signals demo aur clients ko dikhengi — jaise "BUY entry aane wali hai". Actual trade HIT karne ke liye "HIT NOW" dabayein.</p>
+
+                <div style="background:#0f1729; border:1px solid #334155; border-radius:12px; padding:20px; margin-bottom:20px;">
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Product *</label>
+                            <select id="signalProduct">
+                                <option value="XAUUSD">🥇 Gold (XAUUSD)</option>
+                                <option value="BTCUSD">₿ Bitcoin (BTCUSD)</option>
+                                <option value="XAGUSD">🥈 Silver (XAGUSD)</option>
+                                <option value="ETHUSD">Ξ Ethereum (ETHUSD)</option>
+                                <option value="EURUSD">💶 EUR/USD</option>
+                                <option value="GBPUSD">💷 GBP/USD</option>
+                                <option value="USDJPY">💴 USD/JPY</option>
+                                <option value="AUDUSD">🇦🇺 AUD/USD</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Type *</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="signalType" value="BUY" checked /> 🟢 BUY</label>
+                                <label><input type="radio" name="signalType" value="SELL" /> 🔴 SELL</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Entry Price *</label>
+                            <input type="number" id="signalEntry" step="0.0001" placeholder="4405.50" />
+                        </div>
+                        <div class="form-group">
+                            <label>Take Profit (TP) *</label>
+                            <input type="number" id="signalTP" step="0.0001" placeholder="4420.00" />
+                        </div>
+                        <div class="form-group">
+                            <label>Stop Loss (SL) *</label>
+                            <input type="number" id="signalSL" step="0.0001" placeholder="4390.00" />
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Expected Time (optional)</label>
+                            <input type="datetime-local" id="signalExpectedTime" />
+                        </div>
+                        <div class="form-group">
+                            <label>Target *</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="signalTarget" value="demo" /> 🎮 Demo</label>
+                                <label><input type="radio" name="signalTarget" value="clients" /> 👥 Clients</label>
+                                <label><input type="radio" name="signalTarget" value="both" checked /> 🌐 Both</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes (optional)</label>
+                        <textarea id="signalNotes" placeholder="jaise 'Breakout expected above resistance'"></textarea>
+                    </div>
+
+                    <button class="btn-success" onclick="saveSignal()" id="saveSignalBtn">
+                        <i class="fas fa-plus-circle"></i> Add Signal
+                    </button>
+                    <button class="btn-secondary btn-cancel-edit" onclick="resetSignalForm()" id="cancelSignalBtn">
+                        <i class="fas fa-times"></i> Cancel Edit
+                    </button>
+
+                    <div class="info-msg" id="signalMessage"></div>
+                </div>
+
+                <h3 style="color:#d4af37; font-size:1rem; margin:25px 0 15px;">📋 Active Signals</h3>
+                <div id="signalsList"><div class="loading-state">⏳ Loading signals...</div></div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 3: MANUAL TRADE ENTRY                                 -->
+            <!-- ============================================================ -->
+            <div class="section">
+                <h2>⚡ Manual Trade Entry <span class="badge-new">NEW</span></h2>
+                <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:20px;">Manually trade enter karein — jaise hi HIT dabayen, trade foran client dashboard pe live aa jayegi.</p>
+
+                <div style="background:#0f1729; border:1px solid #334155; border-radius:12px; padding:20px;">
+                    <div class="product-preview" id="productPreview">
+                        <div class="icon" id="previewIcon">🥇</div>
+                        <div class="name" id="previewName">Gold</div>
+                        <div class="symbol" id="previewSymbol">XAUUSD</div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Product *</label>
+                            <select id="tradeProduct" onchange="updateProductPreview()">
+                                <option value="XAUUSD">🥇 Gold (XAUUSD)</option>
+                                <option value="BTCUSD">₿ Bitcoin (BTCUSD)</option>
+                                <option value="XAGUSD">🥈 Silver (XAGUSD)</option>
+                                <option value="ETHUSD">Ξ Ethereum (ETHUSD)</option>
+                                <option value="EURUSD">💶 EUR/USD</option>
+                                <option value="GBPUSD">💷 GBP/USD</option>
+                                <option value="USDJPY">💴 USD/JPY</option>
+                                <option value="AUDUSD">🇦🇺 AUD/USD</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Type *</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="tradeType" value="BUY" checked /> 🟢 BUY</label>
+                                <label><input type="radio" name="tradeType" value="SELL" /> 🔴 SELL</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Entry Price *</label>
+                            <input type="number" id="tradeEntry" step="0.0001" placeholder="4405.50" />
+                        </div>
+                        <div class="form-group">
+                            <label>Take Profit (TP) *</label>
+                            <input type="number" id="tradeTP" step="0.0001" placeholder="4420.00" />
+                        </div>
+                        <div class="form-group">
+                            <label>Stop Loss (SL) *</label>
+                            <input type="number" id="tradeSL" step="0.0001" placeholder="4390.00" />
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>Target *</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="tradeTarget" value="demo" /> 🎮 Demo</label>
+                                <label><input type="radio" name="tradeTarget" value="clients" /> 👥 Clients</label>
+                                <label><input type="radio" name="tradeTarget" value="both" checked /> 🌐 Both</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Lot Size (optional)</label>
+                            <input type="number" id="tradeLot" value="0.01" step="0.01" min="0.01" />
+                        </div>
+                    </div>
+
+                    <button class="btn-hit" onclick="hitTrade()" id="hitTradeBtn">
+                        <i class="fas fa-bolt"></i> 🎯 HIT — Send to Clients NOW
+                    </button>
+
+                    <div class="info-msg" id="tradeMessage"></div>
+                </div>
+
+                <h3 style="color:#d4af37; font-size:1rem; margin:25px 0 15px;">📋 Active Manual Trades</h3>
+                <div id="manualTradesList"><div class="loading-state">⏳ Loading manual trades...</div></div>
+            </div>
+
+        </div>
+    </div>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'nexi2026';
+        let allSignals = [];
+        let allManualTrades = [];
+        let editingSignalId = null;
+
+        // Product info
+        const PRODUCT_INFO = {
+            'XAUUSD': { icon: '🥇', name: 'Gold' },
+            'BTCUSD': { icon: '₿', name: 'Bitcoin' },
+            'XAGUSD': { icon: '🥈', name: 'Silver' },
+            'ETHUSD': { icon: 'Ξ', name: 'Ethereum' },
+            'EURUSD': { icon: '💶', name: 'EUR/USD' },
+            'GBPUSD': { icon: '💷', name: 'GBP/USD' },
+            'USDJPY': { icon: '💴', name: 'USD/JPY' },
+            'AUDUSD': { icon: '🇦🇺', name: 'AUD/USD' }
+        };
+
+        // ================================================================
+        // LOGIN
+        // ================================================================
+        document.getElementById('adminUsername').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const pwd = document.getElementById('adminPassword');
+                if (pwd.value.trim() === '') pwd.focus();
+                else adminLogin();
+            }
+        });
+        document.getElementById('adminPassword').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); adminLogin(); }
+        });
+
+        function adminLogin() {
+            const u = document.getElementById('adminUsername').value;
+            const p = document.getElementById('adminPassword').value;
+            if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+                sessionStorage.setItem('nexiAdmin', 'true');
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('tradingRoom').style.display = 'block';
+                loadAllData();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function adminLogout() {
+            if (confirm('Logout?')) {
+                sessionStorage.removeItem('nexiAdmin');
+                window.location.replace('index.html');
+            }
+        }
+
+        window.addEventListener('load', () => {
+            if (sessionStorage.getItem('nexiAdmin') === 'true') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('tradingRoom').style.display = 'block';
+                loadAllData();
+            }
+        });
+
+        // ================================================================
+        // S/R SETTINGS
+        // ================================================================
+        async function loadSRSettings() {
+            try {
+                const sb = initSupabase();
+                if (!sb) return;
+
+                const { data, error } = await sb
+                    .from('settings')
+                    .select('key, value')
+                    .in('key', ['sr_support', 'sr_resistance']);
+
+                if (error) throw error;
+
+                const sr = {};
+                (data || []).forEach(s => { sr[s.key] = s.value; });
+
+                document.getElementById('srSupport').value = sr.sr_support || '0';
+                document.getElementById('srResistance').value = sr.sr_resistance || '0';
+                updateSRPreview();
+
+            } catch (err) {
+                console.error('loadSRSettings error:', err);
+            }
+        }
+
+        function updateSRPreview() {
+            const s = parseFloat(document.getElementById('srSupport').value) || 0;
+            const r = parseFloat(document.getElementById('srResistance').value) || 0;
+            document.getElementById('srPreviewSupport').innerText = s.toFixed(2);
+            document.getElementById('srPreviewResistance').innerText = r.toFixed(2);
+        }
+
+        document.getElementById('srSupport').addEventListener('input', updateSRPreview);
+        document.getElementById('srResistance').addEventListener('input', updateSRPreview);
+
+        async function saveSRSettings() {
+            const support = document.getElementById('srSupport').value.trim();
+            const resistance = document.getElementById('srResistance').value.trim();
+            const btn = document.getElementById('saveSRBtn');
+            const msg = document.getElementById('srMessage');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            msg.style.display = 'none';
+
+            try {
+                const sb = initSupabase();
+
+                await sb.from('settings').update({ value: support, updated_at: new Date().toISOString() }).eq('key', 'sr_support');
+                await sb.from('settings').update({ value: resistance, updated_at: new Date().toISOString() }).eq('key', 'sr_resistance');
+
+                msg.className = 'info-msg success';
+                msg.innerHTML = '✅ S/R settings saved! Clients ab yeh values dekhenge.';
+                setTimeout(() => { msg.style.display = 'none'; }, 4000);
+
+            } catch (err) {
+                console.error(err);
+                msg.className = 'info-msg error';
+                msg.innerHTML = '❌ Error: ' + err.message;
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save"></i> Save S/R Settings';
+        }
+
+        async function autoCalculateSR() {
+            try {
+                const resp = await fetch('https://api.gold-api.com/price/XAU');
+                const data = await resp.json();
+                const current = data.price ? parseFloat(data.price) : 4400;
+
+                document.getElementById('srPreviewCurrent').innerText = '$' + current.toFixed(2);
+                document.getElementById('srSupport').value = (current - 5).toFixed(2);
+                document.getElementById('srResistance').value = (current + 5).toFixed(2);
+                updateSRPreview();
+
+                const msg = document.getElementById('srMessage');
+                msg.className = 'info-msg success';
+                msg.innerHTML = '⚡ Auto-calculated from live price: $' + current.toFixed(2);
+                setTimeout(() => { msg.style.display = 'none'; }, 4000);
+
+            } catch (err) {
+                const current = 4400;
+                document.getElementById('srSupport').value = (current - 5).toFixed(2);
+                document.getElementById('srResistance').value = (current + 5).toFixed(2);
+                updateSRPreview();
+            }
+        }
+
+        // Live price preview update (every 10 sec)
+        setInterval(async () => {
+            if (document.getElementById('tradingRoom').style.display === 'none') return;
+            try {
+                const resp = await fetch('https://api.gold-api.com/price/XAU');
+                const data = await resp.json();
+                if (data.price) {
+                    document.getElementById('srPreviewCurrent').innerText = '$' + parseFloat(data.price).toFixed(2);
+                }
+            } catch (e) { /* silent */ }
+        }, 10000);
+
+        // ================================================================
+        // SIGNALS MANAGER
+        // ================================================================
+        async function loadSignals() {
+            const container = document.getElementById('signalsList');
+            container.innerHTML = '<div class="loading-state">⏳ Loading signals...</div>';
+
+            try {
+                const sb = initSupabase();
+                const { data, error } = await sb
+                    .from('signals')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                allSignals = data || [];
+                renderSignals();
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`;
+            }
+        }
+
+        function renderSignals() {
+            const container = document.getElementById('signalsList');
+
+            if (allSignals.length === 0) {
+                container.innerHTML = '<div class="empty-state">No signals yet. Upar wale form se naya signal banayein.</div>';
+                return;
+            }
+
+            container.innerHTML = allSignals.map(s => {
+                const info = PRODUCT_INFO[s.product] || { icon: '📊', name: s.product };
+                const targetBadge = s.target === 'demo' ? '🎮 Demo' : s.target === 'clients' ? '👥 Clients' : '🌐 Both';
+                const targetClass = s.target;
+                const timeInfo = s.expected_time ? 'Expected: ' + new Date(s.expected_time).toLocaleString() : 'No time set';
+
+                return `<div class="signal-item">
+                    <div class="item-info">
+                        <div class="product-name">
+                            <span class="product-logo">${info.icon}</span>
+                            <span>${info.name}</span>
+                            <span class="badge ${s.type === 'BUY' ? 'buy' : 'sell'}">${s.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</span>
+                        </div>
+                        <div class="item-meta">
+                            <span>Entry: <strong>$${parseFloat(s.entry).toFixed(2)}</strong></span>
+                            <span>TP: <strong style="color:#10b981;">$${parseFloat(s.tp).toFixed(2)}</strong></span>
+                            <span>SL: <strong style="color:#ef4444;">$${parseFloat(s.sl).toFixed(2)}</strong></span>
+                            <span class="badge ${targetClass}">${targetBadge}</span>
+                            <span>${timeInfo}</span>
+                        </div>
+                        ${s.notes ? '<div class="item-meta" style="margin-top:6px;color:#64748b;font-style:italic;">📝 ' + s.notes + '</div>' : ''}
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-hit" onclick="hitSignal('${s.id}')"><i class="fas fa-bolt"></i> HIT NOW</button>
+                        <button class="btn-warning" onclick="editSignal('${s.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-danger" onclick="cancelSignal('${s.id}')"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function saveSignal() {
+            const product = document.getElementById('signalProduct').value;
+            const type = document.querySelector('input[name="signalType"]:checked').value;
+            const entry = parseFloat(document.getElementById('signalEntry').value);
+            const tp = parseFloat(document.getElementById('signalTP').value);
+            const sl = parseFloat(document.getElementById('signalSL').value);
+            const expectedTime = document.getElementById('signalExpectedTime').value;
+            const target = document.querySelector('input[name="signalTarget"]:checked').value;
+            const notes = document.getElementById('signalNotes').value.trim();
+
+            const btn = document.getElementById('saveSignalBtn');
+            const msg = document.getElementById('signalMessage');
+
+            if (isNaN(entry) || isNaN(tp) || isNaN(sl)) {
+                msg.className = 'info-msg error';
+                msg.innerHTML = '❌ Entry, TP, SL sab numbers hone chahiye!';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            msg.style.display = 'none';
+
+            try {
+                const sb = initSupabase();
+                const signalData = {
+                    product: product,
+                    type: type,
+                    entry: entry,
+                    tp: tp,
+                    sl: sl,
+                    expected_time: expectedTime ? new Date(expectedTime).toISOString() : null,
+                    target: target,
+                    notes: notes || null,
+                    status: 'waiting',
+                    is_active: true
+                };
+
+                if (editingSignalId) {
+                    const { error } = await sb.from('signals').update(signalData).eq('id', editingSignalId);
+                    if (error) throw error;
+                    msg.className = 'info-msg success';
+                    msg.innerHTML = '✅ Signal updated!';
+                } else {
+                    const { error } = await sb.from('signals').insert([signalData]);
+                    if (error) throw error;
+                    msg.className = 'info-msg success';
+                    msg.innerHTML = '✅ Signal saved! Clients ab yeh dekh payenge.';
+                }
+
+                setTimeout(() => { msg.style.display = 'none'; }, 4000);
+                resetSignalForm();
+                loadSignals();
+
+            } catch (err) {
+                console.error(err);
+                msg.className = 'info-msg error';
+                msg.innerHTML = '❌ Error: ' + err.message;
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Signal';
+        }
+
+        function editSignal(id) {
+            const s = allSignals.find(x => x.id === id);
+            if (!s) return;
+
+            editingSignalId = id;
+            document.getElementById('signalProduct').value = s.product;
+            document.querySelector(`input[name="signalType"][value="${s.type}"]`).checked = true;
+            document.getElementById('signalEntry').value = s.entry;
+            document.getElementById('signalTP').value = s.tp;
+            document.getElementById('signalSL').value = s.sl;
+            document.getElementById('signalExpectedTime').value = s.expected_time ? new Date(s.expected_time).toISOString().slice(0, 16) : '';
+            document.querySelector(`input[name="signalTarget"][value="${s.target}"]`).checked = true;
+            document.getElementById('signalNotes').value = s.notes || '';
+
+            document.getElementById('cancelSignalBtn').style.display = 'inline-flex';
+            document.getElementById('saveSignalBtn').innerHTML = '<i class="fas fa-save"></i> Update Signal';
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+        }
+
+        function resetSignalForm() {
+            editingSignalId = null;
+            document.getElementById('signalProduct').value = 'XAUUSD';
+            document.querySelector('input[name="signalType"][value="BUY"]').checked = true;
+            document.getElementById('signalEntry').value = '';
+            document.getElementById('signalTP').value = '';
+            document.getElementById('signalSL').value = '';
+            document.getElementById('signalExpectedTime').value = '';
+            document.querySelector('input[name="signalTarget"][value="both"]').checked = true;
+            document.getElementById('signalNotes').value = '';
+            document.getElementById('cancelSignalBtn').style.display = 'none';
+            document.getElementById('saveSignalBtn').innerHTML = '<i class="fas fa-plus-circle"></i> Add Signal';
+        }
+
+        async function cancelSignal(id) {
+            if (!confirm('Cancel this signal? (Clients ko nahi dikhega)')) return;
+            try {
+                const sb = initSupabase();
+                await sb.from('signals').update({ is_active: false, updated_at: new Date().toISOString() }).eq('id', id);
+                loadSignals();
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
+        }
+
+        // HIT Signal → convert to actual trade
+        async function hitSignal(id) {
+            const s = allSignals.find(x => x.id === id);
+            if (!s) return;
+
+            if (!confirm(`HIT this signal now?\n\n${s.type} ${s.product} @ $${s.entry}\n\nYeh signal turant ek LIVE TRADE ban jayega aur clients ko dikhega.`)) return;
+
+            try {
+                const sb = initSupabase();
+
+                // Insert as trade
+                const { error: tErr } = await sb.from('trades').insert([{
+                    user_id: null,
+                    type: s.type.toLowerCase(),
+                    entry: parseFloat(s.entry),
+                    exit: null,
+                    profit: 0,
+                    balance: 0,
+                    product: s.product,
+                    is_manual: true
+                }]);
+                if (tErr) throw tErr;
+
+                // Deactivate signal
+                await sb.from('signals').update({ is_active: false, status: 'hit', updated_at: new Date().toISOString() }).eq('id', id);
+
+                alert('✅ Signal HIT! Trade ab live hai clients ke dashboard pe.');
+                loadSignals();
+                loadManualTrades();
+
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
+        }
+
+        // ================================================================
+        // MANUAL TRADE ENTRY
+        // ================================================================
+        function updateProductPreview() {
+            const product = document.getElementById('tradeProduct').value;
+            const info = PRODUCT_INFO[product] || { icon: '📊', name: product };
+            document.getElementById('previewIcon').innerText = info.icon;
+            document.getElementById('previewName').innerText = info.name;
+            document.getElementById('previewSymbol').innerText = product;
+        }
+
+        async function hitTrade() {
+            const product = document.getElementById('tradeProduct').value;
+            const type = document.querySelector('input[name="tradeType"]:checked').value;
+            const entry = parseFloat(document.getElementById('tradeEntry').value);
+            const tp = parseFloat(document.getElementById('tradeTP').value);
+            const sl = parseFloat(document.getElementById('tradeSL').value);
+            const target = document.querySelector('input[name="tradeTarget"]:checked').value;
+            const lot = parseFloat(document.getElementById('tradeLot').value) || 0.01;
+
+            const btn = document.getElementById('hitTradeBtn');
+            const msg = document.getElementById('tradeMessage');
+
+            if (isNaN(entry) || isNaN(tp) || isNaN(sl)) {
+                msg.className = 'info-msg error';
+                msg.innerHTML = '❌ Entry, TP, SL sab numbers hone chahiye!';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            msg.style.display = 'none';
+
+            try {
+                const sb = initSupabase();
+
+                // Insert trade as manual entry (with a temp target marker)
+                const { error } = await sb.from('trades').insert([{
+                    user_id: null,
+                    type: type.toLowerCase(),
+                    entry: entry,
+                    exit: null,
+                    profit: 0,
+                    balance: 0,
+                    product: product,
+                    is_manual: true
+                }]);
+
+                if (error) throw error;
+
+                msg.className = 'info-msg success';
+                msg.innerHTML = `✅ Trade HIT! ${type} ${product} @ $${entry} ab live hai clients ke dashboard pe.`;
+                setTimeout(() => { msg.style.display = 'none'; }, 5000);
+
+                // Reset form
+                document.getElementById('tradeEntry').value = '';
+                document.getElementById('tradeTP').value = '';
+                document.getElementById('tradeSL').value = '';
+                document.getElementById('tradeLot').value = '0.01';
+
+                loadManualTrades();
+
+            } catch (err) {
+                console.error(err);
+                msg.className = 'info-msg error';
+                msg.innerHTML = '❌ Error: ' + err.message;
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-bolt"></i> 🎯 HIT — Send to Clients NOW';
+        }
+
+        async function loadManualTrades() {
+            const container = document.getElementById('manualTradesList');
+            container.innerHTML = '<div class="loading-state">⏳ Loading manual trades...</div>';
+
+            try {
+                const sb = initSupabase();
+                const { data, error } = await sb
+                    .from('trades')
+                    .select('*')
+                    .eq('is_manual', true)
+                    .is('exit', null)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                allManualTrades = data || [];
+                renderManualTrades();
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Error: ${err.message}</div>`;
+            }
+        }
+
+        function renderManualTrades() {
+            const container = document.getElementById('manualTradesList');
+
+            if (allManualTrades.length === 0) {
+                container.innerHTML = '<div class="empty-state">No active manual trades. Upar wale form se naya trade HIT karein.</div>';
+                return;
+            }
+
+            container.innerHTML = allManualTrades.map(t => {
+                const info = PRODUCT_INFO[t.product] || { icon: '📊', name: t.product };
+                const openedAt = new Date(t.created_at).toLocaleString();
+
+                return `<div class="trade-item">
+                    <div class="item-info">
+                        <div class="product-name">
+                            <span class="product-logo">${info.icon}</span>
+                            <span>${info.name}</span>
+                            <span class="badge ${t.type === 'buy' ? 'buy' : 'sell'}">${t.type === 'buy' ? '🟢 BUY' : '🔴 SELL'}</span>
+                        </div>
+                        <div class="item-meta">
+                            <span>Entry: <strong>$${parseFloat(t.entry).toFixed(2)}</strong></span>
+                            <span>Opened: ${openedAt}</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-success" onclick="closeManualTrade('${t.id}', ${t.entry}, '${t.type}')"><i class="fas fa-check"></i> Close Trade</button>
+                        <button class="btn-danger" onclick="deleteManualTrade('${t.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function closeManualTrade(id, entryPrice, type) {
+            const exitStr = prompt(`Close trade — Exit price daalein:\n\nEntry: $${entryPrice}  |  Type: ${type.toUpperCase()}\n\nExit price (jaise 4410.50):`);
+            if (!exitStr) return;
+
+            const exit = parseFloat(exitStr);
+            if (isNaN(exit)) { alert('❌ Invalid exit price!'); return; }
+
+            // Calculate profit (lot = 0.01, 100 units)
+            const lot = 0.01;
+            let profit = type === 'buy'
+                ? (exit - entryPrice) * lot * 100
+                : (entryPrice - exit) * lot * 100;
+            profit = parseFloat(profit.toFixed(2));
+
+            try {
+                const sb = initSupabase();
+                const { error } = await sb.from('trades').update({
+                    exit: exit,
+                    profit: profit
+                }).eq('id', id);
+
+                if (error) throw error;
+
+                alert(`✅ Trade closed!\n\nExit: $${exit.toFixed(2)}\nP/L: ${profit >= 0 ? '+' : ''}$${profit.toFixed(2)}`);
+                loadManualTrades();
+
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
+        }
+
+        async function deleteManualTrade(id) {
+            if (!confirm('Delete this trade? (Clients ko nahi dikhega)')) return;
+            try {
+                const sb = initSupabase();
+                await sb.from('trades').delete().eq('id', id);
+                loadManualTrades();
+            } catch (err) {
+                console.error(err);
+                alert('❌ Error: ' + err.message);
+            }
+        }
+
+        // ================================================================
+        // INITIAL LOAD
+        // ================================================================
+        async function loadAllData() {
+            await loadSRSettings();
+            loadSignals();
+            loadManualTrades();
+            updateProductPreview();
+        }
+    </script>
+</body>
+</html>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -22,6 +23,8 @@
         .admin-badge { background: #dc2626; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-left: 10px; }
         .btn-refresh { background: #334155; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-left: 10px; }
+        .btn-room { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-left: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-room:hover { transform: translateY(-2px); }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
         .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .admin-stat { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 20px; text-align: center; }
@@ -63,7 +66,6 @@
         .modal-content .details { text-align: left; color: #cbd5e1; font-size: 0.9rem; line-height: 1.8; margin: 15px 0; }
         .modal-content .details strong { color: #fff; }
 
-        /* SETTINGS STYLES */
         .settings-category { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
         .settings-category h3 { color: #d4af37; font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
         .setting-row { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; align-items: center; padding: 10px 0; border-bottom: 1px solid #1e293b; }
@@ -74,7 +76,6 @@
         .setting-row input:focus { border-color: #d4af37; }
         .setting-row input.big-number { font-size: 1.8rem; font-weight: 900; color: #d4af37; text-align: center; padding: 15px; }
 
-        /* ALERT MANAGER STYLES */
         .alert-form { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .alert-form label { display: block; color: #cbd5e1; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; margin-top: 12px; }
         .alert-form textarea { width: 100%; padding: 12px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; min-height: 80px; font-family: inherit; resize: vertical; }
@@ -99,7 +100,6 @@
         .checkbox-row span { color: #cbd5e1; font-size: 0.9rem; font-weight: 600; }
         #templateNameWrap { display: none; margin-top: 10px; }
 
-        /* BANNER MANAGER STYLES */
         .banner-form { background: #0f1729; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .banner-form label { display: block; color: #cbd5e1; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; margin-top: 12px; }
         .banner-form input[type="text"], .banner-form input[type="datetime-local"], .banner-form select, .banner-form input[type="number"] { width: 100%; padding: 12px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; }
@@ -142,6 +142,7 @@
             .banner-form .form-row-2 { grid-template-columns: 1fr; }
             .banner-list-item { flex-direction: column; align-items: stretch; }
             .banner-template-item { flex-direction: column; align-items: stretch; }
+            .navbar { flex-wrap: wrap; gap: 8px; }
         }
     </style>
 </head>
@@ -161,8 +162,9 @@
     <div id="adminDashboard" style="display: none;">
         <nav class="navbar">
             <a href="#" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
-            <div style="display: flex; align-items: center;">
+            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
                 <span class="admin-badge">🔐 ADMIN</span>
+                <a href="trading-room.html" class="btn-room"><i class="fas fa-chart-line"></i> Trading Room</a>
                 <button class="btn-refresh" onclick="loadData()"><i class="fas fa-sync"></i> Refresh</button>
                 <button class="btn-logout" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
@@ -361,8 +363,7 @@
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
     <script>
@@ -432,10 +433,7 @@
             container.innerHTML = '<div class="loading-state">⏳ Loading alerts...</div>';
             try {
                 const sb = initSupabase();
-                const { data, error } = await sb
-                    .from('alerts')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                const { data, error } = await sb.from('alerts').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 allAlerts = data || [];
                 renderAlerts();
