@@ -35,8 +35,12 @@
         .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
         .register-link { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; }
         .register-link a { color: #d4af37; text-decoration: none; font-weight: 700; }
-        .footer-disclaimer { max-width: 450px; margin: 25px auto 0; padding: 15px; background: #0f1729; border-left: 4px solid #ef4444; border-radius: 8px; text-align: left; font-size: 0.75rem; line-height: 1.6; color: #cbd5e1; }
+        .footer-disclaimer { max-width: 450px; width: 100%; margin: 20px auto 0; padding: 15px 18px; background: #0f1729; border: 1px solid #334155; border-left: 4px solid #ef4444; border-radius: 8px; text-align: left; font-size: 0.78rem; line-height: 1.6; color: #cbd5e1; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .footer-disclaimer strong { color: #ef4444; }
+        @media (max-width: 600px) {
+            .form-card { padding: 25px 20px; }
+            .form-card h2 { font-size: 1.6rem; }
+        }
     </style>
 </head>
 <body>
@@ -76,143 +80,4 @@
             <strong>⚠️ Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. You may lose some or all of your capital. All signals and analysis provided by Nexi XauPo are for educational purposes only and do not constitute financial advice.
         </div>
     </div>
-        <!-- ✅ Supabase CDN + Config -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-
-    <script>
-        // ================================================================
-        // PASSWORD TOGGLE (EYE ICON)
-        // ================================================================
-        function togglePassword(fieldId, btn) {
-            const field = document.getElementById(fieldId);
-            const icon = btn.querySelector('i');
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                field.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
-        // ================================================================
-        // SIGN IN
-        // ================================================================
-        async function handleSignIn(event) {
-            event.preventDefault();
-
-            const input = document.getElementById('loginInput').value.trim().toLowerCase();
-            const password = document.getElementById('loginPassword').value;
-
-            const btn = document.getElementById('signinBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-
-            try {
-                const sb = initSupabase();
-                if (!sb) throw new Error('Supabase client init failed');
-
-                const { data: users, error } = await sb
-                    .from('users')
-                    .select('*')
-                    .or(`email.eq.${input},phone.eq.${input}`)
-                    .limit(1);
-
-                if (error) throw error;
-
-                if (!users || users.length === 0) {
-                    showMessage('❌ Invalid credentials! Please check and try again.', 'error');
-                    resetBtn();
-                    return;
-                }
-
-                const user = users[0];
-
-                if (user.password_hash !== password) {
-                    showMessage('❌ Invalid credentials! Please check and try again.', 'error');
-                    resetBtn();
-                    return;
-                }
-
-                if (user.status === 'pending') {
-                    showMessage('⏳ Aapka account abhi admin verify nahi hua.<br>Payment verify hone ke baad login kar payenge.', 'warning');
-                    resetBtn();
-                    return;
-                }
-
-                if (user.status === 'banned') {
-                    showMessage('🚫 Aapka account ban kar diya gaya hai.<br>Support se rabta karein.', 'error');
-                    resetBtn();
-                    return;
-                }
-
-                const today = new Date().toISOString().split('T')[0];
-                const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
-
-                const sessionUser = {
-                    id: user.id,
-                    fullName: user.name,
-                    email: user.email,
-                    phone: user.phone,
-                    secretKey: user.secret_key,
-                    startingCapital: parseFloat(user.capital),
-                    subscriptionStart: user.subscription_start,
-                    subscriptionEnd: expiry,
-                    status: user.status
-                };
-                localStorage.setItem('nexiCurrentUser', JSON.stringify(sessionUser));
-
-                if (user.status === 'expired' || !expiry || expiry < today) {
-                    showMessage('⚠️ Your subscription has expired!<br>Redirecting to renewal page...', 'warning');
-                    setTimeout(() => {
-                        window.location.replace('renewal.html');
-                    }, 2000);
-                    return;
-                }
-
-                showMessage('✅ Login successful!<br>Welcome back, ' + user.name + '!', 'success');
-                setTimeout(() => {
-                    window.location.replace('dashboard.html');
-                }, 1200);
-
-            } catch (err) {
-                console.error(err);
-                showMessage('❌ Error: ' + err.message, 'error');
-                resetBtn();
-            }
-        }
-
-        function resetBtn() {
-            const btn = document.getElementById('signinBtn');
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
-        }
-
-        function showMessage(text, type) {
-            const box = document.getElementById('messageBox');
-            box.className = 'message ' + type;
-            box.innerHTML = text;
-            box.style.display = 'block';
-        }
-
-        // ENTER key support
-        document.getElementById('loginInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const pwd = document.getElementById('loginPassword');
-                if (pwd.value.trim() === '') pwd.focus();
-                else document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-            }
-        });
-        document.getElementById('loginPassword').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-            }
-        });
-    </script>
-</body>
-</html>
+    
