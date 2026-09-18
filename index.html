@@ -89,7 +89,7 @@
         .hero-stat .num { font-size: 2.5rem; font-weight: 900; color: #d4af37; }
         .hero-stat .label { color: #94a3b8; font-size: 0.9rem; }
 
-        /* ✅ TOP DISCLAIMER STRIP (hero ke neeche) */
+        /* TOP DISCLAIMER STRIP */
         .top-disclaimer { background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d); border-top: 2px solid #ef4444; border-bottom: 2px solid #ef4444; padding: 14px 20px; text-align: center; color: #fecaca; font-size: 0.85rem; font-weight: 600; line-height: 1.6; }
         .top-disclaimer strong { color: #fff; font-weight: 900; }
         .top-disclaimer .icon { color: #fbbf24; margin-right: 6px; }
@@ -230,7 +230,7 @@
 </head>
 <body>
 
-    <!-- ✅ WELCOME OVERLAY -->
+    <!-- WELCOME OVERLAY -->
     <div id="welcomeOverlay">
         <div class="welcome-particles" id="welcomeParticles"></div>
         <button class="welcome-close-btn" onclick="closeWelcome()" title="Close">&times;</button>
@@ -248,7 +248,7 @@
         <div class="welcome-tagline">✨ Expert Analysis + AI Precision ✨</div>
     </div>
 
-    <!-- ✅ ALERT SPEECH BUBBLE -->
+    <!-- ALERT SPEECH BUBBLE -->
     <div id="alertBubble" style="display: none;">
         <div class="alert-bubble-content">
             <button class="alert-bubble-close" onclick="closeAlertBubble()">×</button>
@@ -276,7 +276,7 @@
         </div>
     </nav>
 
-    <!-- ✅ PUBLICITY BANNER -->
+    <!-- PUBLICITY BANNER -->
     <div id="publicityBanner" style="display:none;"></div>
 
     <!-- RISK TICKER -->
@@ -304,12 +304,12 @@
         </div>
     </section>
 
-    <!-- ✅ TOP DISCLAIMER (hero ke bilkul neeche) -->
+    <!-- TOP DISCLAIMER (hero ke bilkul neeche) -->
     <div class="top-disclaimer">
         <span class="icon">⚠️</span><strong>Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. You may lose some or all of your capital. All signals and analysis are for educational purposes only and do not constitute financial advice. You are solely responsible for your own trading decisions.
     </div>
 
-    <!-- ✅ REAL PERFORMANCE SECTION (Settings se on/off hoga) -->
+    <!-- REAL PERFORMANCE SECTION (Settings se on/off hoga) -->
     <section class="real-stats" id="performance" style="display:none;">
         <div class="real-stat-card" id="statCardWinRate">
             <div class="icon">🎯</div>
@@ -319,7 +319,7 @@
         </div>
         <div class="real-stat-card" id="statCardVisitors">
             <div class="icon">👥</div>
-            <div class="label">Visitors Today</div>
+            <div class="label">Total Visitors</div>
             <div class="value blue" id="statVisitors">1000</div>
             <div class="sub">Active community</div>
         </div>
@@ -331,7 +331,7 @@
         </div>
     </section>
 
-    <!-- ✅ UPCOMING SIGNALS SECTION -->
+    <!-- UPCOMING SIGNALS SECTION -->
     <section class="signals-section" id="signals" style="display:none;">
         <h2>🎯 Upcoming Trade Signals</h2>
         <p class="subtitle">Yeh signals expert trader ne di hain — jab actual trade HIT hoga to ye live ban jayengi.</p>
@@ -449,11 +449,11 @@
             </div>
         </div>
     </div>
-        <!-- ✅ Supabase CDN + Config -->
+        <!-- Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
-       <script>
+    <script>
         function goToRegister() { window.location.href = 'register.html'; }
         function goToSignIn() { window.location.href = 'signin.html'; }
         function scrollToSection(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
@@ -504,12 +504,6 @@
                 container.appendChild(p);
             }
         }
-
-        window.addEventListener('load', () => {
-            document.body.style.overflow = 'hidden';
-            typewriterEffect();
-            generateParticles();
-        });
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -590,11 +584,6 @@
             }
         }
 
-        window.addEventListener('load', () => {
-            loadPublicityBanners();
-            setInterval(loadPublicityBanners, 30000);
-        });
-
         // ================================================================
         // ALERT BUBBLE
         // ================================================================
@@ -652,11 +641,6 @@
             }
         }
 
-        window.addEventListener('load', () => {
-            loadActiveAlert();
-            setInterval(loadActiveAlert, 15000);
-        });
-
         // ================================================================
         // DYNAMIC SETTINGS
         // ================================================================
@@ -704,7 +688,7 @@
         }
 
         // ================================================================
-        // ✅ REAL PERFORMANCE STATS (with 1000+ visitor counter)
+        // REAL PERFORMANCE STATS (1000 floor + total all-time visitors)
         // ================================================================
         let realStatsCache = {
             winRate: '--',
@@ -721,7 +705,7 @@
         async function loadRealStats() {
             try {
                 const sb = initSupabase();
-                if (!sb) { console.error('❌ Supabase init failed'); return; }
+                if (!sb) { console.error('Supabase init failed'); return; }
 
                 const showWinRate = (settingsCache.show_win_rate || 'true') === 'true';
                 const showVisitors = (settingsCache.show_visitors || 'true') === 'true';
@@ -753,14 +737,14 @@
                     }
                 }
 
-                // Visitors (today) — with floor
+                // Visitors (ALL TIME) + 1000 floor
                 if (showVisitors) {
-                    const today = new Date().toISOString().split('T')[0];
-                    const { count } = await sb
+                    const { count, error: vErr } = await sb
                         .from('visits')
-                        .select('*', { count: 'exact', head: true })
-                        .eq('visited_date', today);
-                    visitors = Math.max(VISITORS_FLOOR, count || 0);
+                        .select('*', { count: 'exact', head: true });
+                    if (!vErr) {
+                        visitors = VISITORS_FLOOR + (count || 0);
+                    }
                 }
 
                 // Clients (active)
@@ -784,7 +768,7 @@
                 realStatsCache.totalSignals = totalSignals;
 
                 applyRealStatsToUI();
-            } catch (err) { console.error('❌ loadRealStats:', err); }
+            } catch (err) { console.error('loadRealStats:', err); }
         }
 
         function animateVisitorCount(targetNum, element) {
@@ -794,13 +778,13 @@
             element.innerText = current;
             if (targetNum <= VISITORS_FLOOR) return;
             const totalSteps = targetNum - VISITORS_FLOOR;
-            const stepDelay = Math.max(20, Math.min(80, Math.floor(2000 / totalSteps)));
+            const stepDelay = Math.max(15, Math.min(60, Math.floor(1800 / totalSteps)));
             function tick() {
                 current++;
                 element.innerText = current;
                 if (current < targetNum) visitorsAnimFrame = setTimeout(tick, stepDelay);
             }
-            visitorsAnimFrame = setTimeout(tick, 200);
+            visitorsAnimFrame = setTimeout(tick, 150);
         }
 
         function applyRealStatsToUI() {
@@ -984,31 +968,35 @@
         function closeModal() { document.getElementById('freeTradesModal').style.display = 'none'; }
 
         // ================================================================
-        // VISIT TRACKING
+        // VISIT TRACKING — Har page load pe +1 (no localStorage block)
         // ================================================================
         async function logVisit() {
             try {
                 const sb = initSupabase();
                 if (!sb) return;
                 const today = new Date().toISOString().split('T')[0];
-                const lastVisit = localStorage.getItem('nexiLastVisit');
-                if (lastVisit === today) return;
                 const ua = navigator.userAgent || '';
                 await sb.from('visits').insert([{
                     page: 'index',
                     user_agent: ua,
                     visited_date: today
                 }]);
-                localStorage.setItem('nexiLastVisit', today);
+                // Reload stats to reflect new count
+                loadRealStats();
             } catch (err) { console.error('logVisit:', err); }
         }
 
         // ================================================================
-        // INIT — LOAD EVERYTHING IN ORDER (Ye important hai!)
+        // INIT — LOAD EVERYTHING IN ORDER
         // ================================================================
         window.addEventListener('load', async () => {
-            // 1. Log visit (background)
-            setTimeout(logVisit, 2000);
+            // Welcome overlay
+            document.body.style.overflow = 'hidden';
+            typewriterEffect();
+            generateParticles();
+
+            // 1. Log visit FIRST (so counter updates quickly)
+            logVisit();
 
             // 2. Publicity banners
             loadPublicityBanners();
@@ -1018,10 +1006,10 @@
             loadActiveAlert();
             setInterval(loadActiveAlert, 15000);
 
-            // 4. FIRST: Load settings
+            // 4. Load settings FIRST
             await loadDynamicSettings();
 
-            // 5. THEN: Load real stats (settings ready hain ab)
+            // 5. Then load real stats (settings ready)
             loadRealStats();
             setInterval(loadRealStats, 60000);
             setInterval(loadDynamicSettings, 30000);
@@ -1052,4 +1040,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
