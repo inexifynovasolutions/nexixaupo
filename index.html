@@ -453,12 +453,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
-    <script>
+       <script>
         function goToRegister() { window.location.href = 'register.html'; }
         function goToSignIn() { window.location.href = 'signin.html'; }
         function scrollToSection(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
 
-        // Visitors floor (kam az kam itna dikhaye)
         const VISITORS_FLOOR = 1000;
 
         // ================================================================
@@ -531,26 +530,20 @@
             try {
                 const sb = initSupabase();
                 if (!sb) return;
-
                 const banners = await getActiveBanners('demo');
-
                 const visible = banners.filter(b => {
                     if (b.closable && bannerClosedIds.includes(b.id)) return false;
                     return true;
                 });
-
                 visible.sort((a, b) => (b.priority || 5) - (a.priority || 5));
-
                 if (visible.length === 0) {
                     document.getElementById('publicityBanner').style.display = 'none';
                     if (bannerRotationTimer) clearInterval(bannerRotationTimer);
                     return;
                 }
-
                 activeBanners = visible;
                 currentBannerIndex = 0;
                 showBanner(activeBanners[0]);
-
                 if (bannerRotationTimer) clearInterval(bannerRotationTimer);
                 if (activeBanners.length > 1) {
                     bannerRotationTimer = setInterval(() => {
@@ -564,26 +557,21 @@
         function showBanner(banner) {
             const el = document.getElementById('publicityBanner');
             if (!el) return;
-
             el.className = '';
             el.classList.add('style-' + (banner.color || 'gold'));
-
             const styleClass = banner.style === 'scrolling' ? 'pb-scrolling'
                              : banner.style === 'slide' ? 'pb-slide'
                              : 'pb-static';
             el.classList.add(styleClass);
-
             let innerHTML = '';
             const closeBtn = banner.closable
                 ? `<button class="pb-close" onclick="closeBanner('${banner.id}')" title="Close">×</button>`
                 : '';
-
             if (banner.style === 'scrolling') {
                 innerHTML = `<div class="pb-content"><span class="pb-scroll-text">${banner.message}</span>${closeBtn}</div>`;
             } else {
                 innerHTML = `<div class="pb-content">${banner.message}${closeBtn}</div>`;
             }
-
             el.innerHTML = innerHTML;
             el.style.display = 'block';
         }
@@ -608,7 +596,7 @@
         });
 
         // ================================================================
-        // ALERT BUBBLE (with re-appear)
+        // ALERT BUBBLE
         // ================================================================
         let currentAlertId = null;
 
@@ -616,7 +604,6 @@
             try {
                 const sb = initSupabase();
                 if (!sb) return;
-
                 const { data, error } = await sb
                     .from('alerts')
                     .select('*')
@@ -624,24 +611,20 @@
                     .in('target', ['demo', 'both'])
                     .order('created_at', { ascending: false });
                 if (error) throw error;
-
                 const now = new Date();
                 const active = (data || []).filter(a => {
                     if (a.start_time && new Date(a.start_time) > now) return false;
                     if (a.end_time && new Date(a.end_time) < now) return false;
                     return true;
                 });
-
                 if (active.length === 0) {
                     document.getElementById('alertBubble').style.display = 'none';
                     currentAlertId = null;
                     return;
                 }
-
                 const alert = active[0];
                 const reappearSec = parseInt(alert.reappear_seconds) || 0;
                 const closedAtRaw = localStorage.getItem('alertClosedAt_' + alert.id);
-
                 if (closedAtRaw) {
                     if (reappearSec === 0) {
                         document.getElementById('alertBubble').style.display = 'none';
@@ -654,7 +637,6 @@
                         return;
                     }
                 }
-
                 if (currentAlertId !== alert.id || document.getElementById('alertBubble').style.display === 'none') {
                     currentAlertId = alert.id;
                     document.getElementById('alertBubbleText').innerText = alert.message;
@@ -685,13 +667,10 @@
             try {
                 const sb = initSupabase();
                 if (!sb) return;
-
                 const { data, error } = await sb.from('settings').select('key, value');
                 if (error) throw error;
-
                 settingsCache = {};
                 (data || []).forEach(s => { settingsCache[s.key] = s.value; });
-
                 applySettingsToUI();
             } catch (err) { console.error('loadDynamicSettings:', err); }
         }
@@ -700,9 +679,7 @@
             const freeTrades = settingsCache.free_trades_per_day || '3';
             const firstPrice = settingsCache.first_month_price || '3';
             const renewalPrice = settingsCache.renewal_price || '5';
-
             freeTradesLimit = parseInt(freeTrades) || 3;
-
             const ids = {
                 'heroFreeTrades': freeTrades,
                 'freeTradesBadge': freeTrades,
@@ -715,12 +692,10 @@
                 'modalPrice': firstPrice,
                 'modalPrice2': firstPrice
             };
-
             for (const id in ids) {
                 const el = document.getElementById(id);
                 if (el) el.innerText = ids[id];
             }
-
             if (!demoRunning && !demoTrade) {
                 const el = document.getElementById('freeTradesLeft');
                 if (el) el.innerText = freeTradesLimit;
@@ -728,13 +703,8 @@
             }
         }
 
-        window.addEventListener('load', () => {
-            loadDynamicSettings();
-            setInterval(loadDynamicSettings, 30000);
-        });
-
         // ================================================================
-        // ✅ REAL PERFORMANCE STATS (with 1000+ visitor counter + animation)
+        // ✅ REAL PERFORMANCE STATS (with 1000+ visitor counter)
         // ================================================================
         let realStatsCache = {
             winRate: '--',
@@ -751,7 +721,7 @@
         async function loadRealStats() {
             try {
                 const sb = initSupabase();
-                if (!sb) return;
+                if (!sb) { console.error('❌ Supabase init failed'); return; }
 
                 const showWinRate = (settingsCache.show_win_rate || 'true') === 'true';
                 const showVisitors = (settingsCache.show_visitors || 'true') === 'true';
@@ -761,44 +731,39 @@
                 realStatsCache.showVisitors = showVisitors;
                 realStatsCache.showClients = showClients;
 
-                let winRate = '--';
+                let winRate = '0%';
                 let visitors = VISITORS_FLOOR;
                 let clients = 0;
                 let totalSignals = 0;
 
-                // Win rate from daily_stats
+                // Win rate
                 if (showWinRate) {
                     const { data: dailyData } = await sb
                         .from('daily_stats')
-                        .select('win_trades, total_trades, stat_date')
+                        .select('win_trades, total_trades')
                         .order('stat_date', { ascending: false })
                         .limit(30);
-
                     if (dailyData && dailyData.length > 0) {
                         let totWins = 0, totTrades = 0;
                         dailyData.forEach(d => {
                             totWins += parseInt(d.win_trades) || 0;
                             totTrades += parseInt(d.total_trades) || 0;
                         });
-                        if (totTrades > 0) winRate = ((totWins / totTrades) * 100).toFixed(1) + '%';
-                        else winRate = '0%';
-                    } else {
-                        winRate = '0%';
+                        winRate = totTrades > 0 ? ((totWins / totTrades) * 100).toFixed(1) + '%' : '0%';
                     }
                 }
 
-                // Visitors from visits table (today) — with floor
+                // Visitors (today) — with floor
                 if (showVisitors) {
                     const today = new Date().toISOString().split('T')[0];
                     const { count } = await sb
                         .from('visits')
                         .select('*', { count: 'exact', head: true })
                         .eq('visited_date', today);
-                    const realCount = count || 0;
-                    visitors = Math.max(VISITORS_FLOOR, realCount);
+                    visitors = Math.max(VISITORS_FLOOR, count || 0);
                 }
 
-                // Clients from users table (active)
+                // Clients (active)
                 if (showClients) {
                     const { count } = await sb
                         .from('users')
@@ -807,7 +772,7 @@
                     clients = count || 0;
                 }
 
-                // Total signals
+                // Signals count
                 const { count: sigCount } = await sb
                     .from('signals')
                     .select('*', { count: 'exact', head: true });
@@ -819,29 +784,21 @@
                 realStatsCache.totalSignals = totalSignals;
 
                 applyRealStatsToUI();
-            } catch (err) { console.error('loadRealStats:', err); }
+            } catch (err) { console.error('❌ loadRealStats:', err); }
         }
 
         function animateVisitorCount(targetNum, element) {
             if (!element) return;
-            // Cancel previous animation
-            if (visitorsAnimFrame) cancelAnimationFrame(visitorsAnimFrame);
-
-            // Start from 1000 (floor) and increase by 1 until target
+            if (visitorsAnimFrame) clearTimeout(visitorsAnimFrame);
             let current = VISITORS_FLOOR;
             element.innerText = current;
-
             if (targetNum <= VISITORS_FLOOR) return;
-
             const totalSteps = targetNum - VISITORS_FLOOR;
             const stepDelay = Math.max(20, Math.min(80, Math.floor(2000 / totalSteps)));
-
             function tick() {
                 current++;
                 element.innerText = current;
-                if (current < targetNum) {
-                    visitorsAnimFrame = setTimeout(tick, stepDelay);
-                }
+                if (current < targetNum) visitorsAnimFrame = setTimeout(tick, stepDelay);
             }
             visitorsAnimFrame = setTimeout(tick, 200);
         }
@@ -849,29 +806,21 @@
         function applyRealStatsToUI() {
             const s = realStatsCache;
 
-            // Hero stats
             const heroSignalsEl = document.getElementById('heroTotalSignals');
             const heroWinEl = document.getElementById('heroWinRate');
             const heroClientsEl = document.getElementById('heroActiveClients');
-
             if (heroSignalsEl) heroSignalsEl.innerText = s.totalSignals > 0 ? s.totalSignals : '--';
             if (heroWinEl) heroWinEl.innerText = s.winRate;
             if (heroClientsEl) heroClientsEl.innerText = s.clients > 0 ? s.clients : '--';
 
-            // Real stats section
             const realStatsSec = document.getElementById('performance');
             if (realStatsSec) {
-                if (s.showWinRate || s.showVisitors || s.showClients) {
-                    realStatsSec.style.display = 'grid';
-                } else {
-                    realStatsSec.style.display = 'none';
-                }
+                realStatsSec.style.display = (s.showWinRate || s.showVisitors || s.showClients) ? 'grid' : 'none';
             }
 
             const winCard = document.getElementById('statCardWinRate');
             const visCard = document.getElementById('statCardVisitors');
             const cliCard = document.getElementById('statCardClients');
-
             if (winCard) winCard.style.display = s.showWinRate ? 'block' : 'none';
             if (visCard) visCard.style.display = s.showVisitors ? 'block' : 'none';
             if (cliCard) cliCard.style.display = s.showClients ? 'block' : 'none';
@@ -879,19 +828,10 @@
             const statWinRateEl = document.getElementById('statWinRate');
             const statVisitorsEl = document.getElementById('statVisitors');
             const statClientsEl = document.getElementById('statClients');
-
             if (statWinRateEl) statWinRateEl.innerText = s.winRate;
             if (statVisitorsEl) animateVisitorCount(s.visitors, statVisitorsEl);
             if (statClientsEl) statClientsEl.innerText = s.clients;
         }
-
-        window.addEventListener('load', () => {
-            // Delayed to ensure settings loaded
-            setTimeout(() => {
-                loadRealStats();
-                setInterval(loadRealStats, 60000);
-            }, 1500);
-        });
 
         // ================================================================
         // UPCOMING SIGNALS
@@ -911,11 +851,9 @@
             const container = document.getElementById('signalsList');
             const section = document.getElementById('signals');
             if (!container || !section) return;
-
             try {
                 const sb = initSupabase();
                 if (!sb) return;
-
                 const { data, error } = await sb
                     .from('signals')
                     .select('*')
@@ -923,14 +861,11 @@
                     .in('target', ['demo', 'both'])
                     .order('created_at', { ascending: false })
                     .limit(5);
-
                 if (error) throw error;
-
                 if (!data || data.length === 0) {
                     section.style.display = 'none';
                     return;
                 }
-
                 section.style.display = 'block';
                 container.innerHTML = data.map(s => {
                     const info = PRODUCT_INFO[s.product] || { icon: '📊', name: s.product };
@@ -954,14 +889,8 @@
                         </div>
                     </div>`;
                 }).join('');
-
             } catch (err) { console.error('loadUpcomingSignals:', err); }
         }
-
-        window.addEventListener('load', () => {
-            loadUpcomingSignals();
-            setInterval(loadUpcomingSignals, 30000);
-        });
 
         // ================================================================
         // DEMO LOGIC
@@ -985,7 +914,6 @@
                 demoFloating = (demoTrade.type === 'BUY') ? (demoPrice - demoTrade.entry) * lotSize * 100 : (demoTrade.entry - demoPrice) * lotSize * 100;
                 document.getElementById('demoFloating').innerText = (demoFloating >= 0 ? '+' : '') + '$' + demoFloating.toFixed(2);
                 document.getElementById('demoFloating').style.color = demoFloating >= 0 ? '#10b981' : '#ef4444';
-
                 document.getElementById('demoTableBody').innerHTML = `
                     <tr>
                         <td>#${demoTrade.id}</td>
@@ -997,7 +925,6 @@
                         <td style="color:${demoFloating >= 0 ? '#10b981' : '#ef4444'}; font-weight:700;">${demoFloating >= 0 ? '+' : ''}$${demoFloating.toFixed(2)}</td>
                     </tr>
                 `;
-
                 if (demoTrade.type === 'BUY') {
                     if (demoPrice >= demoTrade.tp || demoPrice <= demoTrade.sl) closeDemoTrade();
                 } else {
@@ -1063,36 +990,51 @@
             try {
                 const sb = initSupabase();
                 if (!sb) return;
-
                 const today = new Date().toISOString().split('T')[0];
                 const lastVisit = localStorage.getItem('nexiLastVisit');
-
                 if (lastVisit === today) return;
-
                 const ua = navigator.userAgent || '';
                 await sb.from('visits').insert([{
                     page: 'index',
                     user_agent: ua,
                     visited_date: today
                 }]);
-
                 localStorage.setItem('nexiLastVisit', today);
             } catch (err) { console.error('logVisit:', err); }
         }
 
-        window.addEventListener('load', () => {
+        // ================================================================
+        // INIT — LOAD EVERYTHING IN ORDER (Ye important hai!)
+        // ================================================================
+        window.addEventListener('load', async () => {
+            // 1. Log visit (background)
             setTimeout(logVisit, 2000);
-        });
 
-        // ================================================================
-        // NAV BUTTONS (logged-in state)
-        // ================================================================
-        window.addEventListener('load', () => {
+            // 2. Publicity banners
+            loadPublicityBanners();
+            setInterval(loadPublicityBanners, 30000);
+
+            // 3. Alert bubble
+            loadActiveAlert();
+            setInterval(loadActiveAlert, 15000);
+
+            // 4. FIRST: Load settings
+            await loadDynamicSettings();
+
+            // 5. THEN: Load real stats (settings ready hain ab)
+            loadRealStats();
+            setInterval(loadRealStats, 60000);
+            setInterval(loadDynamicSettings, 30000);
+
+            // 6. Upcoming signals
+            loadUpcomingSignals();
+            setInterval(loadUpcomingSignals, 30000);
+
+            // 7. Nav buttons state
             const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
             if (user) {
                 const signInBtn = document.getElementById('navSignInBtn');
                 const getStartedBtn = document.getElementById('navGetStartedBtn');
-
                 if (signInBtn) {
                     signInBtn.innerText = '📊 Dashboard';
                     signInBtn.onclick = () => window.location.href = 'dashboard.html';
