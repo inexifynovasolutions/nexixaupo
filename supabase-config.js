@@ -783,3 +783,133 @@ async function getTradesBetween(startISO, endISO) {
 
 // ============================================================
 console.log('✅ supabase-config.js loaded — v2 (with stats/visits/signals helpers)');
+// ============================================================
+// SESSION TIMEOUT SYSTEM (B6 — Phase B Security)
+// ============================================================
+// Config: 30 min inactivity → warning at 29 min → auto logout at 30 min
+
+const SESSION_CONFIG = {
+    TIMEOUT_MINUTES: 30,
+    WARNING_BEFORE_SECONDS: 60,
+    ACTIVITY_EVENTS: ['click', 'keydown', 'mousemove', 'scroll', 'touchstart'],
+    CHECK_INTERVAL_SECONDS: 10
+};
+
+let _sessionState = {
+    lastActivity: Date.now(),
+    warningShown: false,
+    timeoutTimer: null,
+    warningTimer: null,
+    intervalTimer: null,
+    active: false,
+    onLogout: null,
+    warningElement: null
+};
+
+function initSessionTimeout(onLogoutCallback, redirectUrl = 'signin.html') {
+    if (_sessionState.active) return;
+    _sessionState.active = true;
+    _sessionState.lastActivity = Date.now();
+    _sessionState.onLogout = onLogoutCallback || function() {
+        localStorage.removeItem('nexiCurrentUser');
+        sessionStorage.removeItem('nexiAdmin');
+        alert('⏰ Session expired — 30 minutes of inactivity.\n\nPlease login again.');
+        window.location.replace(redirectUrl);
+    };
+    createWarningElement();
+    SESSION_CONFIG.ACTIVITY_EVENTS.forEach(event => {
+        document.addEventListener(event, handleUserActivity, { passive: true });
+    });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    _sessionState.intervalTimer = setInterval(checkSession, SESSION_CONFIG.CHECK_INTERVAL_SECONDS * 1000);
+    console.log('✅ Session timeout initialized — 30 min inactivity');
+}
+
+function handleUserActivity() {
+    if (!_sessionState.active) return;
+    _sessionState.lastActivity = Date.now();
+    if (_sessionState.warningShown) hideWarning();
+}
+
+function handleVisibilityChange() {
+    if (!document.hidden && _sessionState.active) checkSession();
+}
+
+function checkSession() {
+    if (!_sessionState.active) return;
+    const now = Date.now();
+    const elapsed = now - _sessionState.lastActivity;
+    const timeoutMs = SESSION_CONFIG.TIMEOUT_MINUTES * 60 * 1000;
+    const warningMs = timeoutMs - (SESSION_CONFIG.WARNING_BEFORE_SECONDS * 1000);
+    if (elapsed >= timeoutMs) {
+        destroySessionTimeout();
+        _sessionState.onLogout();
+        return;
+    }
+    if (elapsed >= warningMs && !_sessionState.warningShown) showWarning();
+}
+
+function createWarningElement() {
+    if (_sessionState.warningElement) return;
+    const el = document.createElement('div');
+    el.id = 'sessionWarningOverlay';
+    el.style.cssText = `display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;`;
+    el.innerHTML = `<div style="background:#111827;border:3px solid #fbbf24;border-radius:20px;padding:35px;max-width:450px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(251,191,36,0.4);font-family:'Segoe UI',Roboto,sans-serif;">
+        <div style="font-size:3rem;margin-bottom:15px;">⏰</div>
+        <h2 style="color:#fbbf24;font-size:1.5rem;margin-bottom:15px;">Session Expiring!</h2>
+        <p style="color:#cbd5e1;margin-bottom:10px;font-size:0.95rem;line-height:1.6;">Aap <strong style="color:#fbbf24;">30 minutes</strong> se inactive hain.</p>
+        <p style="color:#cbd5e1;margin-bottom:25px;font-size:0.95rem;line-height:1.6;"><strong id="sessionCountdown" style="color:#ef4444;font-size:1.3rem;">60</strong> seconds mein logout ho jayenge.</p>
+        <button id="sessionExtendBtn" style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:14px 35px;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-right:10px;">✓ Stay Logged In</button>
+        <button id="sessionLogoutBtn" style="background:#ef4444;color:white;padding:14px 35px;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;">Logout Now</button>
+    </div>`;
+    document.body.appendChild(el);
+    document.getElementById('sessionExtendBtn').addEventListener('click', handleUserActivity);
+    document.getElementById('sessionLogoutBtn').addEventListener('click', function() {
+        destroySessionTimeout();
+        _sessionState.onLogout();
+    });
+    _sessionState.warningElement = el;
+}
+
+function showWarning() {
+    if (!_sessionState.warningElement) return;
+    _sessionState.warningShown = true;
+    const el = _sessionState.warningElement;
+    el.style.display = 'flex';
+    let secondsLeft = SESSION_CONFIG.WARNING_BEFORE_SECONDS;
+    const countdownEl = document.getElementById('sessionCountdown');
+    if (countdownEl) countdownEl.innerText = secondsLeft;
+    _sessionState.warningTimer = setInterval(() => {
+        secondsLeft--;
+        if (countdownEl) countdownEl.innerText = secondsLeft;
+        if (secondsLeft <= 0) clearInterval(_sessionState.warningTimer);
+    }, 1000);
+}
+
+function hideWarning() {
+    if (!_sessionState.warningElement) return;
+    _sessionState.warningElement.style.display = 'none';
+    _sessionState.warningShown = false;
+    if (_sessionState.warningTimer) {
+        clearInterval(_sessionState.warningTimer);
+        _sessionState.warningTimer = null;
+    }
+}
+
+function destroySessionTimeout() {
+    _sessionState.active = false;
+    if (_sessionState.intervalTimer) clearInterval(_sessionState.intervalTimer);
+    if (_sessionState.warningTimer) clearInterval(_sessionState.warningTimer);
+    SESSION_CONFIG.ACTIVITY_EVENTS.forEach(event => {
+        document.removeEventListener(event, handleUserActivity);
+    });
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    if (_sessionState.warningElement) {
+        _sessionState.warningElement.remove();
+        _sessionState.warningElement = null;
+    }
+}
+
+function extendSession() { handleUserActivity(); }
+
+console.log('✅ Session timeout system loaded');

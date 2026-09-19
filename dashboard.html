@@ -1007,12 +1007,28 @@
             }).join('');
         }
 
-        function logout() {
+               function logout() {
             if (confirm('Are you sure you want to logout?')) {
+                destroySessionTimeout();
                 localStorage.removeItem('nexiCurrentUser');
                 window.location.replace('index.html');
             }
         }
+
+        // B6: Session Timeout (30 min inactivity)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const session = localStorage.getItem('nexiCurrentUser');
+                const mainContainer = document.getElementById('mainContainer');
+                if (session && mainContainer && mainContainer.style.display !== 'none') {
+                    initSessionTimeout(function() {
+                        localStorage.removeItem('nexiCurrentUser');
+                        alert('⏰ Session expired — 30 minutes of inactivity.\n\nPlease login again.');
+                        window.location.replace('signin.html');
+                    }, 'signin.html');
+                }
+            }, 3000);
+        });
     </script>
 </body>
 </html>

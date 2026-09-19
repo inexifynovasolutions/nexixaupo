@@ -399,12 +399,28 @@
             }
         }
 
-        function adminLogout() {
+                function adminLogout() {
             if (confirm('Logout from admin?')) {
+                destroySessionTimeout();
                 sessionStorage.removeItem('nexiAdmin');
                 window.location.replace('index.html');
             }
         }
+
+        // B6: Session Timeout (30 min inactivity)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const isAdmin = sessionStorage.getItem('nexiAdmin');
+                const dashboard = document.getElementById('adminDashboard');
+                if (isAdmin === 'true' && dashboard && dashboard.style.display !== 'none') {
+                    initSessionTimeout(function() {
+                        sessionStorage.removeItem('nexiAdmin');
+                        alert('⏰ Admin session expired — 30 minutes of inactivity.\n\nPlease login again.');
+                        window.location.replace('admin.html');
+                    }, 'admin.html');
+                }
+            }, 3000);
+        });
 
         window.addEventListener('load', () => {
             if (sessionStorage.getItem('nexiAdmin') === 'true') {
