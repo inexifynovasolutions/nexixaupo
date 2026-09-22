@@ -173,7 +173,6 @@
 
     </div>
 
-    <!-- Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
@@ -182,11 +181,11 @@
         // ============================================================
         // Global State
         // ============================================================
-        let registrationData = {};       // User info (name, email, phone, capital)
-        let registeredAuthUserId = null; // Supabase Auth user ID (UUID)
+        let registrationData = {};
+        let registeredAuthUserId = null;
 
         // ============================================================
-        // PASSWORD TOGGLE (EYE ICON)
+        // PASSWORD TOGGLE
         // ============================================================
         function togglePassword(fieldId, btn) {
             const field = document.getElementById(fieldId);
@@ -203,7 +202,8 @@
         }
 
         // ============================================================
-        // STEP 1: Account Details → Supabase Auth signUp
+        // STEP 1: ACCOUNT → signUp + users table insert (status: pending)
+        // Handles: fresh signup, duplicate email, orphan auth user
         // ============================================================
         async function handleRegister(event) {
             event.preventDefault();
@@ -215,7 +215,6 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             const startingCapital = parseFloat(document.getElementById('startingCapital').value);
 
-            // Basic validation
             if (password !== confirmPassword) {
                 showMessage('❌ Passwords do not match!', 'error');
                 return;
@@ -230,49 +229,122 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
 
             try {
-                // 1. Supabase Auth mein account banao
+                const sb = initSupabase();
+                if (!sb) throw new Error('Supabase init failed');
+
+                // 1. Try Supabase Auth signup
                 const { data, error } = await signUpUser(email, password, {
                     name: fullName,
                     phone: phone,
                     capital: startingCapital
                 });
 
-                if (error) {
-                    // Check if email already registered
-                    if (error.message && error.message.toLowerCase().includes('already')) {
-                        showMessage('❌ This email is already registered! Please <a href="signin.html" style="color:#d4af37;">Sign In</a> instead.', 'error');
+                // 2. Handle duplicate email — RECOVERY PATH
+                if (error && error.message && error.message.toLowerCase().includes('already')) {
+                    console.log('⚠️ Email already registered — attempting recovery...');
+
+                    const { data: signInData, error: signInError } = await signInUser(email, password);
+
+                    if (signInError || !signInData || !signInData.user) {
+                        showMessage('❌ Email already registered!<br>Password ghalat hai ya aap bhool gaye.<br>Please <a href="signin.html" style="color:#d4af37;">Sign In</a> karein.', 'error');
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
                         return;
                     }
-                    throw error;
+
+                    // Sign in success — check users table
+                    const { data: existingUser } = await sb
+                        .from('users')
+                        .select('id, status, secret_key')
+                        .eq('id', signInData.user.id)
+                        .maybeSingle();
+
+                    if (existingUser) {
+                        if (existingUser.status === 'active') {
+                            showMessage('❌ Aapka account already active hai!<br><a href="signin.html" style="color:#d4af37;">Sign In</a> karein.', 'error');
+                            await signOutUser();
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
+                            return;
+                        }
+
+                        // Pending user — payment form pe bhejo
+                        registeredAuthUserId = signInData.user.id;
+                        registrationData = { fullName, email, phone, startingCapital };
+                        console.log('✅ Recovering pending user:', registeredAuthUserId);
+
+                        showMessage('✅ Account mil gaya! Payment form pe le ja rahe hain...', 'success');
+                        setTimeout(() => {
+                            document.getElementById('accountForm').style.display = 'none';
+                            document.getElementById('paymentForm').style.display = 'block';
+                            updateProgress(2);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }, 1200);
+                        return;
+                    }
+
+                    // Orphan auth user (users table mein row nahi) — INSERT karo
+                    console.log('⚠️ Orphan auth user — inserting users record');
+                    const { error: insertErr } = await sb.from('users').insert([{
+                        id: signInData.user.id,
+                        name: fullName,
+                        email: email,
+                        phone: phone,
+                        secret_key: null,
+                        capital: startingCapital,
+                        status: 'pending'
+                    }]);
+
+                    if (insertErr) throw new Error('User record error: ' + insertErr.message);
+
+                    registeredAuthUserId = signInData.user.id;
+                    registrationData = { fullName, email, phone, startingCapital };
+                    console.log('✅ Orphan recovered:', registeredAuthUserId);
+
+                    showMessage('✅ Account recovered! Redirecting to payment...', 'success');
+                    setTimeout(() => {
+                        document.getElementById('accountForm').style.display = 'none';
+                        document.getElementById('paymentForm').style.display = 'block';
+                        updateProgress(2);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 1200);
+                    return;
                 }
 
-                if (!data || !data.user) {
-                    throw new Error('Account creation failed — no user returned');
-                }
+                // 3. Other signup errors
+                if (error) throw error;
+                if (!data || !data.user) throw new Error('Account creation failed — no user returned');
 
-                // 2. Auth user id save karo (payment step mein use karenge)
                 registeredAuthUserId = data.user.id;
-
-                registrationData = {
-                    fullName: fullName,
-                    email: email,
-                    phone: phone,
-                    startingCapital: startingCapital
-                };
-
+                registrationData = { fullName, email, phone, startingCapital };
                 console.log('✅ Auth user created:', registeredAuthUserId);
 
-                // 3. Payment step pe move karo
-                showMessage('✅ Account created! Redirecting to payment...', 'success');
+                // 4. INSERT users table immediately (status: pending, secret_key: null)
+                const { error: userErr } = await sb.from('users').insert([{
+                    id: registeredAuthUserId,
+                    name: fullName,
+                    email: email,
+                    phone: phone,
+                    secret_key: null,
+                    capital: startingCapital,
+                    status: 'pending'
+                }]);
 
+                if (userErr) {
+                    console.error('⚠️ users table insert error:', userErr);
+                    // Continue anyway — Step 2 mein retry hoga
+                } else {
+                    console.log('✅ users table record created (pending)');
+                }
+
+                // 5. Move to payment step
+                showMessage('✅ Account created! Redirecting to payment...', 'success');
                 setTimeout(() => {
                     document.getElementById('accountForm').style.display = 'none';
                     document.getElementById('paymentForm').style.display = 'block';
                     updateProgress(2);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 1000);
+                }, 1200);
 
             } catch (err) {
                 console.error('handleRegister error:', err);
@@ -283,7 +355,7 @@
         }
 
         // ============================================================
-        // STEP 2: Payment → users + payments table mein insert
+        // STEP 2: PAYMENT → users UPDATE (secret_key) + payments INSERT
         // ============================================================
         async function handlePayment(event) {
             event.preventDefault();
@@ -316,50 +388,64 @@
                     const sb = initSupabase();
                     if (!sb) throw new Error('Supabase init failed');
 
-                    // 1. Secret Key generate karo
+                    // 1. Generate secret key
                     const emailPart = (registrationData.email || 'USER').substring(0, 4).toUpperCase();
                     const phoneDigits = (registrationData.phone || '0000').replace(/\D/g, '');
                     const phonePart = phoneDigits.slice(-4) || '0000';
                     const random4 = Math.floor(1000 + Math.random() * 9000);
                     const secretKey = emailPart + phonePart + random4;
 
-                    // 2. users table mein insert karo (id = auth user id)
-                    const userPayload = {
-                        id: registeredAuthUserId,           // ⚠️ Same as auth.users.id
-                        name: registrationData.fullName,
-                        email: registrationData.email,
-                        phone: registrationData.phone,
-                        secret_key: secretKey,
-                        capital: registrationData.startingCapital,
-                        status: 'pending'
-                        // password_hash nahi hai — Supabase Auth handles passwords
-                    };
+                    console.log('🔑 Secret key generated:', secretKey);
 
-                    const { error: userError } = await sb
+                    // 2. UPDATE users table — set secret_key, ensure data fresh
+                    const { data: updateData, error: updateErr } = await sb
                         .from('users')
-                        .insert([userPayload]);
+                        .update({
+                            name: registrationData.fullName,
+                            phone: registrationData.phone,
+                            capital: registrationData.startingCapital,
+                            secret_key: secretKey
+                        })
+                        .eq('id', registeredAuthUserId)
+                        .select();
 
-                    if (userError) throw new Error('User record error: ' + userError.message);
+                    if (updateErr) throw new Error('User update error: ' + updateErr.message);
 
-                    // 3. payments table mein insert karo
-                    const paymentPayload = {
-                        user_id: registeredAuthUserId,
-                        amount: 3.00,
-                        type: 'first',
-                        screenshot_url: base64Screenshot,
-                        payer_uid: payerUID,
-                        status: 'pending'
-                    };
+                    // 3. If no row updated (orphan case) — INSERT fallback
+                    if (!updateData || updateData.length === 0) {
+                        console.log('⚠️ No users row to update — inserting fresh record');
+                        const { error: insertErr } = await sb.from('users').insert([{
+                            id: registeredAuthUserId,
+                            name: registrationData.fullName,
+                            email: registrationData.email,
+                            phone: registrationData.phone,
+                            secret_key: secretKey,
+                            capital: registrationData.startingCapital,
+                            status: 'pending'
+                        }]);
+                        if (insertErr) throw new Error('User insert error: ' + insertErr.message);
+                        console.log('✅ users table record inserted (fallback)');
+                    } else {
+                        console.log('✅ users table updated with secret_key');
+                    }
 
+                    // 4. INSERT payment record
                     const { error: paymentError } = await sb
                         .from('payments')
-                        .insert([paymentPayload]);
+                        .insert([{
+                            user_id: registeredAuthUserId,
+                            amount: 3.00,
+                            type: 'first',
+                            screenshot_url: base64Screenshot,
+                            payer_uid: payerUID,
+                            status: 'pending'
+                        }]);
 
                     if (paymentError) throw new Error('Payment save error: ' + paymentError.message);
 
-                    console.log('✅ User + Payment records created');
+                    console.log('✅ Payment record created');
 
-                    // 4. Success screen dikhao
+                    // 5. Success screen
                     document.getElementById('paymentForm').style.display = 'none';
                     document.getElementById('successForm').style.display = 'block';
                     updateProgress(3);
@@ -377,7 +463,7 @@
 
 <!-- PART 3/3 will continue from here -->
         // ============================================================
-        // STEP 3: Secret Key Verify → Supabase Auth mein user check
+        // STEP 3: Secret Key Verify → Supabase Auth login
         // ============================================================
         async function verifySecretKey() {
             const input = document.getElementById('secretKeyInput').value.trim().toUpperCase();
@@ -390,7 +476,7 @@
                 const sb = initSupabase();
                 if (!sb) throw new Error('Supabase init failed');
 
-                // users table se lookup (admin verified hone ke baad hi active hoga)
+                // users table se lookup
                 const { data: user, error } = await sb
                     .from('users')
                     .select('*')
@@ -408,8 +494,7 @@
                     return;
                 }
 
-                // Supabase Auth mein login karein — same email + password ke saath
-                // ⚠️ User ne register karte waqt jo password diya tha, wohi use karein
+                // Supabase Auth login ke liye password prompt
                 const emailForLogin = user.email;
                 const passwordInput = prompt(
                     '✅ Secret Key Verified!\n\nPlease enter your PASSWORD to login:\n(Jo aap ne register karte waqt diya tha)'
@@ -429,7 +514,7 @@
 
                 console.log('✅ Logged in via Supabase Auth:', authData.user.email);
 
-                // Old session structure bhi save karein (dashboard.html ke liye)
+                // Session save
                 const sessionUser = {
                     id: user.id,
                     fullName: user.name,
@@ -460,7 +545,6 @@
             box.className = 'message ' + type;
             box.innerHTML = text;
             box.style.display = 'block';
-            // Success/warning 5 sec mein hide
             if (type === 'success' || type === 'warning') {
                 setTimeout(() => { box.style.display = 'none'; }, 5000);
             }
