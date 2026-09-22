@@ -42,6 +42,7 @@
         .message { padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; font-size: 0.9rem; }
         .message.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; display: block; }
         .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
+        .message.warning { background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; display: block; }
         .login-link { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; }
         .login-link a { color: #d4af37; text-decoration: none; font-weight: 700; }
         .binance-box { background: #0f1729; border: 2px dashed #d4af37; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
@@ -171,16 +172,22 @@
         </div>
 
     </div>
-        <!-- ✅ Supabase CDN + Config -->
+
+    <!-- Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
-    <script>
-        let registrationData = {};
+<!-- PART 2/3 will continue from here -->
+     <script>
+        // ============================================================
+        // Global State
+        // ============================================================
+        let registrationData = {};       // User info (name, email, phone, capital)
+        let registeredAuthUserId = null; // Supabase Auth user ID (UUID)
 
-        // ================================================================
+        // ============================================================
         // PASSWORD TOGGLE (EYE ICON)
-        // ================================================================
+        // ============================================================
         function togglePassword(fieldId, btn) {
             const field = document.getElementById(fieldId);
             const icon = btn.querySelector('i');
@@ -195,11 +202,12 @@
             }
         }
 
-        // ================================================================
-        // STEP 1: Account Details → Supabase mein duplicate check
-        // ================================================================
+        // ============================================================
+        // STEP 1: Account Details → Supabase Auth signUp
+        // ============================================================
         async function handleRegister(event) {
             event.preventDefault();
+
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim().toLowerCase();
             const phone = document.getElementById('phone').value.trim();
@@ -207,34 +215,57 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             const startingCapital = parseFloat(document.getElementById('startingCapital').value);
 
-            if (password !== confirmPassword) { showMessage('❌ Passwords do not match!', 'error'); return; }
-            if (startingCapital < 100) { showMessage('❌ Minimum capital is $100', 'error'); return; }
+            // Basic validation
+            if (password !== confirmPassword) {
+                showMessage('❌ Passwords do not match!', 'error');
+                return;
+            }
+            if (startingCapital < 100) {
+                showMessage('❌ Minimum capital is $100', 'error');
+                return;
+            }
 
             const submitBtn = event.target.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
 
             try {
-                const sb = initSupabase();
-                if (!sb) throw new Error('Supabase client init failed');
+                // 1. Supabase Auth mein account banao
+                const { data, error } = await signUpUser(email, password, {
+                    name: fullName,
+                    phone: phone,
+                    capital: startingCapital
+                });
 
-                const { data: existing, error } = await sb
-                    .from('users')
-                    .select('id, email, phone')
-                    .or(`email.eq.${email},phone.eq.${phone}`)
-                    .limit(1);
-
-                if (error) throw error;
-
-                if (existing && existing.length > 0) {
-                    showMessage('❌ User already exists! Please <a href="signin.html" style="color:#d4af37;">Sign In</a>.', 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
-                    return;
+                if (error) {
+                    // Check if email already registered
+                    if (error.message && error.message.toLowerCase().includes('already')) {
+                        showMessage('❌ This email is already registered! Please <a href="signin.html" style="color:#d4af37;">Sign In</a> instead.', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
+                        return;
+                    }
+                    throw error;
                 }
 
-                registrationData = { fullName, email, phone, password, startingCapital };
-                showMessage('✅ Details saved! Redirecting to payment...', 'success');
+                if (!data || !data.user) {
+                    throw new Error('Account creation failed — no user returned');
+                }
+
+                // 2. Auth user id save karo (payment step mein use karenge)
+                registeredAuthUserId = data.user.id;
+
+                registrationData = {
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    startingCapital: startingCapital
+                };
+
+                console.log('✅ Auth user created:', registeredAuthUserId);
+
+                // 3. Payment step pe move karo
+                showMessage('✅ Account created! Redirecting to payment...', 'success');
 
                 setTimeout(() => {
                     document.getElementById('accountForm').style.display = 'none';
@@ -244,23 +275,34 @@
                 }, 1000);
 
             } catch (err) {
-                console.error(err);
-                showMessage('❌ Error: ' + err.message, 'error');
+                console.error('handleRegister error:', err);
+                showMessage('❌ Error: ' + (err.message || 'Account creation failed'), 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
             }
         }
 
-        // ================================================================
-        // STEP 2: Payment → Supabase mein user + payment insert
-        // ================================================================
+        // ============================================================
+        // STEP 2: Payment → users + payments table mein insert
+        // ============================================================
         async function handlePayment(event) {
             event.preventDefault();
+
             const screenshotFile = document.getElementById('screenshot').files[0];
             const payerUID = document.getElementById('payerUID').value.trim();
 
-            if (!screenshotFile) { alert('❌ Please upload screenshot!'); return; }
-            if (!payerUID) { alert('❌ Please enter Binance UID!'); return; }
+            if (!screenshotFile) {
+                showMessage('❌ Please upload screenshot!', 'error');
+                return;
+            }
+            if (!payerUID) {
+                showMessage('❌ Please enter Binance UID!', 'error');
+                return;
+            }
+            if (!registeredAuthUserId) {
+                showMessage('❌ Session lost! Please refresh and register again.', 'error');
+                return;
+            }
 
             const submitBtn = event.target.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
@@ -272,34 +314,36 @@
 
                 try {
                     const sb = initSupabase();
-                    if (!sb) throw new Error('Supabase client init failed');
+                    if (!sb) throw new Error('Supabase init failed');
 
+                    // 1. Secret Key generate karo
                     const emailPart = (registrationData.email || 'USER').substring(0, 4).toUpperCase();
                     const phoneDigits = (registrationData.phone || '0000').replace(/\D/g, '');
                     const phonePart = phoneDigits.slice(-4) || '0000';
                     const random4 = Math.floor(1000 + Math.random() * 9000);
                     const secretKey = emailPart + phonePart + random4;
 
+                    // 2. users table mein insert karo (id = auth user id)
                     const userPayload = {
+                        id: registeredAuthUserId,           // ⚠️ Same as auth.users.id
                         name: registrationData.fullName,
                         email: registrationData.email,
                         phone: registrationData.phone,
-                        password_hash: registrationData.password,
                         secret_key: secretKey,
                         capital: registrationData.startingCapital,
                         status: 'pending'
+                        // password_hash nahi hai — Supabase Auth handles passwords
                     };
 
-                    const { data: userData, error: userError } = await sb
+                    const { error: userError } = await sb
                         .from('users')
-                        .insert([userPayload])
-                        .select()
-                        .single();
+                        .insert([userPayload]);
 
-                    if (userError) throw new Error('User create error: ' + userError.message);
+                    if (userError) throw new Error('User record error: ' + userError.message);
 
+                    // 3. payments table mein insert karo
                     const paymentPayload = {
-                        user_id: userData.id,
+                        user_id: registeredAuthUserId,
                         amount: 3.00,
                         type: 'first',
                         screenshot_url: base64Screenshot,
@@ -313,14 +357,17 @@
 
                     if (paymentError) throw new Error('Payment save error: ' + paymentError.message);
 
+                    console.log('✅ User + Payment records created');
+
+                    // 4. Success screen dikhao
                     document.getElementById('paymentForm').style.display = 'none';
                     document.getElementById('successForm').style.display = 'block';
                     updateProgress(3);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
 
                 } catch (err) {
-                    console.error(err);
-                    alert('❌ ' + err.message);
+                    console.error('handlePayment error:', err);
+                    showMessage('❌ ' + (err.message || 'Payment submission failed'), 'error');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment';
                 }
@@ -328,17 +375,22 @@
             reader.readAsDataURL(screenshotFile);
         }
 
-        // ================================================================
-        // STEP 3: Secret key verify → Supabase se user lookup
-        // ================================================================
+<!-- PART 3/3 will continue from here -->
+        // ============================================================
+        // STEP 3: Secret Key Verify → Supabase Auth mein user check
+        // ============================================================
         async function verifySecretKey() {
             const input = document.getElementById('secretKeyInput').value.trim().toUpperCase();
-            if (!input) { alert('❌ Please enter secret key!'); return; }
+            if (!input) {
+                alert('❌ Please enter secret key!');
+                return;
+            }
 
             try {
                 const sb = initSupabase();
-                if (!sb) throw new Error('Supabase client init failed');
+                if (!sb) throw new Error('Supabase init failed');
 
+                // users table se lookup (admin verified hone ke baad hi active hoga)
                 const { data: user, error } = await sb
                     .from('users')
                     .select('*')
@@ -346,13 +398,38 @@
                     .maybeSingle();
 
                 if (error) throw error;
-                if (!user) { alert('❌ Invalid secret key!'); return; }
+                if (!user) {
+                    alert('❌ Invalid secret key!');
+                    return;
+                }
 
                 if (user.status !== 'active') {
                     alert('⏳ Aapka account abhi admin verify nahi hua.\n\nThodi der mein dobara koshish karein ya admin se rabta karein.');
                     return;
                 }
 
+                // Supabase Auth mein login karein — same email + password ke saath
+                // ⚠️ User ne register karte waqt jo password diya tha, wohi use karein
+                const emailForLogin = user.email;
+                const passwordInput = prompt(
+                    '✅ Secret Key Verified!\n\nPlease enter your PASSWORD to login:\n(Jo aap ne register karte waqt diya tha)'
+                );
+
+                if (!passwordInput) {
+                    alert('❌ Password required to login.');
+                    return;
+                }
+
+                const { data: authData, error: authError } = await signInUser(emailForLogin, passwordInput);
+
+                if (authError) {
+                    alert('❌ Login failed: ' + authError.message + '\n\nPassword ghalat hai ya account issue hai.');
+                    return;
+                }
+
+                console.log('✅ Logged in via Supabase Auth:', authData.user.email);
+
+                // Old session structure bhi save karein (dashboard.html ke liye)
                 const sessionUser = {
                     id: user.id,
                     fullName: user.name,
@@ -370,61 +447,90 @@
                 setTimeout(() => { window.location.replace('dashboard.html'); }, 1500);
 
             } catch (err) {
-                console.error(err);
-                alert('❌ Error: ' + err.message);
+                console.error('verifySecretKey error:', err);
+                alert('❌ Error: ' + (err.message || 'Verification failed'));
             }
         }
 
+        // ============================================================
+        // Helper Functions
+        // ============================================================
         function showMessage(text, type) {
             const box = document.getElementById('messageBox');
             box.className = 'message ' + type;
             box.innerHTML = text;
             box.style.display = 'block';
+            // Success/warning 5 sec mein hide
+            if (type === 'success' || type === 'warning') {
+                setTimeout(() => { box.style.display = 'none'; }, 5000);
+            }
         }
 
         function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => { alert('✅ Copied: ' + text); });
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Copied: ' + text);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
         }
 
         function backToAccount() {
             document.getElementById('paymentForm').style.display = 'none';
             document.getElementById('accountForm').style.display = 'block';
             updateProgress(1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateProgress(step) {
             for (let i = 1; i <= 4; i++) {
                 const el = document.getElementById('step' + i);
+                if (!el) continue;
                 el.classList.remove('active', 'completed');
                 if (i < step) el.classList.add('completed');
                 if (i === step) el.classList.add('active');
             }
         }
 
-        window.addEventListener('load', () => updateProgress(1));
+        // ============================================================
+        // INIT
+        // ============================================================
+        window.addEventListener('load', () => {
+            updateProgress(1);
+            console.log('✅ register.html loaded — v3 (Supabase Auth)');
+        });
 
-        // ENTER key support — register form
-        document.getElementById('registerForm').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.type !== 'checkbox' && e.target.type !== 'file') {
-                e.preventDefault();
-                const form = e.target.form;
-                const inputs = Array.from(form.querySelectorAll('input:not([type="checkbox"]):not([type="file"])'));
-                const currentIndex = inputs.indexOf(e.target);
-                if (currentIndex < inputs.length - 1) {
-                    inputs[currentIndex + 1].focus();
-                } else {
-                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        // ============================================================
+        // ENTER KEY SUPPORT — Register Form
+        // ============================================================
+        const registerFormEl = document.getElementById('registerForm');
+        if (registerFormEl) {
+            registerFormEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.type !== 'checkbox' && e.target.type !== 'file') {
+                    e.preventDefault();
+                    const form = e.target.form;
+                    const inputs = Array.from(form.querySelectorAll('input:not([type="checkbox"]):not([type="file"])'));
+                    const currentIndex = inputs.indexOf(e.target);
+                    if (currentIndex < inputs.length - 1) {
+                        inputs[currentIndex + 1].focus();
+                    } else {
+                        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                    }
                 }
-            }
-        });
+            });
+        }
 
-        // ENTER key support — payment form
-        document.getElementById('paymentFormSubmit').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.type !== 'file') {
-                e.preventDefault();
-                document.getElementById('paymentFormSubmit').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-            }
-        });
+        // ============================================================
+        // ENTER KEY SUPPORT — Payment Form
+        // ============================================================
+        const paymentFormEl = document.getElementById('paymentFormSubmit');
+        if (paymentFormEl) {
+            paymentFormEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.type !== 'file') {
+                    e.preventDefault();
+                    paymentFormEl.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+            });
+        }
     </script>
 </body>
 </html>
