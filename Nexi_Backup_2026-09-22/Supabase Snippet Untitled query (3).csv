@@ -1,0 +1,16 @@
+id,key,value,label,description,input_type,category,display_order,updated_at
+8808450b-d3d6-465a-82ad-28617e4aecd3,binance_uid,968525536,Binance UID,Payment receive karne wali Binance UID,text,payment,4,2026-09-11 21:49:23.468446+00
+7590f152-017d-44b8-9f99-bdcdfe1754c3,binance_nickname,NexiProduct,Binance Nickname,Binance account ka nickname,text,payment,5,2026-09-11 21:49:23.468446+00
+4fc3cca8-08cc-4803-80a0-5270e13724d5,contact_email,support@nexifynova.co.uk,Contact Email,Client ko dikhne wali support email,email,contact,6,2026-09-11 21:49:23.468446+00
+12bb5f3e-8a01-4761-a00d-2b3057f99bbf,min_capital,100,Minimum Capital ($),Registration ke waqt minimum capital,number,trading,7,2026-09-11 21:49:23.468446+00
+8e81263b-bec1-47c7-9a70-6bf382758776,max_capital,10000,Maximum Capital ($),Registration ke waqt maximum capital,number,trading,8,2026-09-11 21:49:23.468446+00
+2c72f9e4-1a78-4d34-92d5-bafbb1c1d630,site_name,Nexi Rocket-XauPo,Site Name,Poori site ka brand name,text,general,9,2026-09-11 21:49:23.468446+00
+88c47c06-c933-482a-bf50-4fd9d888bcee,support_whatsapp,,Support WhatsApp,WhatsApp number (optional),text,contact,10,2026-09-11 21:49:23.468446+00
+b2ec6ad2-9e30-4abc-8057-c8f660ed7e69,first_month_price,12,First Month Price ($),Naye clients ke liye first month price,number,pricing,2,2026-09-11 23:16:46.197129+00
+bbaf0f9b-ff5f-4587-8fa9-c40fa0cae6d8,renewal_price,16,Renewal Price ($),Monthly renewal price,number,pricing,3,2026-09-11 23:16:46.498385+00
+444ca389-47d9-4b8d-aafc-146e444677f9,sr_support,4344.70,Support Price,Support price for trading signals,number,trading,10,2026-09-12 02:27:42.59875+00
+3789eaad-d93b-41cb-a301-d611d1526bb9,sr_resistance,4354.70,Resistance Price,Resistance price for trading signals,number,trading,11,2026-09-12 02:27:43.060349+00
+47c89847-a978-48ec-9d6f-aaea34670339,free_trades_per_day,7,Free Trades Per Day,Demo page pe free trades ki limit,number,trading,1,2026-09-12 17:35:19.973727+00
+9b86255c-21f2-42a7-a340-c10d18b7960b,show_win_rate,true,Show Win Rate,Clients ko win rate dikhayein,text,trading,20,2026-09-18 12:05:52.075122+00
+3ef28418-5e72-4ba2-8fc6-3757fe7398ea,show_visitors,true,Show Visitor Count,Clients ko visitors counter dikhayein,text,trading,21,2026-09-18 12:05:52.075122+00
+d2160079-2133-4bc5-91fd-f1de1e9fe8d6,show_clients,true,Show Client Count,Clients ko clients counter dikhayein,text,trading,22,2026-09-18 12:05:52.075122+00
