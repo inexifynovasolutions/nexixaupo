@@ -1,8 +1,11 @@
 // ============================================================
 // Nexi Rocket-XauPo — Supabase Client Configuration
 // File: supabase-config.js
+// Version: v3 (Supabase Auth Migration — Phase B2)
 // ============================================================
 
+// ⚠️ IMPORTANT: In values ko aage chalke environment variables mein move karenge
+// (Phase C — Infrastructure)
 const SUPABASE_URL = 'https://awiduhclxuxkqkxrgfub.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_D44mLJQb87KSHfN_9lQTHg_hvAzRavv';
 
@@ -21,7 +24,231 @@ function initSupabase() {
 }
 
 // ============================================================
-// HELPER FUNCTIONS — Users
+// 🆕 SUPABASE AUTH HELPERS (Phase B2 — Migration)
+// ============================================================
+// Ye helpers Supabase Auth (auth.users) ke saath kaam karte hain.
+// Custom auth (users table) ki jagah ye use honge.
+
+// ------------------------------------------------------------
+// 1. SIGN UP — Naya user register karein
+// ------------------------------------------------------------
+// @param {string} email — User ka email
+// @param {string} password — User ka password (bcrypt mein store hoga)
+// @param {object} metadata — Extra info (name, phone, capital, secret_key)
+// @returns {object} — { data, error }
+async function signUpUser(email, password, metadata = {}) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: { message: 'Supabase init failed' } };
+
+        const { data, error } = await sb.auth.signUp({
+            email: email.toLowerCase().trim(),
+            password: password,
+            options: {
+                data: metadata  // name, phone, capital, secret_key yahan aayenge
+            }
+        });
+
+        if (error) {
+            console.error('signUpUser error:', error);
+            return { error };
+        }
+
+        console.log('✅ signUpUser success:', data.user?.email);
+        return { data };
+    } catch (err) {
+        console.error('signUpUser exception:', err);
+        return { error: { message: err.message || 'Unknown error' } };
+    }
+}
+
+// ------------------------------------------------------------
+// 2. SIGN IN — User login karein
+// ------------------------------------------------------------
+// @param {string} email — User ka email
+// @param {string} password — User ka password
+// @returns {object} — { data, error }
+async function signInUser(email, password) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: { message: 'Supabase init failed' } };
+
+        const { data, error } = await sb.auth.signInWithPassword({
+            email: email.toLowerCase().trim(),
+            password: password
+        });
+
+        if (error) {
+            console.error('signInUser error:', error);
+            return { error };
+        }
+
+        console.log('✅ signInUser success:', data.user?.email);
+        return { data };
+    } catch (err) {
+        console.error('signInUser exception:', err);
+        return { error: { message: err.message || 'Unknown error' } };
+    }
+}
+
+// ------------------------------------------------------------
+// 3. SIGN OUT — User logout karein
+// ------------------------------------------------------------
+async function signOutUser() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: { message: 'Supabase init failed' } };
+
+        const { error } = await sb.auth.signOut();
+        if (error) {
+            console.error('signOutUser error:', error);
+            return { error };
+        }
+
+        console.log('✅ signOutUser success');
+        return { success: true };
+    } catch (err) {
+        console.error('signOutUser exception:', err);
+        return { error: { message: err.message || 'Unknown error' } };
+    }
+}
+
+// ------------------------------------------------------------
+// 4. GET SESSION — Current session check karein
+// ------------------------------------------------------------
+// @returns {object|null} — Session ya null
+async function getCurrentSession() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return null;
+
+        const { data, error } = await sb.auth.getSession();
+        if (error) {
+            console.error('getCurrentSession error:', error);
+            return null;
+        }
+
+        return data.session || null;
+    } catch (err) {
+        console.error('getCurrentSession exception:', err);
+        return null;
+    }
+}
+
+// ------------------------------------------------------------
+// 5. GET AUTH USER — Current logged-in user
+// ------------------------------------------------------------
+// @returns {object|null} — Auth user ya null
+async function getCurrentAuthUser() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return null;
+
+        const { data, error } = await sb.auth.getUser();
+        if (error) {
+            console.error('getCurrentAuthUser error:', error);
+            return null;
+        }
+
+        return data.user || null;
+    } catch (err) {
+        console.error('getCurrentAuthUser exception:', err);
+        return null;
+    }
+}
+
+// ------------------------------------------------------------
+// 6. RESET PASSWORD — Password reset email bhejein
+// ------------------------------------------------------------
+// @param {string} email — User ka email
+// @returns {object} — { data, error }
+async function resetPassword(email) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: { message: 'Supabase init failed' } };
+
+        const redirectUrl = window.location.origin + '/signin.html';
+
+        const { data, error } = await sb.auth.resetPasswordForEmail(
+            email.toLowerCase().trim(),
+            { redirectTo: redirectUrl }
+        );
+
+        if (error) {
+            console.error('resetPassword error:', error);
+            return { error };
+        }
+
+        console.log('✅ resetPassword email sent:', email);
+        return { data };
+    } catch (err) {
+        console.error('resetPassword exception:', err);
+        return { error: { message: err.message || 'Unknown error' } };
+    }
+}
+
+// ------------------------------------------------------------
+// 7. UPDATE PASSWORD — Naya password set karein (logged in user)
+// ------------------------------------------------------------
+// @param {string} newPassword — Naya password
+// @returns {object} — { data, error }
+async function updatePassword(newPassword) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: { message: 'Supabase init failed' } };
+
+        const { data, error } = await sb.auth.updateUser({
+            password: newPassword
+        });
+
+        if (error) {
+            console.error('updatePassword error:', error);
+            return { error };
+        }
+
+        console.log('✅ updatePassword success');
+        return { data };
+    } catch (err) {
+        console.error('updatePassword exception:', err);
+        return { error: { message: err.message || 'Unknown error' } };
+    }
+}
+
+// ------------------------------------------------------------
+// 8. ON AUTH STATE CHANGE — Login/logout events ko track karein
+// ------------------------------------------------------------
+// @param {function} callback — (event, session) => {}
+// Events: SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, USER_UPDATED
+function onAuthStateChange(callback) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return null;
+
+        const { data } = sb.auth.onAuthStateChange((event, session) => {
+            console.log('🔐 Auth event:', event);
+            callback(event, session);
+        });
+
+        return data.subscription;
+    } catch (err) {
+        console.error('onAuthStateChange exception:', err);
+        return null;
+    }
+}
+
+// ============================================================
+// END OF PART 1/3
+// ============================================================
+// ============================================================
+// PART 2/3 — LEGACY HELPERS (v2 se preserve kiye gaye)
+// ============================================================
+// ⚠️ Ye helpers abhi bhi admin.html, renewal.html,
+// statistics-room.html mein use ho rahe hain.
+// Phase B2 ke baad inhe gradually hata denge.
+// ============================================================
+
+// ============================================================
+// HELPER FUNCTIONS — Users (Legacy Custom Auth)
 // ============================================================
 
 async function getUserByEmail(email) {
@@ -106,7 +333,6 @@ async function getSetting(key, defaultValue = null) {
     return data ? data.value : defaultValue;
 }
 
-// ✅ NEW: Alias with default (same as getSetting)
 async function getSettingWithDefault(key, defaultValue = null) {
     return await getSetting(key, defaultValue);
 }
@@ -148,6 +374,7 @@ async function getFreeTradesPerDay() {
     _cachedFreeTrades = parseInt(val) || 3;
     return _cachedFreeTrades;
 }
+
 // ============================================================
 // HELPER FUNCTIONS — Alerts
 // ============================================================
@@ -455,8 +682,16 @@ async function deleteBannerTemplate(id) {
     }
     return { success: true };
 }
+
 // ============================================================
-// HELPER FUNCTIONS — Visits (NEW)
+// END OF PART 2/3
+// ============================================================
+// ============================================================
+// PART 3/3 — NEW HELPERS (v2 se preserve) + Session Timeout
+// ============================================================
+
+// ============================================================
+// HELPER FUNCTIONS — Visits
 // ============================================================
 
 async function logVisit(page = 'index', ipAddress = null) {
@@ -553,7 +788,7 @@ async function getVisitsGroupedByDate(limit = 30) {
 }
 
 // ============================================================
-// HELPER FUNCTIONS — Daily Stats (NEW)
+// HELPER FUNCTIONS — Daily Stats
 // ============================================================
 
 async function getDailyStats(limit = 30) {
@@ -635,7 +870,7 @@ async function getOverallWinRate(days = 30) {
 }
 
 // ============================================================
-// HELPER FUNCTIONS — Signals (NEW)
+// HELPER FUNCTIONS — Signals
 // ============================================================
 
 async function getActiveSignals(target = 'clients', limit = 10) {
@@ -710,7 +945,7 @@ async function getTotalSignalsCount() {
 }
 
 // ============================================================
-// HELPER FUNCTIONS — Clients Count (NEW)
+// HELPER FUNCTIONS — Clients Count
 // ============================================================
 
 async function getActiveClientsCount() {
@@ -755,7 +990,7 @@ async function getTotalClientsCount() {
 }
 
 // ============================================================
-// HELPER FUNCTIONS — Trades (NEW — for stats recalculation)
+// HELPER FUNCTIONS — Trades
 // ============================================================
 
 async function getTradesBetween(startISO, endISO) {
@@ -782,7 +1017,10 @@ async function getTradesBetween(startISO, endISO) {
 }
 
 // ============================================================
-console.log('✅ supabase-config.js loaded — v2 (with stats/visits/signals helpers)');
+// VERSION LOG
+// ============================================================
+console.log('✅ supabase-config.js v3 loaded — Supabase Auth + Legacy + Session');
+
 // ============================================================
 // SESSION TIMEOUT SYSTEM (B6 — Phase B Security)
 // ============================================================
@@ -913,3 +1151,7 @@ function destroySessionTimeout() {
 function extendSession() { handleUserActivity(); }
 
 console.log('✅ Session timeout system loaded');
+
+// ============================================================
+// END OF FILE (supabase-config.js v3)
+// ============================================================
