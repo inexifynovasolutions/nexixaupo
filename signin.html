@@ -38,6 +38,9 @@
         .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
         .register-link { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; }
         .register-link a { color: #d4af37; text-decoration: none; font-weight: 700; }
+        .forgot-link { text-align: center; margin-top: 10px; }
+        .forgot-link a { color: #94a3b8; text-decoration: none; font-size: 0.85rem; }
+        .forgot-link a:hover { color: #d4af37; }
         .footer-disclaimer { max-width: 450px; width: 100%; margin: 20px auto 0; padding: 15px 18px; background: #0f1729; border: 1px solid #334155; border-left: 4px solid #ef4444; border-radius: 8px; text-align: left; font-size: 0.78rem; line-height: 1.6; color: #cbd5e1; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .footer-disclaimer strong { color: #ef4444; }
         @media (max-width: 600px) {
@@ -65,8 +68,8 @@
             <div class="message" id="messageBox"></div>
             <form onsubmit="handleSignIn(event)" id="signinForm">
                 <div class="form-group">
-                    <label>Email or Phone</label>
-                    <input type="text" id="loginInput" placeholder="Enter email or phone" required />
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com" required />
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -78,6 +81,9 @@
                 <button type="submit" class="btn-submit" id="signinBtn">
                     <i class="fas fa-sign-in-alt"></i> Sign In
                 </button>
+                <div class="forgot-link">
+                    <a href="#" onclick="handleForgotPassword(); return false;">Forgot Password?</a>
+                </div>
                 <div class="register-link">
                     Don't have an account? <a href="register.html">Register</a>
                 </div>
@@ -88,14 +94,16 @@
             <strong>⚠️ Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. You may lose some or all of your capital. All signals and analysis provided by Nexi XauPo are for educational purposes only and do not constitute financial advice.
         </div>
     </div>
-        <!-- Supabase CDN + Config -->
+
+    <!-- Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
-    <script>
-        // ================================================================
+<!-- PART 2/2 will continue from here -->
+     <script>
+        // ============================================================
         // PASSWORD TOGGLE (EYE ICON)
-        // ================================================================
+        // ============================================================
         function togglePassword(fieldId, btn) {
             const field = document.getElementById(fieldId);
             const icon = btn.querySelector('i');
@@ -110,60 +118,93 @@
             }
         }
 
-        // ================================================================
-        // SIGN IN
-        // ================================================================
+        // ============================================================
+        // SIGN IN — Supabase Auth + users table check
+        // ============================================================
         async function handleSignIn(event) {
             event.preventDefault();
 
-            const input = document.getElementById('loginInput').value.trim().toLowerCase();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showMessage('❌ Please enter email and password.', 'error');
+                return;
+            }
 
             const btn = document.getElementById('signinBtn');
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
 
             try {
-                const sb = initSupabase();
-                if (!sb) throw new Error('Supabase client init failed');
+                // 1. Supabase Auth se login karein
+                const { data: authData, error: authError } = await signInUser(email, password);
 
-                const { data: users, error } = await sb
+                if (authError) {
+                    console.error('Auth signin error:', authError);
+                    if (authError.message && authError.message.toLowerCase().includes('invalid')) {
+                        showMessage('❌ Invalid email or password. Please check and try again.', 'error');
+                    } else if (authError.message && authError.message.toLowerCase().includes('email not confirmed')) {
+                        showMessage('⚠️ Please verify your email first. Check your inbox.', 'warning');
+                    } else {
+                        showMessage('❌ ' + authError.message, 'error');
+                    }
+                    resetBtn();
+                    return;
+                }
+
+                if (!authData || !authData.user) {
+                    showMessage('❌ Login failed — no user returned.', 'error');
+                    resetBtn();
+                    return;
+                }
+
+                console.log('✅ Supabase Auth login:', authData.user.email);
+
+                // 2. users table se extra data fetch karein
+                const sb = initSupabase();
+                const { data: user, error: userError } = await sb
                     .from('users')
                     .select('*')
-                    .or(`email.eq.${input},phone.eq.${input}`)
-                    .limit(1);
+                    .eq('id', authData.user.id)
+                    .maybeSingle();
 
-                if (error) throw error;
-
-                if (!users || users.length === 0) {
-                    showMessage('❌ Invalid credentials! Please check and try again.', 'error');
+                if (userError) {
+                    console.error('Users table fetch error:', userError);
+                    showMessage('❌ Account data load failed. Please contact support.', 'error');
+                    await signOutUser(); // Auth session clear karo
                     resetBtn();
                     return;
                 }
 
-                const user = users[0];
-
-                if (user.password_hash !== password) {
-                    showMessage('❌ Invalid credentials! Please check and try again.', 'error');
+                if (!user) {
+                    console.error('User record not found for auth user:', authData.user.id);
+                    showMessage('❌ Account record not found. Please complete registration or contact support.', 'error');
+                    await signOutUser();
                     resetBtn();
                     return;
                 }
 
+                // 3. Status checks
                 if (user.status === 'pending') {
                     showMessage('⏳ Aapka account abhi admin verify nahi hua.<br>Payment verify hone ke baad login kar payenge.', 'warning');
+                    await signOutUser();
                     resetBtn();
                     return;
                 }
 
                 if (user.status === 'banned') {
                     showMessage('🚫 Aapka account ban kar diya gaya hai.<br>Support se rabta karein.', 'error');
+                    await signOutUser();
                     resetBtn();
                     return;
                 }
 
+                // 4. Expiry check
                 const today = new Date().toISOString().split('T')[0];
                 const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
 
+                // Session data save karo
                 const sessionUser = {
                     id: user.id,
                     fullName: user.name,
@@ -177,6 +218,7 @@
                 };
                 localStorage.setItem('nexiCurrentUser', JSON.stringify(sessionUser));
 
+                // 5. Expired check
                 if (user.status === 'expired' || !expiry || expiry < today) {
                     showMessage('⚠️ Your subscription has expired!<br>Redirecting to renewal page...', 'warning');
                     setTimeout(() => {
@@ -185,18 +227,54 @@
                     return;
                 }
 
+                // 6. Success — dashboard pe bhejo
                 showMessage('✅ Login successful!<br>Welcome back, ' + user.name + '!', 'success');
                 setTimeout(() => {
                     window.location.replace('dashboard.html');
                 }, 1200);
 
             } catch (err) {
-                console.error(err);
-                showMessage('❌ Error: ' + err.message, 'error');
+                console.error('handleSignIn error:', err);
+                showMessage('❌ Error: ' + (err.message || 'Login failed'), 'error');
                 resetBtn();
             }
         }
 
+        // ============================================================
+        // FORGOT PASSWORD — Reset email bhejein
+        // ============================================================
+        async function handleForgotPassword() {
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+
+            if (!email) {
+                showMessage('⚠️ Pehle apna email likhein, phir "Forgot Password" dabayein.', 'warning');
+                document.getElementById('loginEmail').focus();
+                return;
+            }
+
+            // Confirm karein
+            if (!confirm('Password reset email bhejein is email pe?\n\n' + email)) return;
+
+            try {
+                const { data, error } = await resetPassword(email);
+
+                if (error) {
+                    console.error('resetPassword error:', error);
+                    showMessage('❌ ' + error.message, 'error');
+                    return;
+                }
+
+                showMessage('✅ Password reset email bhej di gayi!<br>Apna inbox check karein (spam folder bhi).', 'success');
+
+            } catch (err) {
+                console.error('handleForgotPassword error:', err);
+                showMessage('❌ Error: ' + (err.message || 'Reset failed'), 'error');
+            }
+        }
+
+        // ============================================================
+        // Helper Functions
+        // ============================================================
         function resetBtn() {
             const btn = document.getElementById('signinBtn');
             btn.disabled = false;
@@ -210,21 +288,63 @@
             box.style.display = 'block';
         }
 
-        // ENTER key support
-        document.getElementById('loginInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const pwd = document.getElementById('loginPassword');
-                if (pwd.value.trim() === '') pwd.focus();
-                else document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        // ============================================================
+        // INIT — Check if already logged in
+        // ============================================================
+        window.addEventListener('load', async () => {
+            console.log('✅ signin.html loaded — v3 (Supabase Auth)');
+
+            // Agar Supabase session already active hai, to dashboard bhejo
+            try {
+                const session = await getCurrentSession();
+                if (session && session.user) {
+                    console.log('🔐 Existing session found, checking user record...');
+
+                    const sb = initSupabase();
+                    const { data: user } = await sb
+                        .from('users')
+                        .select('id, status, subscription_end')
+                        .eq('id', session.user.id)
+                        .maybeSingle();
+
+                    if (user && user.status === 'active') {
+                        const today = new Date().toISOString().split('T')[0];
+                        const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
+                        if (expiry && expiry >= today) {
+                            window.location.replace('dashboard.html');
+                            return;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.log('No active session — showing signin form');
             }
         });
-        document.getElementById('loginPassword').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-            }
-        });
+
+        // ============================================================
+        // ENTER KEY SUPPORT
+        // ============================================================
+        const emailInput = document.getElementById('loginEmail');
+        const passwordInput = document.getElementById('loginPassword');
+
+        if (emailInput) {
+            emailInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (passwordInput.value.trim() === '') passwordInput.focus();
+                    else document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+            });
+        }
+
+        if (passwordInput) {
+            passwordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('signinForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+            });
+        }
     </script>
 </body>
 </html>

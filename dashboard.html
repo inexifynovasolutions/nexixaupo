@@ -19,7 +19,7 @@
         .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
 
-        /* ✅ PUBLICITY BANNER */
+        /* PUBLICITY BANNER */
         #publicityBanner { display: none; position: sticky; top: 70px; z-index: 99; width: 100%; overflow: hidden; font-weight: 700; font-size: 0.95rem; transition: all 0.3s ease; }
         #publicityBanner.style-gold { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; }
         #publicityBanner.style-green { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; }
@@ -36,7 +36,7 @@
         #publicityBanner.pb-static .pb-content { animation: pbFadeIn 0.6s ease-out; }
         @keyframes pbFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ✅ ALERT SPEECH BUBBLE */
+        /* ALERT SPEECH BUBBLE */
         #alertBubble { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 10000; max-width: 90%; width: 500px; animation: alertSlideIn 0.5s ease-out; }
         @keyframes alertSlideIn { from { opacity: 0; transform: translateX(-50%) translateY(-30px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         .alert-bubble-content { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; padding: 20px 50px 20px 25px; border-radius: 15px; font-size: 1rem; font-weight: 700; text-align: center; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); position: relative; border: 2px solid #34d399; animation: alertPulse 2s ease-in-out infinite; }
@@ -54,7 +54,7 @@
         .stat-card .value { font-size: 1.5rem; font-weight: 900; color: #d4af37; }
         .stat-card .value.green { color: #10b981; }
 
-        /* ✅ REAL PERFORMANCE STATS */
+        /* REAL PERFORMANCE STATS */
         .real-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .real-stat-card { background: linear-gradient(135deg, #111827, #0f1729); border: 2px solid #334155; border-radius: 15px; padding: 20px; text-align: center; transition: all 0.3s; }
         .real-stat-card:hover { border-color: #d4af37; transform: translateY(-3px); }
@@ -65,7 +65,7 @@
         .real-stat-card .value.blue { color: #60a5fa; }
         .real-stat-card .sub { color: #64748b; font-size: 0.7rem; margin-top: 4px; }
 
-        /* ✅ UPCOMING SIGNALS */
+        /* UPCOMING SIGNALS */
         .signals-section { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
         .signals-section h2 { color: #d4af37; font-size: 1.3rem; margin-bottom: 8px; }
         .signals-section .subtitle { color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px; }
@@ -158,7 +158,7 @@
         <p style="color:#94a3b8; margin-top:20px;">Loading your account...</p>
     </div>
 
-    <!-- ✅ ALERT SPEECH BUBBLE -->
+    <!-- ALERT SPEECH BUBBLE -->
     <div id="alertBubble" style="display: none;">
         <div class="alert-bubble-content">
             <button class="alert-bubble-close" onclick="closeAlertBubble()">×</button>
@@ -175,7 +175,7 @@
         </div>
     </nav>
 
-    <!-- ✅ PUBLICITY BANNER -->
+    <!-- PUBLICITY BANNER -->
     <div id="publicityBanner" style="display:none;"></div>
 
     <div class="container" id="mainContainer" style="display:none;">
@@ -192,7 +192,7 @@
             <div class="stat-card"><div class="label">🔑 Status</div><div class="value green">✅ Verified</div></div>
         </div>
 
-        <!-- ✅ REAL PERFORMANCE STATS (settings se conditional) -->
+        <!-- REAL PERFORMANCE STATS -->
         <div class="real-stats" id="realStatsSection" style="display:none;">
             <div class="real-stat-card" id="statCardWinRate">
                 <div class="icon">🎯</div>
@@ -214,7 +214,7 @@
             </div>
         </div>
 
-        <!-- ✅ UPCOMING SIGNALS (signals table se — clients target) -->
+        <!-- UPCOMING SIGNALS -->
         <div class="signals-section" id="upcomingSignalsSection" style="display:none;">
             <h2>🎯 Upcoming Trade Signals</h2>
             <p class="subtitle">Expert trader ke diye gaye signals — jab actual trade HIT hoga to ye live ban jayengi.</p>
@@ -292,11 +292,16 @@
             <strong>⚠️ Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. You may lose some or all of your capital. All signals and analysis provided by Nexi XauPo are for educational purposes only and do not constitute financial advice. You are solely responsible for your own trading decisions. Nexi XauPo is not liable for any losses incurred.
         </div>
     </footer>
-        <!-- ✅ Supabase CDN + Config -->
+
+    <!-- Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
-    <script>
+<!-- PART 2/3 will continue from here -->
+     <script>
+        // ============================================================
+        // Global State
+        // ============================================================
         let currentUser = null;
         let baseBalance = 0, currentPrice = 0, isTradeOpen = false, currentTrade = null, tradeCounter = 0;
         let priceHistory = [], lastTradeTime = 0, rangeStartTime = Date.now();
@@ -316,9 +321,9 @@
             'AUDUSD': { icon: '🇦🇺', name: 'AUD/USD' }
         };
 
-        // ================================================================
+        // ============================================================
         // PUBLICITY BANNER — clients target
-        // ================================================================
+        // ============================================================
         let activeBanners = [];
         let currentBannerIndex = 0;
         let bannerRotationTimer = null;
@@ -404,14 +409,9 @@
             }
         }
 
-        window.addEventListener('load', () => {
-            loadPublicityBanners();
-            setInterval(loadPublicityBanners, 30000);
-        });
-
-        // ================================================================
+        // ============================================================
         // ALERT BUBBLE — clients target + re-appear
-        // ================================================================
+        // ============================================================
         let currentAlertId = null;
 
         async function loadActiveAlert() {
@@ -476,14 +476,9 @@
             }
         }
 
-        window.addEventListener('load', () => {
-            loadActiveAlert();
-            setInterval(loadActiveAlert, 15000);
-        });
-
-        // ================================================================
+        // ============================================================
         // REAL PERFORMANCE STATS — settings se conditional
-        // ================================================================
+        // ============================================================
         let realStatsCache = {
             winRate: '--', visitors: 0, clients: 0,
             showWinRate: true, showVisitors: true, showClients: true
@@ -494,7 +489,6 @@
                 const sb = initSupabase();
                 if (!sb) return;
 
-                // Settings read
                 const showWinRate = (await getSetting('show_win_rate', 'true')) === 'true';
                 const showVisitors = (await getSetting('show_visitors', 'true')) === 'true';
                 const showClients = (await getSetting('show_clients', 'true')) === 'true';
@@ -571,14 +565,9 @@
             document.getElementById('dashClients').innerText = s.clients;
         }
 
-        window.addEventListener('load', () => {
-            loadRealStats();
-            setInterval(loadRealStats, 60000);
-        });
-
-        // ================================================================
+        // ============================================================
         // UPCOMING SIGNALS — clients target
-        // ================================================================
+        // ============================================================
         async function loadUpcomingSignals() {
             const container = document.getElementById('upcomingSignalsList');
             const section = document.getElementById('upcomingSignalsSection');
@@ -630,47 +619,54 @@
             } catch (err) { console.error('loadUpcomingSignals:', err); }
         }
 
-        window.addEventListener('load', () => {
-            loadUpcomingSignals();
-            setInterval(loadUpcomingSignals, 30000);
-        });
-
-        // ================================================================
-        // LOAD: Fetch fresh user data from Supabase
-        // ================================================================
+        // ============================================================
+        // MAIN LOAD — Supabase Auth Session + User data
+        // ============================================================
         window.addEventListener('load', async () => {
-            const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
-            if (!session || !session.id) {
+            console.log('✅ dashboard.html loaded — v3 (Supabase Auth)');
+
+            // 1. Supabase Auth session check
+            const authSession = await getCurrentSession();
+
+            if (!authSession || !authSession.user) {
+                console.log('❌ No active session — redirecting to signin');
                 alert('❌ Please login first!');
                 window.location.replace('signin.html');
                 return;
             }
 
+            const authUserId = authSession.user.id;
+
             try {
                 const sb = initSupabase();
                 if (!sb) throw new Error('Supabase init failed');
 
+                // 2. users table se fresh data fetch karein
                 const { data: user, error } = await sb
                     .from('users')
                     .select('*')
-                    .eq('id', session.id)
+                    .eq('id', authUserId)
                     .maybeSingle();
 
                 if (error) throw error;
                 if (!user) {
-                    alert('❌ User not found!');
+                    alert('❌ User record not found! Contact support.');
+                    await signOutUser();
                     localStorage.removeItem('nexiCurrentUser');
                     window.location.replace('signin.html');
                     return;
                 }
 
+                // 3. Status check
                 if (user.status !== 'active') {
                     alert('⚠️ Account status: ' + user.status);
+                    await signOutUser();
                     localStorage.removeItem('nexiCurrentUser');
                     window.location.replace(user.status === 'pending' ? 'signin.html' : 'renewal.html');
                     return;
                 }
 
+                // 4. Expiry check
                 const today = new Date().toISOString().split('T')[0];
                 const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
                 if (!expiry || expiry < today) {
@@ -681,6 +677,7 @@
 
                 currentUser = user;
 
+                // 5. Session data localStorage mein bhi save karein (backward compat)
                 const sessionUser = {
                     id: user.id,
                     fullName: user.name,
@@ -694,6 +691,7 @@
                 };
                 localStorage.setItem('nexiCurrentUser', JSON.stringify(sessionUser));
 
+                // 6. UI update
                 $('navUserName').innerText = user.name;
                 $('welcomeName').innerText = user.name;
                 $('statCapital').innerText = '$' + parseFloat(user.capital).toFixed(2);
@@ -704,19 +702,46 @@
                 $('infoKey').innerText = user.secret_key;
                 $('infoEnd').innerText = expiry;
                 $('capitalInput').value = parseFloat(user.capital);
+                baseBalance = parseFloat(user.capital);
 
+                // 7. Trade history load karein
                 await loadTradeHistory();
 
+                // 8. UI show
                 $('loadingScreen').style.display = 'none';
                 $('mainContainer').style.display = 'block';
 
+                // 9. Background loaders
+                loadPublicityBanners();
+                setInterval(loadPublicityBanners, 30000);
+
+                loadActiveAlert();
+                setInterval(loadActiveAlert, 15000);
+
+                loadRealStats();
+                setInterval(loadRealStats, 60000);
+
+                loadUpcomingSignals();
+                setInterval(loadUpcomingSignals, 30000);
+
+                // 10. B6: Session timeout init
+                initSessionTimeout(async function() {
+                    await signOutUser();
+                    localStorage.removeItem('nexiCurrentUser');
+                    alert('⏰ Session expired — 30 minutes of inactivity.\n\nPlease login again.');
+                    window.location.replace('signin.html');
+                }, 'signin.html');
+
             } catch (err) {
-                console.error(err);
+                console.error('Dashboard load error:', err);
                 alert('❌ Error loading account: ' + err.message);
                 window.location.replace('signin.html');
             }
         });
 
+        // ============================================================
+        // TRADE HISTORY LOAD
+        // ============================================================
         async function loadTradeHistory() {
             try {
                 const sb = initSupabase();
@@ -728,7 +753,7 @@
                     .limit(50);
                 if (error) throw error;
 
-                // Manual trades bhi fetch karo (jo admin ne HIT kiye)
+                // Manual trades bhi fetch karo
                 const { data: manualData, error: mErr } = await sb
                     .from('trades')
                     .select('*')
@@ -738,7 +763,6 @@
                 if (mErr) console.warn('Manual trades fetch error:', mErr);
 
                 const allTrades = [...(data || []), ...(manualData || [])];
-                // Remove duplicates by id
                 const seen = new Set();
                 const unique = allTrades.filter(t => {
                     if (seen.has(t.id)) return false;
@@ -765,6 +789,10 @@
             }
         }
 
+<!-- PART 3/3 will continue from here -->
+        // ============================================================
+        // ROBOT LOGIC — Start/Stop
+        // ============================================================
         function startRobot() {
             const capital = parseFloat($('capitalInput').value);
             if (isNaN(capital) || capital < 100) {
@@ -798,6 +826,9 @@
             $('capitalInput').disabled = false;
         }
 
+        // ============================================================
+        // LIVE PRICE FETCH
+        // ============================================================
         async function getLivePrice() {
             if (!isRobotRunning) return;
             try {
@@ -824,6 +855,9 @@
             updateLiveTable();
         }
 
+        // ============================================================
+        // STRATEGY ANALYZER
+        // ============================================================
         function analyzeStrategy(rsi) {
             if (!isRobotRunning || !isSupportSet) return;
             if (isTradeOpen) { checkTradeClose(); return; }
@@ -854,6 +888,9 @@
             $('aiStatus').innerText = '⏳ Waiting';
         }
 
+        // ============================================================
+        // TRADE OPEN / CLOSE
+        // ============================================================
         function openTrade(type, price) {
             if (isTradeOpen) return;
             isTradeOpen = true;
@@ -894,6 +931,8 @@
 
             try {
                 const sb = initSupabase();
+
+                // ⚠️ Ab user_id use karein (RLS ke liye)
                 await sb.from('trades').insert([{
                     user_id: currentUser.id,
                     type: currentTrade.type.toLowerCase(),
@@ -911,8 +950,10 @@
 
                 currentUser.capital = balanceFixed;
                 const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
-                session.startingCapital = balanceFixed;
-                localStorage.setItem('nexiCurrentUser', JSON.stringify(session));
+                if (session) {
+                    session.startingCapital = balanceFixed;
+                    localStorage.setItem('nexiCurrentUser', JSON.stringify(session));
+                }
                 $('statCapital').innerText = '$' + balanceFixed.toFixed(2);
 
             } catch (err) {
@@ -940,6 +981,9 @@
             updateLiveTable();
         }
 
+        // ============================================================
+        // UI UPDATERS
+        // ============================================================
         function updateBalance() {
             let floatingPL = 0;
             if (isTradeOpen && currentTrade) {
@@ -1007,28 +1051,22 @@
             }).join('');
         }
 
-               function logout() {
+        // ============================================================
+        // LOGOUT — Supabase Auth + localStorage clear
+        // ============================================================
+        async function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                destroySessionTimeout();
+                try {
+                    destroySessionTimeout();
+                    await signOutUser();  // Supabase Auth session clear
+                } catch (err) {
+                    console.error('signOut error:', err);
+                }
                 localStorage.removeItem('nexiCurrentUser');
                 window.location.replace('index.html');
             }
         }
-
-        // B6: Session Timeout (30 min inactivity)
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const session = localStorage.getItem('nexiCurrentUser');
-                const mainContainer = document.getElementById('mainContainer');
-                if (session && mainContainer && mainContainer.style.display !== 'none') {
-                    initSessionTimeout(function() {
-                        localStorage.removeItem('nexiCurrentUser');
-                        alert('⏰ Session expired — 30 minutes of inactivity.\n\nPlease login again.');
-                        window.location.replace('signin.html');
-                    }, 'signin.html');
-                }
-            }, 3000);
-        });
     </script>
 </body>
 </html>
+    

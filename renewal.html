@@ -128,75 +128,111 @@
         </div>
 
     </div>
-        <!-- ✅ Supabase CDN + Config -->
+
+    <!-- Supabase CDN + Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
 
-    <script>
+<!-- PART 2/2 will continue from here -->
+     <script>
+        // ============================================================
+        // Global State
+        // ============================================================
         let currentUser = null;
 
-        // ================================================================
-        //  LOAD: Session se fresh user data
-        // ================================================================
+        // ============================================================
+        // LOAD: Supabase Auth session + user data check
+        // ============================================================
         window.addEventListener('load', async () => {
-            const session = JSON.parse(localStorage.getItem('nexiCurrentUser'));
-            if (!session || !session.id) {
+            console.log('✅ renewal.html loaded — v3 (Supabase Auth)');
+
+            // 1. Supabase Auth session check
+            const authSession = await getCurrentSession();
+
+            if (!authSession || !authSession.user) {
+                console.log('❌ No active session — redirecting to signin');
                 alert('❌ Please login first!');
                 window.location.replace('signin.html');
                 return;
             }
 
+            const authUserId = authSession.user.id;
+
             try {
                 const sb = initSupabase();
+                if (!sb) throw new Error('Supabase init failed');
+
+                // 2. users table se fresh data fetch karein
                 const { data: user, error } = await sb
                     .from('users')
                     .select('*')
-                    .eq('id', session.id)
+                    .eq('id', authUserId)
                     .maybeSingle();
+
                 if (error) throw error;
                 if (!user) {
-                    alert('❌ User not found!');
+                    alert('❌ User record not found! Contact support.');
+                    await signOutUser();
                     localStorage.removeItem('nexiCurrentUser');
                     window.location.replace('signin.html');
                     return;
                 }
 
                 currentUser = user;
+
                 const today = new Date().toISOString().split('T')[0];
                 const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;
 
-                // Agar subscription active hai to renewal ki zaroorat nahi
+                // 3. Agar subscription active hai to renewal ki zaroorat nahi
                 if (user.status === 'active' && expiry && expiry >= today) {
                     alert('✅ Your subscription is still active!');
                     window.location.replace('dashboard.html');
                     return;
                 }
 
-                // Prev expiry show
+                // 4. Prev expiry show
                 document.getElementById('prevExpiry').innerText = expiry || '--';
 
-                // Show page
+                // 5. UI show
                 document.getElementById('loadingScreen').style.display = 'none';
                 document.getElementById('mainContainer').style.display = 'block';
 
+                // 6. B6: Session timeout init
+                initSessionTimeout(async function() {
+                    await signOutUser();
+                    localStorage.removeItem('nexiCurrentUser');
+                    alert('⏰ Session expired — 30 minutes of inactivity.\n\nPlease login again.');
+                    window.location.replace('signin.html');
+                }, 'signin.html');
+
             } catch (err) {
-                console.error(err);
+                console.error('renewal.html load error:', err);
                 alert('❌ Error: ' + err.message);
                 window.location.replace('signin.html');
             }
         });
 
-        // ================================================================
-        //  SUBMIT RENEWAL → payments table insert
-        // ================================================================
+        // ============================================================
+        // SUBMIT RENEWAL → payments table insert
+        // ============================================================
         async function handleRenewal(event) {
             event.preventDefault();
 
             const screenshotFile = document.getElementById('screenshot').files[0];
             const payerUID = document.getElementById('payerUID').value.trim();
 
-            if (!screenshotFile) { showMessage('❌ Please upload screenshot!', 'error'); return; }
-            if (!payerUID) { showMessage('❌ Please enter Binance UID!', 'error'); return; }
+            if (!screenshotFile) {
+                showMessage('❌ Please upload screenshot!', 'error');
+                return;
+            }
+            if (!payerUID) {
+                showMessage('❌ Please enter Binance UID!', 'error');
+                return;
+            }
+            if (!currentUser) {
+                showMessage('❌ Session lost! Please login again.', 'error');
+                return;
+            }
 
             const btn = document.getElementById('renewalBtn');
             btn.disabled = true;
@@ -221,16 +257,23 @@
 
                     if (error) throw error;
 
+                    console.log('✅ Renewal payment submitted');
+
                     showMessage('✅ Renewal submitted!<br>Admin will verify within 5-30 minutes.<br>You will be redirected...', 'success');
 
-                    setTimeout(() => {
+                    setTimeout(async () => {
+                        try {
+                            await signOutUser();
+                        } catch (err) {
+                            console.error('signOut error:', err);
+                        }
                         localStorage.removeItem('nexiCurrentUser');
                         window.location.replace('index.html');
                     }, 3000);
 
                 } catch (err) {
-                    console.error(err);
-                    showMessage('❌ Error: ' + err.message, 'error');
+                    console.error('handleRenewal error:', err);
+                    showMessage('❌ Error: ' + (err.message || 'Submission failed'), 'error');
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Renewal';
                 }
@@ -238,6 +281,9 @@
             reader.readAsDataURL(screenshotFile);
         }
 
+        // ============================================================
+        // Helper Functions
+        // ============================================================
         function showMessage(text, type) {
             const box = document.getElementById('messageBox');
             box.className = 'message ' + type;
@@ -246,23 +292,38 @@
         }
 
         function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => { alert('✅ Copied: ' + text); });
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Copied: ' + text);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
         }
 
-        function logout() {
+        async function logout() {
             if (confirm('Logout?')) {
+                try {
+                    destroySessionTimeout();
+                    await signOutUser();
+                } catch (err) {
+                    console.error('signOut error:', err);
+                }
                 localStorage.removeItem('nexiCurrentUser');
                 window.location.replace('index.html');
             }
         }
 
-        // ENTER key support
-        document.getElementById('renewalForm').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.type !== 'file') {
-                e.preventDefault();
-                document.getElementById('renewalForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-            }
-        });
+        // ============================================================
+        // ENTER KEY SUPPORT
+        // ============================================================
+        const renewalFormEl = document.getElementById('renewalForm');
+        if (renewalFormEl) {
+            renewalFormEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.type !== 'file') {
+                    e.preventDefault();
+                    renewalFormEl.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+            });
+        }
     </script>
 </body>
 </html>
