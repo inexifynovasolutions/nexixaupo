@@ -1,7 +1,7 @@
 // ============================================================
 // Nexi Rocket-XauPo — Supabase Client Configuration
 // File: supabase-config.js
-// Version: v3 (Supabase Auth Migration — Phase B2)
+// Version: v4 (Phase B4 — Rate Limiting added)
 // ============================================================
 
 // ⚠️ IMPORTANT: In values ko aage chalke environment variables mein move karenge
@@ -24,18 +24,12 @@ function initSupabase() {
 }
 
 // ============================================================
-// 🆕 SUPABASE AUTH HELPERS (Phase B2 — Migration)
+// SUPABASE AUTH HELPERS (Phase B2 — Migration)
 // ============================================================
-// Ye helpers Supabase Auth (auth.users) ke saath kaam karte hain.
-// Custom auth (users table) ki jagah ye use honge.
 
 // ------------------------------------------------------------
 // 1. SIGN UP — Naya user register karein
 // ------------------------------------------------------------
-// @param {string} email — User ka email
-// @param {string} password — User ka password (bcrypt mein store hoga)
-// @param {object} metadata — Extra info (name, phone, capital, secret_key)
-// @returns {object} — { data, error }
 async function signUpUser(email, password, metadata = {}) {
     try {
         const sb = initSupabase();
@@ -45,7 +39,7 @@ async function signUpUser(email, password, metadata = {}) {
             email: email.toLowerCase().trim(),
             password: password,
             options: {
-                data: metadata  // name, phone, capital, secret_key yahan aayenge
+                data: metadata
             }
         });
 
@@ -65,9 +59,6 @@ async function signUpUser(email, password, metadata = {}) {
 // ------------------------------------------------------------
 // 2. SIGN IN — User login karein
 // ------------------------------------------------------------
-// @param {string} email — User ka email
-// @param {string} password — User ka password
-// @returns {object} — { data, error }
 async function signInUser(email, password) {
     try {
         const sb = initSupabase();
@@ -116,7 +107,6 @@ async function signOutUser() {
 // ------------------------------------------------------------
 // 4. GET SESSION — Current session check karein
 // ------------------------------------------------------------
-// @returns {object|null} — Session ya null
 async function getCurrentSession() {
     try {
         const sb = initSupabase();
@@ -138,7 +128,6 @@ async function getCurrentSession() {
 // ------------------------------------------------------------
 // 5. GET AUTH USER — Current logged-in user
 // ------------------------------------------------------------
-// @returns {object|null} — Auth user ya null
 async function getCurrentAuthUser() {
     try {
         const sb = initSupabase();
@@ -160,8 +149,6 @@ async function getCurrentAuthUser() {
 // ------------------------------------------------------------
 // 6. RESET PASSWORD — Password reset email bhejein
 // ------------------------------------------------------------
-// @param {string} email — User ka email
-// @returns {object} — { data, error }
 async function resetPassword(email) {
     try {
         const sb = initSupabase();
@@ -188,10 +175,8 @@ async function resetPassword(email) {
 }
 
 // ------------------------------------------------------------
-// 7. UPDATE PASSWORD — Naya password set karein (logged in user)
+// 7. UPDATE PASSWORD — Naya password set karein
 // ------------------------------------------------------------
-// @param {string} newPassword — Naya password
-// @returns {object} — { data, error }
 async function updatePassword(newPassword) {
     try {
         const sb = initSupabase();
@@ -215,10 +200,8 @@ async function updatePassword(newPassword) {
 }
 
 // ------------------------------------------------------------
-// 8. ON AUTH STATE CHANGE — Login/logout events ko track karein
+// 8. ON AUTH STATE CHANGE — Login/logout events track
 // ------------------------------------------------------------
-// @param {function} callback — (event, session) => {}
-// Events: SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, USER_UPDATED
 function onAuthStateChange(callback) {
     try {
         const sb = initSupabase();
@@ -240,15 +223,11 @@ function onAuthStateChange(callback) {
 // END OF PART 1/3
 // ============================================================
 // ============================================================
-// PART 2/3 — LEGACY HELPERS (v2 se preserve kiye gaye)
-// ============================================================
-// ⚠️ Ye helpers abhi bhi admin.html, renewal.html,
-// statistics-room.html mein use ho rahe hain.
-// Phase B2 ke baad inhe gradually hata denge.
+// PART 2/3 — LEGACY HELPERS + RATE LIMITING
 // ============================================================
 
 // ============================================================
-// HELPER FUNCTIONS — Users (Legacy Custom Auth)
+// HELPER FUNCTIONS — Users (Legacy)
 // ============================================================
 
 async function getUserByEmail(email) {
@@ -684,10 +663,72 @@ async function deleteBannerTemplate(id) {
 }
 
 // ============================================================
+// 🆕 RATE LIMITING HELPERS (Phase B4)
+// ============================================================
+
+async function checkRateLimit(identifier, action, maxAttempts = 5, windowSeconds = 60, blockSeconds = 900) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { allowed: false, error: 'Supabase init failed' };
+
+        const { data, error } = await sb.rpc('check_rate_limit', {
+            p_identifier: identifier,
+            p_action: action,
+            p_max_attempts: maxAttempts,
+            p_window_seconds: windowSeconds,
+            p_block_seconds: blockSeconds
+        });
+
+        if (error) {
+            console.error('checkRateLimit error:', error);
+            // Fail-open: agar RPC fail ho, allow karein
+            return { allowed: true, error: error.message };
+        }
+
+        return data;
+    } catch (err) {
+        console.error('checkRateLimit exception:', err);
+        return { allowed: true, error: err.message };
+    }
+}
+
+// Preset configs for different actions
+const RATE_LIMIT_PRESETS = {
+    login:          { max: 5, window: 60, block: 900 },     // 5/min → block 15 min
+    register:       { max: 3, window: 300, block: 1800 },   // 3/5min → block 30 min
+    password_reset: { max: 2, window: 600, block: 3600 },   // 2/10min → block 1 hour
+    resend_email:   { max: 1, window: 300, block: 1800 },   // 1/5min → block 30 min
+    payment_submit: { max: 3, window: 1800, block: 3600 },  // 3/30min → block 1 hour
+    contact_form:   { max: 2, window: 600, block: 3600 }    // 2/10min → block 1 hour
+};
+
+// Convenience wrapper
+async function checkRateLimitFor(action, identifier) {
+    const preset = RATE_LIMIT_PRESETS[action] || RATE_LIMIT_PRESETS.login;
+    return await checkRateLimit(identifier, action, preset.max, preset.window, preset.block);
+}
+
+// Format remaining time
+function formatRateLimitMessage(result) {
+    if (!result) return '❌ Too many attempts. Please try again later.';
+
+    const seconds = result.seconds_remaining || 0;
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    let timeStr = '';
+    if (minutes > 0) timeStr = minutes + ' minute' + (minutes > 1 ? 's' : '');
+    if (secs > 0) timeStr += (timeStr ? ' ' : '') + secs + ' second' + (secs > 1 ? 's' : '');
+    if (!timeStr) timeStr = 'a few minutes';
+
+    return `🚫 Too many attempts!\n\nPlease wait ${timeStr} before trying again.`;
+}
+
+// ============================================================
 // END OF PART 2/3
 // ============================================================
 // ============================================================
-// PART 3/3 — NEW HELPERS (v2 se preserve) + Session Timeout
+// PART 3/3 — NEW HELPERS + SESSION TIMEOUT
 // ============================================================
 
 // ============================================================
@@ -1019,12 +1060,11 @@ async function getTradesBetween(startISO, endISO) {
 // ============================================================
 // VERSION LOG
 // ============================================================
-console.log('✅ supabase-config.js v3 loaded — Supabase Auth + Legacy + Session');
+console.log('✅ supabase-config.js v4 loaded — Auth + Legacy + RateLimit + Session');
 
 // ============================================================
 // SESSION TIMEOUT SYSTEM (B6 — Phase B Security)
 // ============================================================
-// Config: 30 min inactivity → warning at 29 min → auto logout at 30 min
 
 const SESSION_CONFIG = {
     TIMEOUT_MINUTES: 30,
@@ -1153,5 +1193,5 @@ function extendSession() { handleUserActivity(); }
 console.log('✅ Session timeout system loaded');
 
 // ============================================================
-// END OF FILE (supabase-config.js v3)
+// END OF FILE (supabase-config.js v4)
 // ============================================================
