@@ -1,0 +1,13 @@
+{
+  "name": "nexixaupo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nexi Rocket-XauPo — Trading Signals Website",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js && python -m http.server 8000"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
