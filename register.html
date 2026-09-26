@@ -202,8 +202,22 @@
         }
 
         // ============================================================
+        // Format time remaining (for rate limit messages)
+        // ============================================================
+        function formatTimeRemaining(seconds) {
+            if (!seconds || seconds <= 0) return 'a few moments';
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            let parts = [];
+            if (minutes > 0) parts.push(minutes + ' minute' + (minutes > 1 ? 's' : ''));
+            if (secs > 0) parts.push(secs + ' second' + (secs > 1 ? 's' : ''));
+            return parts.join(' ') || 'a few moments';
+        }
+
+        // ============================================================
         // STEP 1: ACCOUNT → signUp + users table insert (status: pending)
         // Handles: fresh signup, duplicate email, orphan auth user
+        // + Rate limiting
         // ============================================================
         async function handleRegister(event) {
             event.preventDefault();
@@ -226,6 +240,25 @@
 
             const submitBtn = event.target.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
+            // ============================================================
+            // 🔒 RATE LIMIT CHECK — Registration attempts
+            // ============================================================
+            try {
+                const rl = await checkRateLimitFor('register', email);
+                if (rl && rl.allowed === false) {
+                    console.warn('🚫 Register rate limited:', rl);
+                    showMessage('🚫 Too many registration attempts!<br>Please wait <strong>' + formatTimeRemaining(rl.seconds_remaining) + '</strong> before trying again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
+                    return;
+                }
+                console.log('✅ Register rate limit OK. Attempt:', rl.attempts, '/', rl.max_attempts);
+            } catch (rlErr) {
+                console.error('Rate limit check error (fail-open):', rlErr);
+            }
+
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
 
             try {
@@ -332,7 +365,6 @@
 
                 if (userErr) {
                     console.error('⚠️ users table insert error:', userErr);
-                    // Continue anyway — Step 2 mein retry hoga
                 } else {
                     console.log('✅ users table record created (pending)');
                 }
@@ -355,7 +387,8 @@
         }
 
         // ============================================================
-        // STEP 2: PAYMENT → users UPDATE (secret_key) + payments INSERT
+        // STEP 2: PAYMENT → users UPDATE + payments INSERT
+        // + Rate limiting
         // ============================================================
         async function handlePayment(event) {
             event.preventDefault();
@@ -378,6 +411,25 @@
 
             const submitBtn = event.target.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
+            // ============================================================
+            // 🔒 RATE LIMIT CHECK — Payment submission
+            // ============================================================
+            try {
+                const rl = await checkRateLimitFor('payment_submit', registeredAuthUserId);
+                if (rl && rl.allowed === false) {
+                    console.warn('🚫 Payment rate limited:', rl);
+                    showMessage('🚫 Too many payment attempts!<br>Please wait <strong>' + formatTimeRemaining(rl.seconds_remaining) + '</strong> before trying again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment';
+                    return;
+                }
+                console.log('✅ Payment rate limit OK. Attempt:', rl.attempts, '/', rl.max_attempts);
+            } catch (rlErr) {
+                console.error('Rate limit check error (fail-open):', rlErr);
+            }
+
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
 
             const reader = new FileReader();
@@ -397,7 +449,7 @@
 
                     console.log('🔑 Secret key generated:', secretKey);
 
-                    // 2. UPDATE users table — set secret_key, ensure data fresh
+                    // 2. UPDATE users table — set secret_key
                     const { data: updateData, error: updateErr } = await sb
                         .from('users')
                         .update({
@@ -411,9 +463,9 @@
 
                     if (updateErr) throw new Error('User update error: ' + updateErr.message);
 
-                    // 3. If no row updated (orphan case) — INSERT fallback
+                    // 3. Fallback INSERT if no row updated
                     if (!updateData || updateData.length === 0) {
-                        console.log('⚠️ No users row to update — inserting fresh record');
+                        console.log('⚠️ No users row to update — inserting fresh');
                         const { error: insertErr } = await sb.from('users').insert([{
                             id: registeredAuthUserId,
                             name: registrationData.fullName,
@@ -580,7 +632,7 @@
         // ============================================================
         window.addEventListener('load', () => {
             updateProgress(1);
-            console.log('✅ register.html loaded — v3 (Supabase Auth)');
+            console.log('✅ register.html loaded — v4 (Supabase Auth + Rate Limit)');
         });
 
         // ============================================================
