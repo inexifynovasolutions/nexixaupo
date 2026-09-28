@@ -216,6 +216,9 @@
         // ============================================================
         // SUBMIT RENEWAL → payments table insert
         // ============================================================
+                // ============================================================
+        // SUBMIT RENEWAL → Server-side secure RPC (B5)
+        // ============================================================
         async function handleRenewal(event) {
             event.preventDefault();
 
@@ -235,30 +238,89 @@
                 return;
             }
 
+            // ============================================================
+            // 📸 File size check (before reading)
+            // ============================================================
+            const MAX_FILE_SIZE = 500 * 1024; // 500KB
+            const MIN_FILE_SIZE = 3 * 1024;   // 3KB
+
+            if (screenshotFile.size > MAX_FILE_SIZE) {
+                showMessage('❌ Screenshot too large! Maximum 500KB.<br>Please compress or use a smaller image.', 'error');
+                return;
+            }
+            if (screenshotFile.size < MIN_FILE_SIZE) {
+                showMessage('❌ Screenshot too small! Please upload a real image.', 'error');
+                return;
+            }
+
             const btn = document.getElementById('renewalBtn');
             btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
+            // ============================================================
+            // 🔒 RATE LIMIT CHECK — Payment submission
+            // ============================================================
+            try {
+                const rl = await checkRateLimitFor('payment_submit', currentUser.id);
+                if (rl && rl.allowed === false) {
+                    console.warn('🚫 Renewal rate limited:', rl);
+                    showMessage('🚫 Too many renewal attempts!<br>Please wait <strong>' + formatTimeRemaining(rl.seconds_remaining) + '</strong> before trying again.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Renewal';
+                    return;
+                }
+                console.log('✅ Renewal rate limit OK. Attempt:', rl.attempts, '/', rl.max_attempts);
+            } catch (rlErr) {
+                console.error('Rate limit check error (fail-open):', rlErr);
+            }
+
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
 
+            // ============================================================
+            // 📸 Read file as base64
+            // ============================================================
             const reader = new FileReader();
             reader.onload = async function(e) {
                 const base64Screenshot = e.target.result;
 
                 try {
-                    const sb = initSupabase();
-                    if (!sb) throw new Error('Supabase init failed');
+                    // ============================================================
+                    // 🆕 SECURE PAYMENT SUBMISSION (Server-Side RPC)
+                    // ============================================================
+                    console.log('📤 Calling submit_payment_secure RPC (renewal)...');
 
-                    const { error } = await sb.from('payments').insert([{
-                        user_id: currentUser.id,
-                        amount: 5.00,
-                        type: 'renewal',
-                        screenshot_url: base64Screenshot,
-                        payer_uid: payerUID,
-                        status: 'pending'
-                    }]);
+                    const result = await submitPaymentSecure(
+                        5.00,               // amount (renewal = $5)
+                        'renewal',          // type
+                        base64Screenshot,   // screenshot
+                        payerUID            // Binance UID
+                    );
 
-                    if (error) throw error;
+                    // ============================================================
+                    // Handle server response
+                    // ============================================================
+                    if (!result || result.success !== true) {
+                        const errorCode = result?.error || 'UNKNOWN';
+                        const errorMsg = getPaymentErrorMessage(errorCode, result?.message);
+                        console.error('❌ Server rejected renewal:', errorCode, result?.message);
 
-                    console.log('✅ Renewal payment submitted');
+                        if (errorCode === 'DUPLICATE_SCREENSHOT') {
+                            showMessage('🚫 ' + errorMsg + '<br><br>Please take a <strong>new screenshot</strong> of your payment.', 'error');
+                        } else if (errorCode === 'RECENT_PAYMENT_EXISTS') {
+                            showMessage('⏳ ' + errorMsg + '<br><br>Your previous renewal is still pending verification.', 'warning');
+                        } else {
+                            showMessage('❌ ' + errorMsg, 'error');
+                        }
+
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Renewal';
+                        return;
+                    }
+
+                    // ============================================================
+                    // SUCCESS
+                    // ============================================================
+                    console.log('✅ Renewal submitted successfully! ID:', result.payment_id);
 
                     showMessage('✅ Renewal submitted!<br>Admin will verify within 5-30 minutes.<br>You will be redirected...', 'success');
 
@@ -274,14 +336,13 @@
 
                 } catch (err) {
                     console.error('handleRenewal error:', err);
-                    showMessage('❌ Error: ' + (err.message || 'Submission failed'), 'error');
+                    showMessage('❌ ' + (err.message || 'Renewal submission failed'), 'error');
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Renewal';
                 }
             };
             reader.readAsDataURL(screenshotFile);
         }
-
         // ============================================================
         // Helper Functions
         // ============================================================

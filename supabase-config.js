@@ -971,6 +971,146 @@ function extendSession() { handleUserActivity(); }
 
 console.log('✅ Session timeout system loaded');
 
+
+
+// ============================================================
+// 🆕 B5: SECURE PAYMENT HELPERS (Phase B5 — Server-Side)
+// ============================================================
+// Ye helpers server-side validation function ko call karti hain.
+// Client-side validation ab sirf UX ke liye hai — real check server pe hoti hai.
+// ============================================================
+
+// ------------------------------------------------------------
+// Submit payment via secure RPC
+// ------------------------------------------------------------
+// @param {number} amount      — 3.00 ya 5.00
+// @param {string} type        — 'first' ya 'renewal'
+// @param {string} screenshotUrl — base64 data URL
+// @param {string} payerUID    — Binance UID
+// @returns {object}           — { success, payment_id, error, message }
+async function submitPaymentSecure(amount, type, screenshotUrl, payerUID) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { success: false, error: 'INIT_FAILED', message: 'Supabase init failed' };
+
+        // 1. Get current auth user
+        const { data: authData, error: authErr } = await sb.auth.getUser();
+        if (authErr || !authData?.user) {
+            return { success: false, error: 'NOT_AUTHENTICATED', message: 'Please login first' };
+        }
+
+        // 2. Validate inputs (basic — server does real check)
+        if (!screenshotUrl || !screenshotUrl.startsWith('data:image')) {
+            return { success: false, error: 'INVALID_SCREENSHOT', message: 'Screenshot is required (image format)' };
+        }
+
+        // 3. Calculate screenshot metadata
+        const screenshotSize = screenshotUrl.length;
+        const screenshotHash = await hashString(screenshotUrl);
+
+        // 4. Get client IP (best-effort — server logs anyway)
+        const clientIP = await getClientIP();
+
+        // 5. Call secure RPC
+        const { data, error } = await sb.rpc('submit_payment_secure', {
+            p_amount: parseFloat(amount),
+            p_type: type,
+            p_screenshot_url: screenshotUrl,
+            p_screenshot_hash: screenshotHash,
+            p_screenshot_size: screenshotSize,
+            p_payer_uid: String(payerUID).trim(),
+            p_client_ip: clientIP
+        });
+
+        if (error) {
+            console.error('submitPaymentSecure RPC error:', error);
+            return { success: false, error: 'RPC_ERROR', message: error.message };
+        }
+
+        // RPC returns jsonb — already { success, error, message, payment_id }
+        console.log('✅ submitPaymentSecure result:', data);
+        return data || { success: false, error: 'UNKNOWN', message: 'No response from server' };
+
+    } catch (err) {
+        console.error('submitPaymentSecure exception:', err);
+        return { success: false, error: 'EXCEPTION', message: err.message || 'Unknown error' };
+    }
+}
+
+// ------------------------------------------------------------
+// Hash string (SHA-256) — for duplicate screenshot detection
+// ------------------------------------------------------------
+async function hashString(str) {
+    try {
+        if (typeof crypto === 'undefined' || !crypto.subtle) {
+            // Fallback: simple hash (less secure but works everywhere)
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return 'simple_' + Math.abs(hash).toString(36);
+        }
+
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (err) {
+        console.error('hashString error:', err);
+        // Ultimate fallback: timestamp-based (won't catch duplicates, but won't break)
+        return 'ts_' + Date.now();
+    }
+}
+
+// ------------------------------------------------------------
+// Get client IP (best-effort — browser may block)
+// ------------------------------------------------------------
+async function getClientIP() {
+    try {
+        const resp = await fetch('https://api.ipify.org?format=json', { 
+            method: 'GET',
+            cache: 'no-store'
+        });
+        if (!resp.ok) return null;
+        const data = await resp.json();
+        return data.ip || null;
+    } catch (err) {
+        // Silent fail — IP is optional
+        return null;
+    }
+}
+
+// ------------------------------------------------------------
+// Helper: Check if payment error needs specific UI handling
+// ------------------------------------------------------------
+function getPaymentErrorMessage(errorCode, fallbackMessage) {
+    const messages = {
+        'UNAUTHENTICATED':      'Please login first to submit payment',
+        'USER_NOT_FOUND':       'Account not found. Please register first.',
+        'BANNED':               'Your account is banned. Contact support.',
+        'INVALID_AMOUNT':       'Invalid amount. Allowed: $3 or $5',
+        'INVALID_TYPE':         'Invalid payment type',
+        'AMOUNT_TYPE_MISMATCH': 'Amount does not match payment type',
+        'MISSING_SCREENSHOT':   'Please upload payment screenshot',
+        'SCREENSHOT_TOO_LARGE': 'Screenshot too large. Maximum 500KB.',
+        'SCREENSHOT_TOO_SMALL': 'Screenshot too small. Upload a real image.',
+        'INVALID_PAYER_UID':    'Please enter a valid Binance UID',
+        'DUPLICATE_SCREENSHOT': 'This screenshot was already submitted. Upload a new one.',
+        'RECENT_PAYMENT_EXISTS':'You submitted a payment recently. Please wait for admin approval.',
+        'RPC_ERROR':            'Server error. Please try again.',
+        'INIT_FAILED':          'Connection error. Please refresh and try again.'
+    };
+    return messages[errorCode] || fallbackMessage || 'Payment submission failed';
+}
+
+console.log('✅ B5 secure payment helpers loaded');
+
+
+
+
 // ============================================================
 // END OF FILE (supabase-config.js v5)
 // ============================================================
