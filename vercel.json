@@ -1,4 +1,6 @@
 {
+  "buildCommand": "node build.js",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
@@ -27,6 +29,12 @@
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
+    },
+    {
+      "source": "/env-config.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
     }
   ],
   "rewrites": [
@@ -36,6 +44,8 @@
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/renewal", "destination": "/renewal.html" },
     { "source": "/trading-room", "destination": "/trading-room.html" },
-    { "source": "/statistics-room", "destination": "/statistics-room.html" }
+    { "source": "/statistics-room", "destination": "/statistics-room.html" },
+    { "source": "/verify-email", "destination": "/verify-email.html" },
+    { "source": "/payment-pending", "destination": "/payment-pending.html" }
   ]
 }
