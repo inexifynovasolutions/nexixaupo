@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Verify Email | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .card { background: #111827; border: 2px solid #334155; border-radius: 20px; padding: 45px 35px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .card .icon { font-size: 4rem; margin-bottom: 20px; }
+        .card h2 { font-size: 1.7rem; margin-bottom: 15px; }
+        .card p { color: #cbd5e1; line-height: 1.7; margin-bottom: 20px; font-size: 0.95rem; }
+        .card .message-box { padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: left; font-size: 0.9rem; }
+        .card .message-box.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; }
+        .card .message-box.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; }
+        .card .message-box.warning { background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; }
+        .card .message-box.info { background: rgba(96, 165, 250, 0.1); border: 1px solid #60a5fa; color: #60a5fa; }
+        .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1.05rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 10px; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-secondary { background: #334155; color: #fff; }
+        .btn-secondary:hover { background: #475569; }
+        .spinner { font-size: 3rem; color: #d4af37; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="card">
+        <div class="spinner" id="spinner"><i class="fas fa-circle-notch"></i></div>
+        <h2 id="title">Verifying your email...</h2>
+        <p id="subtitle">Please wait while we confirm your account.</p>
+        <div class="message-box" id="messageBox" style="display: none;"></div>
+        <a href="#" class="btn" id="actionBtn" style="display: none;">Continue</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="env-config.js"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        // ============================================================
+        // VERIFY EMAIL PAGE — Supabase Auth handles verification via URL
+        // ============================================================
+
+        function showMessage(html, type) {
+            const box = document.getElementById('messageBox');
+            box.className = 'message-box ' + type;
+            box.innerHTML = html;
+            box.style.display = 'block';
+        }
+
+        function showAction(text, url, isSecondary = false) {
+            const btn = document.getElementById('actionBtn');
+            btn.innerText = text;
+            btn.href = url;
+            btn.className = 'btn' + (isSecondary ? ' btn-secondary' : '');
+            btn.style.display = 'inline-block';
+        }
+
+        window.addEventListener('load', async () => {
+            console.log('✅ verify-email.html loaded');
+
+            // Wait a moment for Supabase to process URL hash
+            await new Promise(r => setTimeout(r, 1500));
+
+            const spinner = document.getElementById('spinner');
+            const title = document.getElementById('title');
+            const subtitle = document.getElementById('subtitle');
+
+            try {
+                // 1. Check current session (Supabase auto-establishes on email link click)
+                const session = await getCurrentSession();
+
+                if (!session || !session.user) {
+                    // No session — maybe link expired or direct access
+                    spinner.style.display = 'none';
+                    title.innerText = 'Verification Link Needed';
+                    title.style.color = '#fbbf24';
+                    subtitle.innerText = 'This page is for email verification only.';
+                    showMessage(
+                        '⚠️ <strong>No active verification session found.</strong><br><br>' +
+                        'If you just clicked a verification link, wait a moment and refresh.<br><br>' +
+                        'If the link expired, please register again or sign in to resend.',
+                        'warning'
+                    );
+                    showAction('Go to Sign In', 'signin.html');
+                    return;
+                }
+
+                // 2. Check if email is verified
+                const { verified, user } = await checkEmailVerified();
+
+                if (!verified) {
+                    spinner.style.display = 'none';
+                    title.innerText = 'Email Not Verified Yet';
+                    title.style.color = '#fbbf24';
+                    subtitle.innerText = 'Your email could not be confirmed.';
+                    showMessage(
+                        '⚠️ <strong>Email verification incomplete.</strong><br><br>' +
+                        'Please click the verification link in your email again,<br>' +
+                        'or contact support if the problem persists.',
+                        'warning'
+                    );
+                    showAction('Go to Sign In', 'signin.html');
+                    return;
+                }
+
+                // 3. Email verified! Check users table
+                const sb = initSupabase();
+                const { data: userRecord, error: userErr } = await sb
+                    .from('users')
+                    .select('*')
+                    .eq('id', user.id)
+                    .maybeSingle();
+
+                console.log('📊 User record:', userRecord);
+
+                if (userErr) throw userErr;
+
+                // 4. Handle different user states
+                if (!userRecord) {
+                    // Verified but no users table record — orphan
+                    spinner.style.display = 'none';
+                    title.innerText = 'Account Setup Incomplete';
+                    title.style.color = '#fbbf24';
+                    subtitle.innerText = 'Your account exists but setup is incomplete.';
+                    showMessage(
+                        '⚠️ <strong>Account setup incomplete.</strong><br><br>' +
+                        'Please register again or contact support.',
+                        'warning'
+                    );
+                    showAction('Go to Register', 'register.html');
+                    return;
+                }
+
+                if (userRecord.status === 'active') {
+                    // Already active — go to dashboard
+                    spinner.style.display = 'none';
+                    title.innerText = 'Email Verified!';
+                    title.style.color = '#10b981';
+                    subtitle.innerText = 'Your account is already active.';
+                    showMessage(
+                        '✅ <strong>Welcome back!</strong><br><br>' +
+                        'Your account is active. Redirecting to dashboard...',
+                        'success'
+                    );
+                    showAction('Go to Dashboard', 'dashboard.html');
+                    setTimeout(() => { window.location.replace('dashboard.html'); }, 2500);
+                    return;
+                }
+
+                // 5. Default case: pending → go to payment
+                spinner.style.display = 'none';
+                title.innerText = 'Email Verified!';
+                title.style.color = '#10b981';
+                subtitle.innerText = 'Your account is now verified.';
+                showMessage(
+                    '✅ <strong>Email verified successfully!</strong><br><br>' +
+                    'Next step: Complete your payment to activate your account.<br><br>' +
+                    'Redirecting to payment page...',
+                    'success'
+                );
+                showAction('Continue to Payment', 'payment-pending.html');
+                setTimeout(() => { window.location.replace('payment-pending.html'); }, 2500);
+
+            } catch (err) {
+                console.error('verify-email error:', err);
+                spinner.style.display = 'none';
+                title.innerText = 'Verification Error';
+                title.style.color = '#ef4444';
+                subtitle.innerText = 'Something went wrong.';
+                showMessage(
+                    '❌ <strong>Error:</strong> ' + (err.message || 'Verification failed') + '<br><br>' +
+                    'Please try signing in or register again.',
+                    'error'
+                );
+                showAction('Go to Sign In', 'signin.html');
+            }
+        });
+    </script>
+</body>
+</html>

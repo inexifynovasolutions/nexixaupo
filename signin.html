@@ -206,11 +206,32 @@
                     return;
                 }
 
-                // 3. Status checks
-                if (user.status === 'pending') {
-                    showMessage('⏳ Aapka account abhi admin verify nahi hua.<br>Payment verify hone ke baad login kar payenge.', 'warning');
+                                // ============================================================
+                // 3. B3: Email verification check
+                // ============================================================
+                const { verified: emailVerified } = await checkEmailVerified();
+
+                if (!emailVerified) {
+                    // Email not verified — send to verify page
+                    console.log('⚠️ Email not verified');
+                    showMessage('⚠️ <strong>Email not verified!</strong><br>Please check your inbox for the verification link.', 'warning');
                     await signOutUser();
-                    resetBtn();
+                    setTimeout(() => {
+                        window.location.replace('verify-email.html');
+                    }, 2000);
+                    return;
+                }
+
+                // ============================================================
+                // 4. Status checks
+                // ============================================================
+                if (user.status === 'pending') {
+                    // Email verified but payment not done
+                    console.log('⏳ User pending payment — redirecting to payment page');
+                    showMessage('⏳ <strong>Payment pending!</strong><br>Redirecting to payment page...', 'warning');
+                    setTimeout(() => {
+                        window.location.replace('payment-pending.html');
+                    }, 1500);
                     return;
                 }
 
@@ -220,7 +241,6 @@
                     resetBtn();
                     return;
                 }
-
                 // 4. Session data save karo
                 const today = new Date().toISOString().split('T')[0];
                 const expiry = user.subscription_end ? user.subscription_end.split('T')[0] : null;

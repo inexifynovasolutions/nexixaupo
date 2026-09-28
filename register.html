@@ -156,6 +156,38 @@
             </form>
         </div>
 
+                <!-- 🆕 B3: Email Verification Screen -->
+        <div class="form-card" id="verificationForm" style="display: none; text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 15px;">📧</div>
+            <h2 style="color: #10b981;">Check Your Email!</h2>
+            <p class="subtitle">We've sent a verification link to your inbox</p>
+            
+            <div class="info-box" style="text-align: left;">
+                <p>✅ <strong>Account created successfully!</strong><br><br>
+                We sent a verification email to:<br>
+                <strong id="verifyEmailDisplay" style="color: #d4af37;">your@email.com</strong><br><br>
+                Please click the link in the email to verify your account before proceeding to payment.</p>
+            </div>
+
+            <div style="background: #1e293b; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: left;">
+                <p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.6;">
+                    📌 <strong style="color: #d4af37;">Didn't receive the email?</strong><br>
+                    • Check your <strong>spam/junk folder</strong><br>
+                    • Wait 1-2 minutes, then click below<br>
+                    • Make sure the email address is correct
+                </p>
+            </div>
+
+            <button onclick="resendVerification()" class="btn-submit" style="margin-top: 20px;" id="resendBtn">
+                <i class="fas fa-paper-plane"></i> Resend Verification Email
+            </button>
+
+            <div class="login-link" style="margin-top: 15px;">
+                Already verified? <a href="signin.html">Sign In</a>
+            </div>
+        </div>
+
+
         <div class="form-card" id="successForm" style="display: none; text-align: center;">
             <div style="font-size: 4rem; margin-bottom: 15px;">⏳</div>
             <h2 style="color: #10b981;">Payment Submitted!</h2>
@@ -220,6 +252,10 @@
         // Handles: fresh signup, duplicate email, orphan auth user
         // + Rate limiting
         // ============================================================
+                // ============================================================
+        // STEP 1: ACCOUNT → signUp + users table insert (status: pending)
+        // B3: After signup, show verification screen (payment form comes later)
+        // ============================================================
         async function handleRegister(event) {
             event.preventDefault();
 
@@ -244,12 +280,11 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
 
             // ============================================================
-            // 🔒 RATE LIMIT CHECK — Registration attempts
+            // 🔒 RATE LIMIT CHECK
             // ============================================================
             try {
                 const rl = await checkRateLimitFor('register', email);
                 if (rl && rl.allowed === false) {
-                    console.warn('🚫 Register rate limited:', rl);
                     showMessage('🚫 Too many registration attempts!<br>Please wait <strong>' + formatTimeRemaining(rl.seconds_remaining) + '</strong> before trying again.', 'error');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
@@ -266,7 +301,7 @@
                 const sb = initSupabase();
                 if (!sb) throw new Error('Supabase init failed');
 
-                // 1. Try Supabase Auth signup
+                // 1. Try Supabase Auth signup (with email confirmation)
                 const { data, error } = await signUpUser(email, password, {
                     name: fullName,
                     phone: phone,
@@ -277,19 +312,21 @@
                 if (error && error.message && error.message.toLowerCase().includes('already')) {
                     console.log('⚠️ Email already registered — attempting recovery...');
 
+                    // Try signIn to see if user is already verified
                     const { data: signInData, error: signInError } = await signInUser(email, password);
 
                     if (signInError || !signInData || !signInData.user) {
-                        showMessage('❌ Email already registered!<br>Password ghalat hai ya aap bhool gaye.<br>Please <a href="signin.html" style="color:#d4af37;">Sign In</a> karein.', 'error');
+                        // Couldn't sign in — probably unverified or wrong password
+                        showMessage('❌ Email already registered!<br>Please check your inbox for verification, or <a href="signin.html" style="color:#d4af37;">Sign In</a>.', 'error');
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
                         return;
                     }
 
-                    // Sign in success — check users table
+                    // Signed in — check users table
                     const { data: existingUser } = await sb
                         .from('users')
-                        .select('id, status, secret_key')
+                        .select('id, status')
                         .eq('id', signInData.user.id)
                         .maybeSingle();
 
@@ -297,51 +334,34 @@
                         if (existingUser.status === 'active') {
                             showMessage('❌ Aapka account already active hai!<br><a href="signin.html" style="color:#d4af37;">Sign In</a> karein.', 'error');
                             await signOutUser();
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
-                            return;
+                        } else {
+                            // Verified + pending → go to payment
+                            showMessage('✅ Account verified! Redirecting to payment...', 'success');
+                            setTimeout(() => {
+                                window.location.replace('payment-pending.html');
+                            }, 1200);
                         }
+                    } else {
+                        // Orphan auth user — create users record, go to payment
+                        const { error: insertErr } = await sb.from('users').insert([{
+                            id: signInData.user.id,
+                            name: fullName,
+                            email: email,
+                            phone: phone,
+                            secret_key: null,
+                            capital: startingCapital,
+                            status: 'pending'
+                        }]);
+                        if (insertErr) console.error('Orphan insert error:', insertErr);
 
-                        // Pending user — payment form pe bhejo
-                        registeredAuthUserId = signInData.user.id;
-                        registrationData = { fullName, email, phone, startingCapital };
-                        console.log('✅ Recovering pending user:', registeredAuthUserId);
-
-                        showMessage('✅ Account mil gaya! Payment form pe le ja rahe hain...', 'success');
+                        showMessage('✅ Account recovered! Redirecting to payment...', 'success');
                         setTimeout(() => {
-                            document.getElementById('accountForm').style.display = 'none';
-                            document.getElementById('paymentForm').style.display = 'block';
-                            updateProgress(2);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            window.location.replace('payment-pending.html');
                         }, 1200);
-                        return;
                     }
 
-                    // Orphan auth user (users table mein row nahi) — INSERT karo
-                    console.log('⚠️ Orphan auth user — inserting users record');
-                    const { error: insertErr } = await sb.from('users').insert([{
-                        id: signInData.user.id,
-                        name: fullName,
-                        email: email,
-                        phone: phone,
-                        secret_key: null,
-                        capital: startingCapital,
-                        status: 'pending'
-                    }]);
-
-                    if (insertErr) throw new Error('User record error: ' + insertErr.message);
-
-                    registeredAuthUserId = signInData.user.id;
-                    registrationData = { fullName, email, phone, startingCapital };
-                    console.log('✅ Orphan recovered:', registeredAuthUserId);
-
-                    showMessage('✅ Account recovered! Redirecting to payment...', 'success');
-                    setTimeout(() => {
-                        document.getElementById('accountForm').style.display = 'none';
-                        document.getElementById('paymentForm').style.display = 'block';
-                        updateProgress(2);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 1200);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
                     return;
                 }
 
@@ -351,9 +371,10 @@
 
                 registeredAuthUserId = data.user.id;
                 registrationData = { fullName, email, phone, startingCapital };
-                console.log('✅ Auth user created:', registeredAuthUserId);
+                console.log('✅ Auth user created (unverified):', registeredAuthUserId);
 
-                // 4. INSERT users table immediately (status: pending, secret_key: null)
+                // 4. INSERT users table record (status: pending, secret_key: null)
+                // This way admin can see the user even before email verification
                 const { error: userErr } = await sb.from('users').insert([{
                     id: registeredAuthUserId,
                     name: fullName,
@@ -370,20 +391,53 @@
                     console.log('✅ users table record created (pending)');
                 }
 
-                // 5. Move to payment step
-                showMessage('✅ Account created! Redirecting to payment...', 'success');
-                setTimeout(() => {
-                    document.getElementById('accountForm').style.display = 'none';
-                    document.getElementById('paymentForm').style.display = 'block';
-                    updateProgress(2);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 1200);
+                // 5. Show verification screen
+                document.getElementById('verifyEmailDisplay').innerText = email;
+                document.getElementById('accountForm').style.display = 'none';
+                document.getElementById('verificationForm').style.display = 'block';
+                updateProgress(2);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (err) {
                 console.error('handleRegister error:', err);
                 showMessage('❌ Error: ' + (err.message || 'Account creation failed'), 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue to Payment';
+            }
+        }
+
+        // ============================================================
+        // B3: Resend Verification Email
+        // ============================================================
+        async function resendVerification() {
+            if (!registrationData.email) {
+                alert('❌ Email not found. Please register again.');
+                return;
+            }
+
+            const btn = document.getElementById('resendBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const result = await resendVerificationEmail(registrationData.email);
+
+                if (result.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Email Sent!';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Resend Verification Email';
+                        btn.disabled = false;
+                    }, 3000);
+                } else {
+                    alert('❌ ' + (result.message || 'Failed to resend'));
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Resend Verification Email';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error('resendVerification error:', err);
+                alert('❌ Error: ' + err.message);
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Resend Verification Email';
+                btn.disabled = false;
             }
         }
 

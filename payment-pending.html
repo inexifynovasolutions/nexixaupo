@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Complete Payment | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; min-height: 100vh; }
+        .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
+        .logo span { color: #fff; }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 8px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; }
+        .container { max-width: 700px; margin: 0 auto; padding: 30px 20px; }
+        .form-card { background: #111827; border: 2px solid #334155; border-radius: 20px; padding: 35px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .form-card h2 { color: #d4af37; font-size: 1.6rem; margin-bottom: 10px; text-align: center; }
+        .form-card .subtitle { color: #94a3b8; text-align: center; margin-bottom: 25px; font-size: 0.9rem; }
+        .info-box { background: #1e293b; border-left: 4px solid #d4af37; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+        .info-box p { color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; }
+        .info-box strong { color: #d4af37; }
+        .binance-box { background: #0f1729; border: 2px dashed #d4af37; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .binance-box h3 { color: #d4af37; margin-bottom: 15px; font-size: 1rem; }
+        .binance-row { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; }
+        .binance-row .label { color: #94a3b8; font-size: 0.8rem; }
+        .binance-row .value { color: #fff; font-weight: 700; font-family: monospace; font-size: 1rem; }
+        .binance-row .value.green { color: #10b981; }
+        .copy-btn { background: #d4af37; color: #111827; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
+        .instructions { background: #1e293b; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; }
+        .instructions h4 { color: #d4af37; margin-bottom: 10px; font-size: 0.9rem; }
+        .instructions ol { color: #cbd5e1; font-size: 0.85rem; line-height: 1.8; padding-left: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; color: #94a3b8; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+        .form-group input { width: 100%; padding: 13px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; }
+        .form-group input:focus { border-color: #d4af37; }
+        .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border: none; border-radius: 10px; font-size: 1.05rem; font-weight: 700; cursor: pointer; margin-top: 10px; }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .message { padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; font-size: 0.9rem; }
+        .message.error { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; display: block; }
+        .message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; display: block; }
+        .message.warning { background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; display: block; }
+        .login-link { text-align: center; margin-top: 20px; color: #94a3b8; font-size: 0.9rem; }
+        .login-link a { color: #d4af37; text-decoration: none; font-weight: 700; }
+        .success-screen { display: none; text-align: center; }
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0e17; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 9999; }
+        .loading-screen .spinner { font-size: 3rem; color: #d4af37; animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+        @media (max-width: 600px) { .form-card { padding: 25px 20px; } .navbar { padding: 12px 20px; } }
+    </style>
+</head>
+<body>
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+        <p style="color:#94a3b8; margin-top:20px;">Loading your account...</p>
+    </div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
+        <a href="signin.html" class="btn-outline">Sign In</a>
+    </nav>
+
+    <div class="container" id="mainContainer" style="display: none;">
+
+        <!-- PAYMENT FORM -->
+        <div class="form-card" id="paymentCard">
+            <h2>💰 Complete Your Payment</h2>
+            <p class="subtitle">Send $3 via Binance to activate your account</p>
+
+            <div class="info-box">
+                <p>✅ <strong>Email Verified!</strong><br>
+                Welcome <strong id="userNameDisplay">Trader</strong>, one final step.<br>
+                <strong>Amount:</strong> $3.00 (First Month Offer) | <strong>Method:</strong> Binance Pay</p>
+            </div>
+
+            <div class="binance-box">
+                <h3>📋 Binance Payment Info</h3>
+                <div class="binance-row">
+                    <div><div class="label">Binance UID</div><div class="value">968525536</div></div>
+                    <button class="copy-btn" onclick="copyText('968525536')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="binance-row">
+                    <div><div class="label">Binance Nickname</div><div class="value">NexiProduct</div></div>
+                    <button class="copy-btn" onclick="copyText('NexiProduct')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="binance-row">
+                    <div><div class="label">Amount</div><div class="value green">$3.00</div></div>
+                    <button class="copy-btn" onclick="copyText('3')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h4>📌 Steps:</h4>
+                <ol>
+                    <li>Open Binance App</li>
+                    <li>Go to "Pay" → "Send"</li>
+                    <li>Enter UID: <strong>968525536</strong></li>
+                    <li>Send <strong>$3.00</strong></li>
+                    <li>Take screenshot of transaction</li>
+                    <li>Upload below</li>
+                </ol>
+            </div>
+
+            <div class="message" id="messageBox"></div>
+
+            <form onsubmit="handlePayment(event)" id="paymentForm">
+                <div class="form-group">
+                    <label>Screenshot (Transfer Proof) *</label>
+                    <input type="file" id="screenshot" accept="image/*" required style="padding: 10px;" />
+                </div>
+                <div class="form-group">
+                    <label>Your Binance UID (from which you sent) *</label>
+                    <input type="text" id="payerUID" placeholder="Your Binance UID" required />
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Submit Payment
+                </button>
+            </form>
+
+            <div class="login-link">
+                Want to switch account? <a href="#" onclick="logout(); return false;">Logout</a>
+            </div>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div class="form-card success-screen" id="successCard">
+            <div style="font-size: 4rem; margin-bottom: 15px;">⏳</div>
+            <h2 style="color: #10b981;">Payment Submitted!</h2>
+            <p class="subtitle">Your payment is being verified by admin</p>
+            <div class="info-box" style="text-align: left;">
+                <p>✅ <strong>Submitted successfully!</strong><br><br>
+                Our admin will verify your payment within <strong>5-30 minutes</strong>.<br><br>
+                Once approved, you can sign in to access your dashboard.</p>
+            </div>
+            <div class="login-link" style="margin-top: 20px;">
+                <a href="index.html">← Back to Home</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="env-config.js"></script>
+    <script src="supabase-config.js"></script>
+
+<!-- PART 2/2 will continue from here -->
+     <script>
+        // ============================================================
+        // Global State
+        // ============================================================
+        let currentUser = null;
+
+        // ============================================================
+        // LOAD — Verify session + email verified + users record
+        // ============================================================
+        window.addEventListener('load', async () => {
+            console.log('✅ payment-pending.html loaded');
+
+            // 1. Session check
+            const session = await getCurrentSession();
+            if (!session || !session.user) {
+                console.log('❌ No active session — redirecting to signin');
+                alert('❌ Please login first!');
+                window.location.replace('signin.html');
+                return;
+            }
+
+            // 2. Email verified check
+            const { verified, user: authUser } = await checkEmailVerified();
+            if (!verified) {
+                console.log('❌ Email not verified — redirecting to verify page');
+                window.location.replace('verify-email.html');
+                return;
+            }
+
+            console.log('✅ Auth user verified:', authUser.email);
+
+            try {
+                const sb = initSupabase();
+                if (!sb) throw new Error('Supabase init failed');
+
+                // 3. users table record fetch
+                const { data: user, error } = await sb
+                    .from('users')
+                    .select('*')
+                    .eq('id', authUser.id)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (!user) {
+                    console.error('❌ User record not found');
+                    alert('❌ Account record not found. Please contact support.');
+                    window.location.replace('index.html');
+                    return;
+                }
+
+                // 4. Status check
+                if (user.status === 'active') {
+                    console.log('✅ User already active — going to dashboard');
+                    window.location.replace('dashboard.html');
+                    return;
+                }
+
+                if (user.status === 'banned') {
+                    alert('🚫 Your account is banned. Contact support.');
+                    await signOutUser();
+                    window.location.replace('index.html');
+                    return;
+                }
+
+                // 5. Show payment form
+                currentUser = user;
+                document.getElementById('userNameDisplay').innerText = user.name || 'Trader';
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+
+                // 6. Session timeout init (B6)
+                initSessionTimeout(async function() {
+                    try { await signOutUser(); } catch (e) { console.error(e); }
+                    alert('⏰ Session expired — 30 minutes of inactivity.\n\nPlease login again.');
+                    window.location.replace('signin.html');
+                }, 'signin.html');
+
+            } catch (err) {
+                console.error('payment-pending load error:', err);
+                alert('❌ Error: ' + err.message);
+                window.location.replace('signin.html');
+            }
+        });
+
+        // ============================================================
+        // HANDLE PAYMENT SUBMIT — Secure RPC (B5)
+        // ============================================================
+        async function handlePayment(event) {
+            event.preventDefault();
+
+            const screenshotFile = document.getElementById('screenshot').files[0];
+            const payerUID = document.getElementById('payerUID').value.trim();
+
+            if (!screenshotFile) {
+                showMessage('❌ Please upload screenshot!', 'error');
+                return;
+            }
+            if (!payerUID) {
+                showMessage('❌ Please enter Binance UID!', 'error');
+                return;
+            }
+            if (!currentUser) {
+                showMessage('❌ Session lost! Please login again.', 'error');
+                return;
+            }
+
+            // File size check
+            const MAX_FILE_SIZE = 500 * 1024;
+            const MIN_FILE_SIZE = 3 * 1024;
+
+            if (screenshotFile.size > MAX_FILE_SIZE) {
+                showMessage('❌ Screenshot too large! Maximum 500KB.', 'error');
+                return;
+            }
+            if (screenshotFile.size < MIN_FILE_SIZE) {
+                showMessage('❌ Screenshot too small! Please upload a real image.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
+            // Rate limit
+            try {
+                const rl = await checkRateLimitFor('payment_submit', currentUser.id);
+                if (rl && rl.allowed === false) {
+                    showMessage('🚫 Too many payment attempts!<br>Please wait <strong>' + formatTimeRemaining(rl.seconds_remaining) + '</strong> before trying again.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment';
+                    return;
+                }
+            } catch (rlErr) {
+                console.error('Rate limit check error:', rlErr);
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Screenshot = e.target.result;
+
+                try {
+                    // 🆕 SECURE RPC CALL
+                    console.log('📤 Calling submit_payment_secure RPC...');
+
+                    const result = await submitPaymentSecure(
+                        3.00,
+                        'first',
+                        base64Screenshot,
+                        payerUID
+                    );
+
+                    if (!result || result.success !== true) {
+                        const errorCode = result?.error || 'UNKNOWN';
+                        const errorMsg = getPaymentErrorMessage(errorCode, result?.message);
+                        console.error('❌ Server rejected payment:', errorCode, result?.message);
+
+                        if (errorCode === 'DUPLICATE_SCREENSHOT') {
+                            showMessage('🚫 ' + errorMsg + '<br><br>Please take a <strong>new screenshot</strong>.', 'error');
+                        } else if (errorCode === 'RECENT_PAYMENT_EXISTS') {
+                            showMessage('⏳ ' + errorMsg + '<br><br>Your payment is still pending.', 'warning');
+                        } else {
+                            showMessage('❌ ' + errorMsg, 'error');
+                        }
+
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment';
+                        return;
+                    }
+
+                    console.log('✅ Payment submitted successfully! ID:', result.payment_id);
+
+                    // Show success screen
+                    document.getElementById('paymentCard').style.display = 'none';
+                    document.getElementById('successCard').style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                } catch (err) {
+                    console.error('handlePayment error:', err);
+                    showMessage('❌ ' + (err.message || 'Submission failed'), 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment';
+                }
+            };
+            reader.readAsDataURL(screenshotFile);
+        }
+
+        // ============================================================
+        // Helper Functions
+        // ============================================================
+        function showMessage(text, type) {
+            const box = document.getElementById('messageBox');
+            box.className = 'message ' + type;
+            box.innerHTML = text;
+            box.style.display = 'block';
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Copied: ' + text);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
+        }
+
+        function formatTimeRemaining(seconds) {
+            if (!seconds || seconds <= 0) return 'a few moments';
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            let parts = [];
+            if (minutes > 0) parts.push(minutes + ' minute' + (minutes > 1 ? 's' : ''));
+            if (secs > 0) parts.push(secs + ' second' + (secs > 1 ? 's' : ''));
+            return parts.join(' ') || 'a few moments';
+        }
+
+        async function logout() {
+            if (confirm('Logout?')) {
+                try {
+                    destroySessionTimeout();
+                    await signOutUser();
+                } catch (err) {
+                    console.error('signOut error:', err);
+                }
+                localStorage.removeItem('nexiCurrentUser');
+                window.location.replace('index.html');
+            }
+        }
+
+        // ENTER key support
+        const paymentFormEl = document.getElementById('paymentForm');
+        if (paymentFormEl) {
+            paymentFormEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.type !== 'file') {
+                    e.preventDefault();
+                    paymentFormEl.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+            });
+        }
+    </script>
+</body>
+</html>

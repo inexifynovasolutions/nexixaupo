@@ -1109,7 +1109,73 @@ function getPaymentErrorMessage(errorCode, fallbackMessage) {
 console.log('✅ B5 secure payment helpers loaded');
 
 
+// ============================================================
+// 🆕 B3: EMAIL VERIFICATION HELPERS
+// ============================================================
 
+// ------------------------------------------------------------
+// Resend verification email
+// ------------------------------------------------------------
+// @param {string} email — User ka email
+// @returns {object} — { success, error, message }
+async function resendVerificationEmail(email) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { success: false, error: 'INIT_FAILED', message: 'Supabase init failed' };
+
+        if (!email || typeof email !== 'string') {
+            return { success: false, error: 'INVALID_EMAIL', message: 'Email is required' };
+        }
+
+        const redirectUrl = window.location.origin + '/verify-email.html';
+
+        const { data, error } = await sb.auth.resend({
+            type: 'signup',
+            email: email.toLowerCase().trim(),
+            options: {
+                emailRedirectTo: redirectUrl
+            }
+        });
+
+        if (error) {
+            console.error('resendVerificationEmail error:', error);
+            return { success: false, error: 'RESEND_FAILED', message: error.message };
+        }
+
+        console.log('✅ Verification email resent to:', email);
+        return { success: true, message: 'Verification email sent! Check your inbox.' };
+
+    } catch (err) {
+        console.error('resendVerificationEmail exception:', err);
+        return { success: false, error: 'EXCEPTION', message: err.message || 'Unknown error' };
+    }
+}
+
+// ------------------------------------------------------------
+// Check if current user's email is verified
+// ------------------------------------------------------------
+// @returns {object} — { verified: boolean, user: object|null }
+async function checkEmailVerified() {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { verified: false, user: null };
+
+        const { data, error } = await sb.auth.getUser();
+        if (error || !data?.user) {
+            return { verified: false, user: null };
+        }
+
+        // Supabase marks email_confirmed_at when verified
+        const isVerified = !!data.user.email_confirmed_at;
+        return { verified: isVerified, user: data.user };
+
+    } catch (err) {
+        console.error('checkEmailVerified exception:', err);
+        return { verified: false, user: null };
+    }
+}
+
+console.log('✅ B3 email verification helpers loaded');
 
 // ============================================================
 // END OF FILE (supabase-config.js v5)
