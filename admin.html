@@ -1354,9 +1354,28 @@
                 if (uErr) throw uErr;
                 const { error: pErr } = await sb.from('payments').update({ status: 'approved', verified_by: 'admin', verified_at: new Date().toISOString() }).eq('id', p.id);
                 if (pErr) throw pErr;
-                await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'verify_payment', target_user: p.user_id, meta: { payment_id: p.id, amount: p.amount, type: p.type } }]);
+                                await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'verify_payment', target_user: p.user_id, meta: { payment_id: p.id, amount: p.amount, type: p.type } }]);
+
+                // 🆕 STEP 11: Send payment approved email
                 const u = p.users || {};
-                alert(`✅ VERIFIED!\n\nUser: ${u.name}\nNew Expiry: ${expiryStr.split('T')[0]}\nSecret Key: ${allUsers.find(x => x.id === p.user_id)?.secret_key || '--'}`);
+                const userData = allUsers.find(x => x.id === p.user_id);
+                try {
+                    const emailResult = await sendNotificationEmail('payment_approved', u.email, {
+                        name: u.name,
+                        amount: (parseFloat(p.amount) || 0).toFixed(2),
+                        expiryDate: expiryStr.split('T')[0],
+                        secretKey: userData?.secret_key || '--'
+                    });
+                    if (emailResult.success) {
+                        console.log('✅ Approval email sent to', u.email);
+                    } else {
+                        console.warn('⚠️ Approval email failed:', emailResult.error);
+                    }
+                } catch (emailErr) {
+                    console.error('Email send error (non-blocking):', emailErr);
+                }
+
+                alert(`✅ VERIFIED!\n\nUser: ${u.name}\nNew Expiry: ${expiryStr.split('T')[0]}\nSecret Key: ${userData?.secret_key || '--'}\n\n📧 Email sent to user.`);
                 loadData();
             } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
@@ -1375,14 +1394,31 @@
             } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
-        async function rejectPayment(index) {
+               async function rejectPayment(index) {
             const p = allPayments[index];
             if (!p) return;
-            if (!confirm('Reject this payment?')) return;
+            if (!confirm('Reject this payment?\n\nUser ko email bhi jayegi.')) return;
             try {
                 const sb = initSupabase();
                 await sb.from('payments').update({ status: 'rejected', verified_by: 'admin', verified_at: new Date().toISOString() }).eq('id', p.id);
                 await sb.from('admin_logs').insert([{ admin_id: 'admin', action: 'reject_payment', target_user: p.user_id, meta: { payment_id: p.id } }]);
+
+                // 🆕 STEP 11: Send payment rejected email
+                const u = p.users || {};
+                try {
+                    const emailResult = await sendNotificationEmail('payment_rejected', u.email, {
+                        name: u.name
+                    });
+                    if (emailResult.success) {
+                        console.log('✅ Rejection email sent to', u.email);
+                    } else {
+                        console.warn('⚠️ Rejection email failed:', emailResult.error);
+                    }
+                } catch (emailErr) {
+                    console.error('Email send error (non-blocking):', emailErr);
+                }
+
+                alert('❌ Payment REJECTED!\n\n📧 Email sent to user.');
                 loadData();
             } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }

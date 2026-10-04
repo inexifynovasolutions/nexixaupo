@@ -1252,5 +1252,68 @@ function formatTradeTimeOnly(isoString) {
 console.log('✅ Step 7 helpers loaded — formatTradeTime, formatTradeTimeShort, formatTradeTimeOnly');
 
 // ============================================================
+// 🆕 STEP 11: EMAIL NOTIFICATION HELPER
+// ============================================================
+// Calls the Supabase Edge Function to send transactional emails
+// via Resend API (server-side, API key safe).
+
+// ------------------------------------------------------------
+// Send notification email
+// ------------------------------------------------------------
+// @param {string} type — 'welcome' | 'payment_approved' | 'payment_rejected'
+// @param {string} to — Recipient email
+// @param {object} extraData — { name, amount, expiryDate, secretKey }
+// @returns {object} — { success, email_id, error }
+async function sendNotificationEmail(type, to, extraData = {}) {
+    try {
+        if (!type || !to) {
+            return { success: false, error: 'Missing type or to' };
+        }
+
+        if (!SUPABASE_URL || !SUPABASE_KEY) {
+            return { success: false, error: 'Supabase credentials missing' };
+        }
+
+        const FUNCTION_URL = SUPABASE_URL + '/functions/v1/send-notification-email';
+
+        const body = {
+            type: type,
+            to: to,
+            name: extraData.name || null,
+            amount: extraData.amount || null,
+            expiryDate: extraData.expiryDate || null,
+            secretKey: extraData.secretKey || null
+        };
+
+        console.log('📧 Sending email:', type, 'to', to);
+
+        const resp = await fetch(FUNCTION_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data = await resp.json();
+
+        if (!resp.ok || !data.success) {
+            console.error('sendNotificationEmail failed:', data);
+            return { success: false, error: data.error || 'Send failed', details: data };
+        }
+
+        console.log('✅ Email sent:', data.email_id);
+        return { success: true, email_id: data.email_id, type: data.type };
+
+    } catch (err) {
+        console.error('sendNotificationEmail exception:', err);
+        return { success: false, error: err.message };
+    }
+}
+
+console.log('✅ Step 11 email notification helper loaded');
+
+// ============================================================
 // END OF FILE (supabase-config.js v5)
 // ============================================================

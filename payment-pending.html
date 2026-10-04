@@ -210,11 +210,28 @@
                     return;
                 }
 
-                // 5. Show payment form
+                                // 5. Show payment form
                 currentUser = user;
                 document.getElementById('userNameDisplay').innerText = user.name || 'Trader';
                 document.getElementById('loadingScreen').style.display = 'none';
                 document.getElementById('mainContainer').style.display = 'block';
+
+                // 🆕 STEP 11: Send welcome email (once per session)
+                if (!sessionStorage.getItem('welcomeEmailSent_' + user.id)) {
+                    try {
+                        const emailResult = await sendNotificationEmail('welcome', user.email, {
+                            name: user.name
+                        });
+                        if (emailResult.success) {
+                            console.log('✅ Welcome email sent to', user.email);
+                            sessionStorage.setItem('welcomeEmailSent_' + user.id, 'true');
+                        } else {
+                            console.warn('⚠️ Welcome email failed:', emailResult.error);
+                        }
+                    } catch (emailErr) {
+                        console.error('Welcome email error (non-blocking):', emailErr);
+                    }
+                }
 
                 // 6. Session timeout init (B6)
                 initSessionTimeout(async function() {
