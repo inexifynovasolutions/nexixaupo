@@ -1276,13 +1276,15 @@ async function sendNotificationEmail(type, to, extraData = {}) {
 
         const FUNCTION_URL = SUPABASE_URL + '/functions/v1/send-notification-email';
 
-        const body = {
+                const body = {
             type: type,
             to: to,
             name: extraData.name || null,
             amount: extraData.amount || null,
             expiryDate: extraData.expiryDate || null,
-            secretKey: extraData.secretKey || null
+            secretKey: extraData.secretKey || null,
+            originalMessage: extraData.originalMessage || null,
+            replyMessage: extraData.replyMessage || null
         };
 
         console.log('📧 Sending email:', type, 'to', to);
