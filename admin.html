@@ -135,6 +135,96 @@
         .banner-template-item .bt-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: #94a3b8; margin-top: 6px; }
         .banner-template-item .bt-actions { display: flex; gap: 8px; }
 
+        /* 🆕 SEARCH BAR (Step 8) */
+        .search-container {
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .search-input-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+        .search-input-wrap i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 42px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        .search-input::placeholder {
+            color: #64748b;
+        }
+        .search-clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #334155;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            padding: 0;
+        }
+        .search-clear:hover {
+            background: #ef4444;
+        }
+        .search-clear.visible {
+            display: flex;
+        }
+        .search-info {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .search-info strong {
+            color: #d4af37;
+        }
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .no-results i {
+            font-size: 2rem;
+            color: #334155;
+            display: block;
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 768px) {
             .setting-row { grid-template-columns: 1fr; gap: 8px; }
             .alert-list-item { flex-direction: column; align-items: stretch; }
@@ -143,6 +233,8 @@
             .banner-list-item { flex-direction: column; align-items: stretch; }
             .banner-template-item { flex-direction: column; align-items: stretch; }
             .navbar { flex-wrap: wrap; gap: 8px; }
+            .search-container { padding: 12px 15px; }
+            .search-input-wrap { min-width: 100%; }
         }
     </style>
 </head>
@@ -165,13 +257,34 @@
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
                 <span class="admin-badge">🔐 ADMIN</span>
                 <a href="trading-room.html" class="btn-room"><i class="fas fa-chart-line"></i> Trading Room</a>
-<a href="statistics-room.html" class="btn-room" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);"><i class="fas fa-chart-bar"></i> Statistics Room</a>
-<button class="btn-refresh" onclick="loadData()"><i class="fas fa-sync"></i> Refresh</button>
+                <a href="statistics-room.html" class="btn-room" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);"><i class="fas fa-chart-bar"></i> Statistics Room</a>
+                <button class="btn-refresh" onclick="loadData()"><i class="fas fa-sync"></i> Refresh</button>
                 <button class="btn-logout" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </nav>
 
         <div class="container">
+
+            <!-- 🆕 STEP 8: SEARCH BAR -->
+            <div class="search-container">
+                <div class="search-input-wrap">
+                    <i class="fas fa-search"></i>
+                    <input
+                        type="text"
+                        id="globalSearch"
+                        class="search-input"
+                        placeholder="Search users & payments — name, email, phone, secret key, Binance UID..."
+                        autocomplete="off"
+                    />
+                    <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="search-info" id="searchInfo" style="display: none;">
+                    Found <strong id="searchCount">0</strong> result(s)
+                </div>
+            </div>
+
             <div class="admin-stats">
                 <div class="admin-stat"><div class="icon">👥</div><div class="label">Total Users</div><div class="value" id="totalUsers">0</div></div>
                 <div class="admin-stat"><div class="icon">✅</div><div class="label">Active</div><div class="value green" id="activeUsers">0</div></div>
@@ -366,7 +479,7 @@
     </div>
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="env-config.js"></script>
-<script src="supabase-config.js"></script>
+    <script src="supabase-config.js"></script>
 
     <script>
         const ADMIN_USERNAME = 'admin';
@@ -374,6 +487,7 @@
         let allUsers = [], allPayments = [], allSettings = [], allAlerts = [], allTemplates = [];
         let allBanners = [], allBannerTemplates = [];
         let editingAlertId = null, editingBannerId = null;
+        let currentSearchQuery = '';
 
         document.getElementById('adminUsername').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -400,7 +514,7 @@
             }
         }
 
-                function adminLogout() {
+        function adminLogout() {
             if (confirm('Logout from admin?')) {
                 destroySessionTimeout();
                 sessionStorage.removeItem('nexiAdmin');
@@ -430,6 +544,105 @@
                 loadData();
             }
         });
+
+        // ================================================================
+        // 🆕 STEP 8: SEARCH ENGINE
+        // ================================================================
+        function initSearch() {
+            const input = document.getElementById('globalSearch');
+            const clearBtn = document.getElementById('searchClear');
+            if (!input) return;
+
+            // Debounce — 200ms wait after typing stops
+            let debounceTimer = null;
+            input.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    applySearch(input.value.trim());
+                }, 200);
+            });
+
+            // Escape key to clear
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    clearSearch();
+                }
+            });
+
+            // Clear button visibility
+            input.addEventListener('input', function() {
+                if (input.value.trim().length > 0) {
+                    clearBtn.classList.add('visible');
+                } else {
+                    clearBtn.classList.remove('visible');
+                }
+            });
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('globalSearch');
+            if (input) input.value = '';
+            document.getElementById('searchClear').classList.remove('visible');
+            applySearch('');
+        }
+
+        function applySearch(query) {
+            currentSearchQuery = (query || '').toLowerCase().trim();
+            renderPayments();
+            renderUsers();
+            updateSearchInfo();
+        }
+
+        function updateSearchInfo() {
+            const infoBox = document.getElementById('searchInfo');
+            const countEl = document.getElementById('searchCount');
+            if (!infoBox || !countEl) return;
+
+            if (currentSearchQuery.length === 0) {
+                infoBox.style.display = 'none';
+                return;
+            }
+
+            const total = getFilteredPayments().length + getFilteredUsers().length;
+            countEl.innerText = total;
+            infoBox.style.display = 'block';
+        }
+
+        function userMatchesSearch(user, query) {
+            if (!query) return true;
+            if (!user) return false;
+            const q = query.toLowerCase();
+            return (
+                (user.name || '').toLowerCase().includes(q) ||
+                (user.email || '').toLowerCase().includes(q) ||
+                (user.phone || '').toLowerCase().includes(q) ||
+                (user.secret_key || '').toLowerCase().includes(q) ||
+                (user.status || '').toLowerCase().includes(q)
+            );
+        }
+
+        function paymentMatchesSearch(payment, query) {
+            if (!query) return true;
+            if (!payment) return false;
+            const q = query.toLowerCase();
+            const u = payment.users || {};
+            return (
+                (u.name || '').toLowerCase().includes(q) ||
+                (u.email || '').toLowerCase().includes(q) ||
+                (u.phone || '').toLowerCase().includes(q) ||
+                (payment.payer_uid || '').toLowerCase().includes(q) ||
+                (payment.status || '').toLowerCase().includes(q) ||
+                (payment.type || '').toLowerCase().includes(q)
+            );
+        }
+
+        function getFilteredPayments() {
+            return allPayments.filter(p => paymentMatchesSearch(p, currentSearchQuery));
+        }
+
+        function getFilteredUsers() {
+            return allUsers.filter(u => userMatchesSearch(u, currentSearchQuery));
+        }
 
         // ================================================================
         // TEMPLATE NAME toggles
@@ -1019,6 +1232,7 @@
                 updateStats();
                 renderPayments();
                 renderUsers();
+                updateSearchInfo();
                 loadSettings();
                 loadAlerts();
                 loadTemplates();
@@ -1042,9 +1256,18 @@
 
         function renderPayments() {
             const tbody = document.getElementById('paymentsBody');
-            if (allPayments.length === 0) { tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No payments</td></tr>'; return; }
-            tbody.innerHTML = allPayments.map((p, i) => {
+            const filtered = getFilteredPayments();
+            if (filtered.length === 0) {
+                if (currentSearchQuery) {
+                    tbody.innerHTML = '<tr><td colspan="10" class="no-results"><i class="fas fa-search"></i>No payments match your search</td></tr>';
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No payments</td></tr>';
+                }
+                return;
+            }
+            tbody.innerHTML = filtered.map((p, i) => {
                 const u = p.users || {};
+                const originalIndex = allPayments.indexOf(p);
                 return `<tr>
                     <td>#${i + 1}</td>
                     <td>${u.name || '--'}</td>
@@ -1053,9 +1276,9 @@
                     <td style="font-family:monospace;">${p.payer_uid || '--'}</td>
                     <td style="color:#d4af37; font-weight:700;">$${(parseFloat(p.amount) || 0).toFixed(2)}</td>
                     <td><span class="badge ${p.type === 'renewal' ? 'renewal' : 'new'}">${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New'}</span></td>
-                    <td>${p.screenshot_url ? `<button class="btn-action btn-view" onclick="viewScreenshot(${i})"><i class="fas fa-eye"></i></button>` : '--'}</td>
+                    <td>${p.screenshot_url ? `<button class="btn-action btn-view" onclick="viewScreenshot(${originalIndex})"><i class="fas fa-eye"></i></button>` : '--'}</td>
                     <td><span class="badge ${p.status}">${p.status}</span></td>
-                    <td>${p.status === 'pending' ? `<button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button><button class="btn-action btn-reject" onclick="rejectPayment(${i})">✗</button>` : p.status === 'approved' ? `<button class="btn-action btn-unverify" onclick="unverifyPayment(${i})">↺ Unverify</button>` : p.status === 'rejected' ? `<button class="btn-action btn-verify" onclick="verifyPayment(${i})">✓ Verify</button>` : '--'}</td>
+                    <td>${p.status === 'pending' ? `<button class="btn-action btn-verify" onclick="verifyPayment(${originalIndex})">✓ Verify</button><button class="btn-action btn-reject" onclick="rejectPayment(${originalIndex})">✗</button>` : p.status === 'approved' ? `<button class="btn-action btn-unverify" onclick="unverifyPayment(${originalIndex})">↺ Unverify</button>` : p.status === 'rejected' ? `<button class="btn-action btn-verify" onclick="verifyPayment(${originalIndex})">✓ Verify</button>` : '--'}</td>
                 </tr>`;
             }).join('');
         }
@@ -1129,8 +1352,16 @@
         function renderUsers() {
             const tbody = document.getElementById('usersBody');
             const today = new Date().toISOString().split('T')[0];
-            if (allUsers.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No users</td></tr>'; return; }
-            tbody.innerHTML = allUsers.map((u, i) => {
+            const filtered = getFilteredUsers();
+            if (filtered.length === 0) {
+                if (currentSearchQuery) {
+                    tbody.innerHTML = '<tr><td colspan="9" class="no-results"><i class="fas fa-search"></i>No users match your search</td></tr>';
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No users</td></tr>';
+                }
+                return;
+            }
+            tbody.innerHTML = filtered.map((u, i) => {
                 const isActive = u.status === 'active' && u.subscription_end && u.subscription_end.split('T')[0] >= today;
                 const expiry = u.subscription_end ? u.subscription_end.split('T')[0] : '--';
                 return `<tr>
@@ -1164,15 +1395,20 @@
         });
 
         // ================================================================
-        // INIT — banner preview setup
+        // INIT — banner preview + search setup
         // ================================================================
         window.addEventListener('load', () => {
             updateBannerPreview();
-            document.getElementById('bannerMessage').addEventListener('input', updateBannerPreview);
-            document.getElementById('bannerStyle').addEventListener('change', updateBannerPreview);
+            const bannerMsg = document.getElementById('bannerMessage');
+            const bannerStyle = document.getElementById('bannerStyle');
+            if (bannerMsg) bannerMsg.addEventListener('input', updateBannerPreview);
+            if (bannerStyle) bannerStyle.addEventListener('change', updateBannerPreview);
             document.querySelectorAll('input[name="bannerColor"]').forEach(el => {
                 el.addEventListener('change', updateBannerPreview);
             });
+
+            // 🆕 Search engine init
+            initSearch();
         });
     </script>
 </body>
