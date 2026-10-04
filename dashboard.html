@@ -85,6 +85,30 @@
         .signal-row .signal-details .value.red { color: #ef4444; }
         .signal-row .signal-time { color: #60a5fa; font-size: 0.75rem; font-weight: 600; }
 
+                /* 🆕 STEP 14.4: Signal Notes (Dashboard) */
+        .signal-row .signal-notes {
+            margin-top: 15px;
+            padding: 12px 18px;
+            background: #0a0e17;
+            border-left: 4px solid #d4af37;
+            border-radius: 8px;
+            color: #cbd5e1;
+            font-size: 0.83rem;
+            line-height: 1.6;
+            font-style: italic;
+            width: 100%;
+            text-align: left;
+        }
+        .signal-row .signal-notes .notes-icon {
+            color: #d4af37;
+            font-style: normal;
+            margin-right: 6px;
+            font-weight: 700;
+        }
+        .signal-row.wrapped {
+            flex-wrap: wrap;
+        }
+
         .robot-section { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
         .robot-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .robot-header h2 { color: #d4af37; font-size: 1.4rem; }
@@ -569,7 +593,7 @@
         // ============================================================
         // UPCOMING SIGNALS — clients target
         // ============================================================
-        async function loadUpcomingSignals() {
+                async function loadUpcomingSignals() {
             const container = document.getElementById('upcomingSignalsList');
             const section = document.getElementById('upcomingSignalsSection');
             if (!container || !section) return;
@@ -599,7 +623,10 @@
                     const timeInfo = s.expected_time
                         ? '<div><div class="label">Expected</div><div class="signal-time">' + new Date(s.expected_time).toLocaleString() + '</div></div>'
                         : '';
-                    return `<div class="signal-row">
+                    const notesBlock = (s.notes && s.notes.trim())
+                        ? `<div class="signal-notes"><span class="notes-icon">📝</span>${s.notes}</div>`
+                        : '';
+                    return `<div class="signal-row${notesBlock ? ' wrapped' : ''}">
                         <div class="product-info">
                             <div class="product-logo">${info.icon}</div>
                             <div>
@@ -614,6 +641,7 @@
                             <div><div class="label">SL</div><div class="value red">$${parseFloat(s.sl).toFixed(2)}</div></div>
                             ${timeInfo}
                         </div>
+                        ${notesBlock}
                     </div>`;
                 }).join('');
 

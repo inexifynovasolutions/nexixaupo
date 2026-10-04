@@ -42,7 +42,27 @@
         .nav-buttons { display: flex; gap: 12px; align-items: center; }
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 8px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
         .btn-outline:hover { background: #d4af37; color: #111827; }
-        .btn-primary { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; padding: 10px 25px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+               .btn-primary { 
+            background: linear-gradient(135deg, #d4af37, #f0d060); 
+            color: #111827; 
+            padding: 10px 25px; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+        .btn-primary i {
+            font-size: 0.9rem;
+        }
         .btn-admin { background: transparent; border: 2px solid #ef4444; color: #ef4444; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; font-size: 0.85rem; }
         .btn-admin:hover { background: #ef4444; color: #fff; }
 
@@ -152,6 +172,30 @@
         .signal-row .signal-badge.buy { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .signal-row .signal-badge.sell { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
         .signal-row .signal-time { color: #60a5fa; font-size: 0.8rem; font-weight: 600; }
+
+                /* 🆕 STEP 14.2: Signal Notes */
+        .signal-row .signal-notes {
+            margin-top: 15px;
+            padding: 12px 18px;
+            background: #0a0e17;
+            border-left: 4px solid #d4af37;
+            border-radius: 8px;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            font-style: italic;
+            width: 100%;
+            text-align: left;
+        }
+        .signal-row .signal-notes .notes-icon {
+            color: #d4af37;
+            font-style: normal;
+            margin-right: 6px;
+            font-weight: 700;
+        }
+        .signal-row.wrapped {
+            flex-wrap: wrap;
+        }
 
         /* FEATURES */
         .features { padding: 80px 40px; max-width: 1400px; margin: 0 auto; }
@@ -366,6 +410,8 @@
             .demo-section, .features, .pricing, .signals-section, .real-stats { padding: 40px 20px; }
             .price-card.featured { transform: scale(1); }
             .btn-admin { padding: 6px 12px; font-size: 0.75rem; }
+                        #navGetStartedBtn { padding: 8px 14px; font-size: 0.8rem; }
+            #navGetStartedBtn i { display: none; }
             .free-trades-value { font-size: 2.2rem; }
             .welcome-logo { font-size: 1.4rem; margin-bottom: 30px; }
             .welcome-title { font-size: 2rem; }
@@ -431,12 +477,14 @@
             <a onclick="scrollToSection('pricing')">Pricing</a>
             <a onclick="scrollToSection('contact')">Contact</a>
         </div>
-        <div class="nav-buttons" id="navButtons">
+               <div class="nav-buttons" id="navButtons">
             <a href="admin.html" class="btn-admin" title="Admin Panel">
                 <i class="fas fa-user-shield"></i> Admin
             </a>
             <button class="btn-outline" id="navSignInBtn" onclick="goToSignIn()">Sign In</button>
-            <button class="btn-primary" id="navGetStartedBtn" onclick="goToRegister()">Get Started</button>
+            <button class="btn-primary" id="navGetStartedBtn" onclick="goToRegister()">
+                <i class="fas fa-user-plus"></i> Register Now
+            </button>
         </div>
     </nav>
 
@@ -1053,7 +1101,7 @@
             'AUDUSD': { icon: '🇦🇺', name: 'AUD/USD' }
         };
 
-        async function loadUpcomingSignals() {
+                async function loadUpcomingSignals() {
             const container = document.getElementById('signalsList');
             const section = document.getElementById('signals');
             if (!container || !section) return;
@@ -1078,7 +1126,10 @@
                     const timeInfo = s.expected_time
                         ? '<div class="signal-time">⏰ ' + new Date(s.expected_time).toLocaleString() + '</div>'
                         : '';
-                    return `<div class="signal-row">
+                    const notesBlock = (s.notes && s.notes.trim())
+                        ? `<div class="signal-notes"><span class="notes-icon">📝</span>${s.notes}</div>`
+                        : '';
+                    return `<div class="signal-row${notesBlock ? ' wrapped' : ''}">
                         <div class="product-info">
                             <div class="product-logo">${info.icon}</div>
                             <div>
@@ -1093,6 +1144,7 @@
                             <div><div class="label">SL</div><div class="value red">$${parseFloat(s.sl).toFixed(2)}</div></div>
                             ${timeInfo}
                         </div>
+                        ${notesBlock}
                     </div>`;
                 }).join('');
             } catch (err) { console.error('loadUpcomingSignals:', err); }
