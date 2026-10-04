@@ -925,7 +925,7 @@
 
             container.innerHTML = allManualTrades.map(t => {
                 const info = PRODUCT_INFO[t.product] || { icon: '📊', name: t.product };
-                const openedAt = new Date(t.created_at).toLocaleString();
+                const openedAt = formatTradeTime(t.created_at);
 
                 return `<div class="trade-item">
                     <div class="item-info">

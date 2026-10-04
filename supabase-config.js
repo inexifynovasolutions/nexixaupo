@@ -1182,3 +1182,74 @@ console.log('✅ B3 email verification helpers loaded');
 // ============================================================
 // END OF FILE (supabase-config.js v5)
 // ============================================================
+// ============================================================
+// 🆕 STEP 7: Trade Time Formatting Helpers (AM/PM)
+// ============================================================
+
+// Full format: "04 Oct 2026, 05:30 PM"
+function formatTradeTime(isoString) {
+    if (!isoString) return '--';
+    try {
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return '--';
+
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = months[d.getMonth()];
+        const year = d.getFullYear();
+
+        let hours = d.getHours();
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+
+        return `${day} ${month} ${year}, ${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
+    } catch (e) {
+        return '--';
+    }
+}
+
+// Short format: "04 Oct, 05:30 PM"
+function formatTradeTimeShort(isoString) {
+    if (!isoString) return '--';
+    try {
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return '--';
+
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = months[d.getMonth()];
+
+        let hours = d.getHours();
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+
+        return `${day} ${month}, ${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
+    } catch (e) {
+        return '--';
+    }
+}
+
+// Just time: "05:30 PM"
+function formatTradeTimeOnly(isoString) {
+    if (!isoString) return '--';
+    try {
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return '--';
+
+        let hours = d.getHours();
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+
+        return `${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
+    } catch (e) {
+        return '--';
+    }
+}
+
+console.log('✅ Step 7 helpers loaded — formatTradeTime, formatTradeTimeShort, formatTradeTimeOnly');

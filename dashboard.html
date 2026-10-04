@@ -267,7 +267,7 @@
             <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">📜 Trade History (Last 50)</h3>
             <div class="table-wrap">
                 <table>
-                    <thead><tr><th>#</th><th>Date</th><th>Product</th><th>Type</th><th>Entry</th><th>Exit</th><th>P/L</th><th>Balance</th></tr></thead>
+                    <thead><tr><th>#</th><th>Time</th><th>Product</th><th>Type</th><th>Entry</th><th>Exit</th><th>P/L</th><th>Balance</th></tr></thead>
                     <tbody id="historyBody"><tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr></tbody>
                 </table>
             </div>
@@ -774,16 +774,16 @@
                 const limited = unique.slice(0, 50);
 
                 tradeHistory = limited.map(t => ({
-                    id: t.id.slice(0, 6),
-                    type: (t.type || 'buy').toUpperCase(),
-                    entry: parseFloat(t.entry),
-                    exit: parseFloat(t.exit || 0),
-                    profit: parseFloat(t.profit || 0),
-                    balance: parseFloat(t.balance || 0),
-                    product: t.product || 'XAUUSD',
-                    is_manual: t.is_manual || false,
-                    date: t.created_at.split('T')[0]
-                }));
+    id: t.id.slice(0, 6),
+    type: (t.type || 'buy').toUpperCase(),
+    entry: parseFloat(t.entry),
+    exit: parseFloat(t.exit || 0),
+    profit: parseFloat(t.profit || 0),
+    balance: parseFloat(t.balance || 0),
+    product: t.product || 'XAUUSD',
+    is_manual: t.is_manual || false,
+    created_at: t.created_at
+}));
                 renderHistory();
             } catch (err) {
                 console.error('loadTradeHistory:', err);
@@ -1041,7 +1041,7 @@
                 const manualBadge = t.is_manual ? '<span class="badge-manual">MANUAL</span>' : '';
                 return `<tr>
                     <td>#${t.id}</td>
-                    <td style="font-size:0.75rem;color:#94a3b8;">${t.date}</td>
+                    <td style="font-size:0.75rem;color:#94a3b8;">${formatTradeTimeShort(t.created_at)}</td>
                     <td style="font-size:0.8rem;">${info.icon} ${info.name}${manualBadge}</td>
                     <td class="${t.type === 'BUY' ? 'buy' : 'sell'}">${t.type}</td>
                     <td>$${t.entry.toFixed(2)}</td>

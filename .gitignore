@@ -11,3 +11,5 @@ test-connection.html
 
 # Node
 node_modules/
+test-resend.js
+Self-Backup/
