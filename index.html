@@ -194,6 +194,169 @@
         @keyframes nexifyShimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
         @keyframes nexifyHeartbeat { 0% { transform: scale(1); } 14% { transform: scale(1.08); } 28% { transform: scale(1); } 42% { transform: scale(1.08); } 70% { transform: scale(1); } 100% { transform: scale(1); } }
 
+        /* 🆕 STEP 12: CONTACT SECTION */
+        .contact-section {
+            padding: 80px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .contact-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+        .contact-section .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 1rem;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        .contact-form-wrap {
+            background: #111827;
+            border: 2px solid #334155;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        .contact-form {
+            display: grid;
+            gap: 18px;
+        }
+        .contact-form .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .contact-form .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .contact-form label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        .contact-form textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: #475569;
+        }
+        .contact-form .btn-submit {
+            background: linear-gradient(135deg, #d4af37, #f0d060);
+            color: #111827;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.25s;
+        }
+        .contact-form .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+        .contact-form .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .contact-message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+            text-align: center;
+        }
+        .contact-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            display: block;
+        }
+        .contact-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            display: block;
+        }
+        .contact-info-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .contact-info-card {
+            background: #0f1729;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.25s;
+        }
+        .contact-info-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-3px);
+        }
+        .contact-info-card i {
+            font-size: 1.8rem;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+        .contact-info-card .label {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .contact-info-card .value {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+        .contact-info-card a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .contact-info-card a:hover {
+            color: #d4af37;
+        }
+
+
         @media (max-width: 768px) {
             .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
             .nav-links { display: none; }
@@ -260,12 +423,13 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <a href="index.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
-        <div class="nav-links">
+                <div class="nav-links">
             <a onclick="scrollToSection('demo')">Live Demo</a>
             <a onclick="scrollToSection('signals')">Signals</a>
             <a onclick="scrollToSection('performance')">Performance</a>
             <a onclick="scrollToSection('features')">Features</a>
             <a onclick="scrollToSection('pricing')">Pricing</a>
+            <a onclick="scrollToSection('contact')">Contact</a>
         </div>
         <div class="nav-buttons" id="navButtons">
             <a href="admin.html" class="btn-admin" title="Admin Panel">
@@ -425,6 +589,63 @@
                     <li><i class="fas fa-check"></i> Monthly reports</li>
                 </ul>
                 <button class="btn-outline" style="width:100%;" onclick="goToRegister()">Subscribe</button>
+            </div>
+               </div>
+    </section>
+
+    <!-- 🆕 STEP 12: CONTACT SECTION -->
+    <section class="contact-section" id="contact">
+        <h2>📬 Contact Us</h2>
+        <p class="subtitle">
+            Koi sawal hai? Hum se rabta karein — hum 24 ghante mein jawab denge.
+        </p>
+
+        <div class="contact-form-wrap">
+            <div class="contact-message" id="contactMessage"></div>
+
+            <form class="contact-form" id="contactForm" onsubmit="handleContactSubmit(event)">
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label>Your Name *</label>
+                        <input type="text" id="contactName" placeholder="Enter your name" required maxlength="100" />
+                    </div>
+                    <div class="form-group">
+                        <label>Your Email *</label>
+                        <input type="email" id="contactEmail" placeholder="your@email.com" required maxlength="150" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" id="contactSubject" placeholder="What is this regarding? (optional)" maxlength="200" />
+                </div>
+
+                <div class="form-group">
+                    <label>Message *</label>
+                    <textarea id="contactMessageText" placeholder="Aap ka sawal ya feedback yahan likhein..." required maxlength="2000"></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" id="contactSubmitBtn">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+
+            <div class="contact-info-row">
+                <div class="contact-info-card">
+                    <i class="fas fa-envelope"></i>
+                    <div class="label">General</div>
+                    <div class="value"><a href="mailto:info@nexifynova.co.uk">info@nexifynova.co.uk</a></div>
+                </div>
+                <div class="contact-info-card">
+                    <i class="fas fa-headset"></i>
+                    <div class="label">Support</div>
+                    <div class="value"><a href="mailto:support@nexifynova.co.uk">support@nexifynova.co.uk</a></div>
+                </div>
+                <div class="contact-info-card">
+                    <i class="fas fa-clock"></i>
+                    <div class="label">Response Time</div>
+                    <div class="value">Within 24 hours</div>
+                </div>
             </div>
         </div>
     </section>
@@ -986,6 +1207,106 @@
                 loadRealStats();
             } catch (err) { console.error('logVisit:', err); }
         }
+
+                // ================================================================
+        // 🆕 STEP 12: CONTACT FORM HANDLER
+        // ================================================================
+        function showContactMessage(text, type) {
+            const box = document.getElementById('contactMessage');
+            if (!box) return;
+            box.className = 'contact-message ' + type;
+            box.innerHTML = text;
+            box.style.display = 'block';
+
+            // Auto-hide success after 5s
+            if (type === 'success') {
+                setTimeout(() => { box.style.display = 'none'; }, 6000);
+            }
+        }
+
+        async function handleContactSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim().toLowerCase();
+            const subject = document.getElementById('contactSubject').value.trim();
+            const message = document.getElementById('contactMessageText').value.trim();
+            const btn = document.getElementById('contactSubmitBtn');
+
+            // Validate
+            if (!name || !email || !message) {
+                showContactMessage('❌ Please fill all required fields.', 'error');
+                return;
+            }
+
+            if (message.length < 10) {
+                showContactMessage('❌ Message is too short. Please write at least 10 characters.', 'error');
+                return;
+            }
+
+            // Email regex check
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showContactMessage('❌ Please enter a valid email address.', 'error');
+                return;
+            }
+
+            // Disable button
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            // Rate limit check
+            try {
+                const rl = await checkRateLimitFor('contact_form', email);
+                if (rl && rl.allowed === false) {
+                    showContactMessage('🚫 Too many messages! Please wait <strong>' + formatTimeRemaining(rl.seconds_remaining) + '</strong> before trying again.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                    return;
+                }
+            } catch (rlErr) {
+                console.error('Contact rate limit error (fail-open):', rlErr);
+            }
+
+            // Submit
+            try {
+                const result = await submitContactMessage({ name, email, subject, message });
+
+                if (!result.success) {
+                    showContactMessage('❌ ' + (result.error || 'Failed to send message. Please try again.'), 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                    return;
+                }
+
+                console.log('✅ Contact message sent:', result.message_id);
+                showContactMessage('✅ <strong>Message sent!</strong><br>Thank you ' + name + ', hum 24 ghante mein jawab denge.', 'success');
+
+                // Clear form
+                document.getElementById('contactForm').reset();
+
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+
+            } catch (err) {
+                console.error('handleContactSubmit error:', err);
+                showContactMessage('❌ ' + (err.message || 'Something went wrong'), 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+            }
+        }
+
+        // ENTER key support (except in textarea)
+        const contactFormEl = document.getElementById('contactForm');
+        if (contactFormEl) {
+            contactFormEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    contactFormEl.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+            });
+        }
+
 
         // ================================================================
         // INIT — LOAD EVERYTHING IN ORDER

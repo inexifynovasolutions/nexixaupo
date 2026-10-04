@@ -1314,6 +1314,59 @@ async function sendNotificationEmail(type, to, extraData = {}) {
 
 console.log('✅ Step 11 email notification helper loaded');
 
+
+
+// ============================================================
+// 🆕 STEP 12: CONTACT FORM HELPER
+// ============================================================
+
+// ------------------------------------------------------------
+// Submit contact message
+// ------------------------------------------------------------
+// @param {object} data — { name, email, subject, message }
+// @returns {object} — { success, message_id, error }
+async function submitContactMessage(data) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { success: false, error: 'Supabase init failed' };
+
+        // Basic validation
+        if (!data.name || !data.email || !data.message) {
+            return { success: false, error: 'Name, email and message are required' };
+        }
+
+        const payload = {
+            name: String(data.name).trim().slice(0, 100),
+            email: String(data.email).trim().toLowerCase().slice(0, 150),
+            subject: data.subject ? String(data.subject).trim().slice(0, 200) : null,
+            message: String(data.message).trim().slice(0, 2000),
+            user_agent: navigator.userAgent || '',
+            status: 'unread'
+        };
+
+        console.log('📨 Submitting contact message from:', payload.email);
+
+        const { data: result, error } = await sb
+            .from('contact_messages')
+            .insert([payload])
+            .select('id')
+            .single();
+
+        if (error) {
+            console.error('submitContactMessage error:', error);
+            return { success: false, error: error.message };
+        }
+
+        console.log('✅ Contact message saved:', result.id);
+        return { success: true, message_id: result.id };
+
+    } catch (err) {
+        console.error('submitContactMessage exception:', err);
+        return { success: false, error: err.message || 'Unknown error' };
+    }
+}
+
+console.log('✅ Step 12 contact form helper loaded');
 // ============================================================
 // END OF FILE (supabase-config.js v5)
 // ============================================================
