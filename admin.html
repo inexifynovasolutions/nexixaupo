@@ -1877,7 +1877,7 @@
             }
         }
 
-        async function handleReplyMessage(id) {
+                async function handleReplyMessage(id) {
             const m = allContactMessages.find(x => x.id === id);
             if (!m) return;
 
@@ -1891,14 +1891,37 @@
             }
 
             try {
+                // 1. Save reply to database
                 const result = await replyToContactMessage(id, reply.trim());
                 if (result.error) throw result.error;
+
+                // 2. Update local state
                 m.admin_reply = reply.trim();
                 m.status = 'replied';
                 m.replied_at = new Date().toISOString();
+
+                // 🆕 3. Send reply email to user
+                try {
+                    const emailResult = await sendNotificationEmail('contact_reply', m.email, {
+                        name: m.name,
+                        originalMessage: m.message,
+                        replyMessage: reply.trim()
+                    });
+                    if (emailResult.success) {
+                        console.log('✅ Reply email sent to', m.email);
+                        alert('✅ Reply saved!\n\n📧 Email sent to ' + m.email);
+                    } else {
+                        console.warn('⚠️ Reply email failed:', emailResult.error);
+                        alert('⚠️ Reply saved in database, lekin email nahi ja saki.\n\nError: ' + (emailResult.error || 'Unknown'));
+                    }
+                } catch (emailErr) {
+                    console.error('Email send error (non-blocking):', emailErr);
+                    alert('⚠️ Reply saved in database, lekin email bhejne mein issue aaya.\n\nUser ko manually email karein.');
+                }
+
                 updateContactStats();
                 renderContactMessages();
-                alert('✅ Reply saved! User ko manually email kar dein ya system email step 13.5 mein add hoga.');
+
             } catch (err) {
                 console.error(err);
                 alert('❌ Error: ' + (err.message || err));
