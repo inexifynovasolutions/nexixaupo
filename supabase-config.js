@@ -69,6 +69,7 @@ async function signUpUser(email, password, metadata = {}) {
         return { error: { message: err.message || 'Unknown error' } };
     }
 }
+
 // ------------------------------------------------------------
 // 2. SIGN IN — User login karein
 // ------------------------------------------------------------
@@ -158,14 +159,14 @@ async function getCurrentAuthUser() {
 }
 
 // ------------------------------------------------------------
-// 6. RESET PASSWORD
+// 6. RESET PASSWORD (Step 10 — redirect to /reset-password)
 // ------------------------------------------------------------
 async function resetPassword(email) {
     try {
         const sb = initSupabase();
         if (!sb) return { error: { message: 'Supabase init failed' } };
 
-        const redirectUrl = window.location.origin + '/signin.html';
+        const redirectUrl = window.location.origin + '/reset-password';
 
         const { data, error } = await sb.auth.resetPasswordForEmail(
             email.toLowerCase().trim(),
@@ -231,6 +232,7 @@ function onAuthStateChange(callback) {
 // ============================================================
 // END OF PART 1/3
 // ============================================================
+
 // ============================================================
 // PART 2/3 — LEGACY HELPERS + RATE LIMITING
 // ============================================================
@@ -622,6 +624,7 @@ function formatRateLimitMessage(result) {
 // ============================================================
 // END OF PART 2/3
 // ============================================================
+
 // ============================================================
 // PART 3/3 — NEW HELPERS + SESSION TIMEOUT
 // ============================================================
@@ -973,8 +976,6 @@ function extendSession() { handleUserActivity(); }
 
 console.log('✅ Session timeout system loaded');
 
-
-
 // ============================================================
 // 🆕 B5: SECURE PAYMENT HELPERS (Phase B5 — Server-Side)
 // ============================================================
@@ -1110,7 +1111,6 @@ function getPaymentErrorMessage(errorCode, fallbackMessage) {
 
 console.log('✅ B5 secure payment helpers loaded');
 
-
 // ============================================================
 // 🆕 B3: EMAIL VERIFICATION HELPERS
 // ============================================================
@@ -1179,9 +1179,6 @@ async function checkEmailVerified() {
 
 console.log('✅ B3 email verification helpers loaded');
 
-// ============================================================
-// END OF FILE (supabase-config.js v5)
-// ============================================================
 // ============================================================
 // 🆕 STEP 7: Trade Time Formatting Helpers (AM/PM)
 // ============================================================
@@ -1253,3 +1250,7 @@ function formatTradeTimeOnly(isoString) {
 }
 
 console.log('✅ Step 7 helpers loaded — formatTradeTime, formatTradeTimeShort, formatTradeTimeOnly');
+
+// ============================================================
+// END OF FILE (supabase-config.js v5)
+// ============================================================

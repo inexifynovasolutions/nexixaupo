@@ -46,6 +46,7 @@
     { "source": "/trading-room", "destination": "/trading-room.html" },
     { "source": "/statistics-room", "destination": "/statistics-room.html" },
     { "source": "/verify-email", "destination": "/verify-email.html" },
-    { "source": "/payment-pending", "destination": "/payment-pending.html" }
+    { "source": "/payment-pending", "destination": "/payment-pending.html" },
+    { "source": "/reset-password", "destination": "/reset-password.html" }
   ]
 }
