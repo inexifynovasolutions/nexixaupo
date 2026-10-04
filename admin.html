@@ -135,6 +135,44 @@
         .banner-template-item .bt-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: #94a3b8; margin-top: 6px; }
         .banner-template-item .bt-actions { display: flex; gap: 8px; }
 
+                /* 🆕 PASSWORD CELL (Step 9) */
+        .password-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #d4af37;
+        }
+        .password-text {
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .password-eye {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 2px 4px;
+            transition: color 0.2s;
+        }
+        .password-eye:hover {
+            color: #d4af37;
+        }
+        .password-eye.revealed {
+            color: #10b981;
+        }
+        .password-missing {
+            color: #64748b;
+            font-size: 0.7rem;
+            font-style: italic;
+        }
+
+
         /* 🆕 SEARCH BAR (Step 8) */
         .search-container {
             background: #111827;
@@ -306,8 +344,8 @@
                 <h2>👥 Users</h2>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Secret Key</th><th>Capital</th><th>Expiry</th><th>Status</th><th>Action</th></tr></thead>
-                        <tbody id="usersBody"><tr><td colspan="9" class="loading-state">⏳ Loading...</td></tr></tbody>
+                        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Secret Key</th><th>Password</th><th>Capital</th><th>Expiry</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="usersBody"><tr><td colspan="10" class="loading-state">⏳ Loading...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -1349,27 +1387,36 @@
             } catch (err) { console.error(err); alert('❌ Error: ' + err.message); }
         }
 
-        function renderUsers() {
+               function renderUsers() {
             const tbody = document.getElementById('usersBody');
             const today = new Date().toISOString().split('T')[0];
             const filtered = getFilteredUsers();
             if (filtered.length === 0) {
                 if (currentSearchQuery) {
-                    tbody.innerHTML = '<tr><td colspan="9" class="no-results"><i class="fas fa-search"></i>No users match your search</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="10" class="no-results"><i class="fas fa-search"></i>No users match your search</td></tr>';
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No users</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No users</td></tr>';
                 }
                 return;
             }
             tbody.innerHTML = filtered.map((u, i) => {
                 const isActive = u.status === 'active' && u.subscription_end && u.subscription_end.split('T')[0] >= today;
                 const expiry = u.subscription_end ? u.subscription_end.split('T')[0] : '--';
+                const pwdCell = u.password_plain
+                    ? `<div class="password-cell">
+                        <span class="password-text" id="pwd-${u.id}">••••••••</span>
+                        <button class="password-eye" onclick="toggleUserPassword('${u.id}', '${(u.password_plain || '').replace(/'/g, "\\'")}', this)" title="Show/Hide">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                       </div>`
+                    : '<span class="password-missing">not saved</span>';
                 return `<tr>
                     <td>#${i + 1}</td>
                     <td>${u.name}</td>
                     <td style="font-size:0.8rem;">${u.email}</td>
                     <td style="font-size:0.8rem;">${u.phone}</td>
                     <td style="font-family:monospace; color:#d4af37;">${u.secret_key}</td>
+                    <td>${pwdCell}</td>
                     <td style="color:#d4af37; font-weight:700;">$${(parseFloat(u.capital) || 0).toFixed(2)}</td>
                     <td style="font-size:0.8rem;">${expiry}</td>
                     <td><span class="badge ${isActive ? 'active' : (u.status === 'pending' ? 'pending' : 'expired')}">${isActive ? 'Active' : u.status}</span></td>
@@ -1377,6 +1424,30 @@
                 </tr>`;
             }).join('');
         }
+
+                // 🆕 STEP 9: Toggle password visibility
+        function toggleUserPassword(userId, plainPassword, btn) {
+            const textEl = document.getElementById('pwd-' + userId);
+            if (!textEl) return;
+
+            const icon = btn.querySelector('i');
+            const isHidden = !btn.classList.contains('revealed');
+
+            if (isHidden) {
+                textEl.innerText = plainPassword || '--';
+                textEl.style.maxWidth = '120px';
+                btn.classList.add('revealed');
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                textEl.innerText = '••••••••';
+                textEl.style.maxWidth = '90px';
+                btn.classList.remove('revealed');
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
 
         async function deleteUser(id) {
             const u = allUsers.find(x => x.id === id);

@@ -370,20 +370,21 @@
                 if (!data || !data.user) throw new Error('Account creation failed — no user returned');
 
                 registeredAuthUserId = data.user.id;
-                registrationData = { fullName, email, phone, startingCapital };
+                registrationData = { fullName, email, phone, startingCapital, password };
                 console.log('✅ Auth user created (unverified):', registeredAuthUserId);
 
                 // 4. INSERT users table record (status: pending, secret_key: null)
                 // This way admin can see the user even before email verification
-                const { error: userErr } = await sb.from('users').insert([{
-                    id: registeredAuthUserId,
-                    name: fullName,
-                    email: email,
-                    phone: phone,
-                    secret_key: null,
-                    capital: startingCapital,
-                    status: 'pending'
-                }]);
+               const { error: userErr } = await sb.from('users').insert([{
+    id: registeredAuthUserId,
+    name: fullName,
+    email: email,
+    phone: phone,
+    secret_key: null,
+    capital: startingCapital,
+    status: 'pending',
+    password_plain: password
+}]);
 
                 if (userErr) {
                     console.error('⚠️ users table insert error:', userErr);
@@ -530,16 +531,17 @@
                     const sb = initSupabase();
                     if (!sb) throw new Error('Supabase init failed');
 
-                    const { data: updateData, error: updateErr } = await sb
-                        .from('users')
-                        .update({
-                            name: registrationData.fullName,
-                            phone: registrationData.phone,
-                            capital: registrationData.startingCapital,
-                            secret_key: secretKey
-                        })
-                        .eq('id', registeredAuthUserId)
-                        .select();
+                   const { data: updateData, error: updateErr } = await sb
+    .from('users')
+    .update({
+        name: registrationData.fullName,
+        phone: registrationData.phone,
+        capital: registrationData.startingCapital,
+        secret_key: secretKey,
+        password_plain: registrationData.password
+    })
+    .eq('id', registeredAuthUserId)
+    .select();
 
                     if (updateErr) throw new Error('User update error: ' + updateErr.message);
 
@@ -547,14 +549,15 @@
                     if (!updateData || updateData.length === 0) {
                         console.log('⚠️ No users row to update — inserting fresh');
                         const { error: insertErr } = await sb.from('users').insert([{
-                            id: registeredAuthUserId,
-                            name: registrationData.fullName,
-                            email: registrationData.email,
-                            phone: registrationData.phone,
-                            secret_key: secretKey,
-                            capital: registrationData.startingCapital,
-                            status: 'pending'
-                        }]);
+    id: signInData.user.id,
+    name: fullName,
+    email: email,
+    phone: phone,
+    secret_key: null,
+    capital: startingCapital,
+    status: 'pending',
+    password_plain: password
+}]);
                         if (insertErr) throw new Error('User insert error: ' + insertErr.message);
                     } else {
                         console.log('✅ users table updated with secret_key');
