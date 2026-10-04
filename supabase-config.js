@@ -51,7 +51,10 @@ async function signUpUser(email, password, metadata = {}) {
         const { data, error } = await sb.auth.signUp({
             email: email.toLowerCase().trim(),
             password: password,
-            options: { data: metadata }
+            options: {
+                data: metadata,
+                emailRedirectTo: window.location.origin + '/payment-pending'
+            }
         });
 
         if (error) {
@@ -66,7 +69,6 @@ async function signUpUser(email, password, metadata = {}) {
         return { error: { message: err.message || 'Unknown error' } };
     }
 }
-
 // ------------------------------------------------------------
 // 2. SIGN IN — User login karein
 // ------------------------------------------------------------
