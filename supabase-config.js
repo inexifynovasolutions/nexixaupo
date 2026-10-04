@@ -1367,6 +1367,92 @@ async function submitContactMessage(data) {
 }
 
 console.log('✅ Step 12 contact form helper loaded');
+
+
+// ============================================================
+// 🆕 STEP 13: CONTACT MESSAGES HELPERS (Admin)
+// ============================================================
+
+// Fetch all non-deleted contact messages
+async function getContactMessages(limit = 200) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return [];
+        const { data, error } = await sb
+            .from('contact_messages')
+            .select('*')
+            .eq('is_deleted', false)
+            .order('created_at', { ascending: false })
+            .limit(limit);
+        if (error) { console.error('getContactMessages error:', error); return []; }
+        return data || [];
+    } catch (err) {
+        console.error('getContactMessages exception:', err);
+        return [];
+    }
+}
+
+// Mark as read
+async function markContactMessageRead(id) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: 'Supabase init failed' };
+        const { error } = await sb.from('contact_messages').update({ status: 'read' }).eq('id', id);
+        if (error) { console.error('markRead error:', error); return { error }; }
+        return { success: true };
+    } catch (err) {
+        console.error('markContactMessageRead exception:', err);
+        return { error: err };
+    }
+}
+
+// Mark as unread
+async function markContactMessageUnread(id) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: 'Supabase init failed' };
+        const { error } = await sb.from('contact_messages').update({ status: 'unread' }).eq('id', id);
+        if (error) { console.error('markUnread error:', error); return { error }; }
+        return { success: true };
+    } catch (err) {
+        console.error('markContactMessageUnread exception:', err);
+        return { error: err };
+    }
+}
+
+// Reply to message
+async function replyToContactMessage(id, replyText) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: 'Supabase init failed' };
+        const { error } = await sb.from('contact_messages').update({
+            admin_reply: replyText,
+            replied_at: new Date().toISOString(),
+            status: 'replied'
+        }).eq('id', id);
+        if (error) { console.error('reply error:', error); return { error }; }
+        return { success: true };
+    } catch (err) {
+        console.error('replyToContactMessage exception:', err);
+        return { error: err };
+    }
+}
+
+// Soft delete
+async function deleteContactMessage(id) {
+    try {
+        const sb = initSupabase();
+        if (!sb) return { error: 'Supabase init failed' };
+        const { error } = await sb.from('contact_messages').update({ is_deleted: true }).eq('id', id);
+        if (error) { console.error('delete error:', error); return { error }; }
+        return { success: true };
+    } catch (err) {
+        console.error('deleteContactMessage exception:', err);
+        return { error: err };
+    }
+}
+
+console.log('✅ Step 13 contact messages helpers loaded');  
 // ============================================================
 // END OF FILE (supabase-config.js v5)
 // ============================================================
