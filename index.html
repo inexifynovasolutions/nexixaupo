@@ -481,9 +481,9 @@
             <a href="admin.html" class="btn-admin" title="Admin Panel">
                 <i class="fas fa-user-shield"></i> Admin
             </a>
-            <a href="trade-history.html" id="navTradeHistoryBtn" class="btn-outline" style="display:none;">
+            <a href="trade-history.html" id="navTradeHistoryBtn" class="btn-outline">
                 <i class="fas fa-history"></i> Trade History
-            </a>
+            </a>    
             <button class="btn-outline" id="navSignInBtn" onclick="goToSignIn()">Sign In</button>
             <button class="btn-primary" id="navGetStartedBtn" onclick="goToRegister()">
                 <i class="fas fa-user-plus"></i> Register Now
@@ -1395,9 +1395,8 @@
             loadUpcomingSignals();
             setInterval(loadUpcomingSignals, 30000);
 
-                      // 7. Nav buttons state
+                         // 7. Nav buttons state
             const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
-            const tradeHistoryBtn = document.getElementById('navTradeHistoryBtn');
             
             if (user) {
                 const signInBtn = document.getElementById('navSignInBtn');
@@ -1414,15 +1413,6 @@
                             window.location.replace('index.html');
                         }
                     };
-                }
-                // 🆕 Show Trade History button for logged-in users
-                if (tradeHistoryBtn) {
-                    tradeHistoryBtn.style.display = 'inline-flex';
-                }
-            } else {
-                // Hide Trade History button for guests
-                if (tradeHistoryBtn) {
-                    tradeHistoryBtn.style.display = 'none';
                 }
             }
         });
