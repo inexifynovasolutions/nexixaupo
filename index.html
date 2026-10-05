@@ -73,10 +73,21 @@
         #publicityBanner.style-red { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; }
         #publicityBanner.style-blue { background: linear-gradient(135deg, #60a5fa, #3b82f6); color: #ffffff; }
         #publicityBanner .pb-content { position: relative; padding: 12px 50px 12px 20px; text-align: center; }
+                #publicityBanner .pb-content {
+            word-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.5;
+            white-space: normal;
+        }
         #publicityBanner .pb-close { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); background: rgba(0, 0, 0, 0.2); border: none; color: inherit; font-size: 1.2rem; font-weight: 700; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; line-height: 1; padding: 0; }
         #publicityBanner .pb-close:hover { background: rgba(0, 0, 0, 0.4); transform: translateY(-50%) rotate(90deg) scale(1.1); }
         #publicityBanner.pb-scrolling .pb-content { padding: 12px 0; white-space: nowrap; overflow: hidden; text-align: left; }
-        #publicityBanner.pb-scrolling .pb-scroll-text { display: inline-block; animation: pbMarquee 25s linear infinite; padding-left: 100%; }
+               #publicityBanner.pb-scrolling .pb-scroll-text {
+            display: inline-block;
+            animation: pbMarquee var(--marquee-duration, 30s) linear infinite;
+            padding-left: 100%;
+            padding-right: 50px;
+        }
         @keyframes pbMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         #publicityBanner.pb-slide .pb-content { animation: pbSlideIn 0.8s ease-out; }
         @keyframes pbSlideIn { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
@@ -821,7 +832,7 @@
             } catch (err) { console.error('loadPublicityBanners:', err); }
         }
 
-        function showBanner(banner) {
+               function showBanner(banner) {
             const el = document.getElementById('publicityBanner');
             if (!el) return;
             el.className = '';
@@ -835,6 +846,12 @@
                 ? `<button class="pb-close" onclick="closeBanner('${banner.id}')" title="Close">×</button>`
                 : '';
             if (banner.style === 'scrolling') {
+                // 🆕 Dynamic duration based on text length (min 25s, +1s per 4 chars)
+                const msgLength = (banner.message || '').length;
+                const duration = Math.max(25, Math.ceil(msgLength / 4));
+                el.style.setProperty('--marquee-duration', duration + 's');
+                console.log('📢 Banner scrolling — length:', msgLength, 'duration:', duration + 's');
+
                 innerHTML = `<div class="pb-content"><span class="pb-scroll-text">${banner.message}</span>${closeBtn}</div>`;
             } else {
                 innerHTML = `<div class="pb-content">${banner.message}${closeBtn}</div>`;
@@ -953,10 +970,11 @@
                 const el = document.getElementById(id);
                 if (el) el.innerText = ids[id];
             }
-            if (!demoRunning && !demoTrade) {
+                        if (!demoRunning && !demoTrade) {
+                // 🆕 Restore from localStorage instead of resetting
+                freeTradesLeft = loadFreeTradesFromStorage();
                 const el = document.getElementById('freeTradesLeft');
-                if (el) el.innerText = freeTradesLimit;
-                freeTradesLeft = freeTradesLimit;
+                if (el) el.innerText = freeTradesLeft;
             }
         }
 
@@ -1156,7 +1174,44 @@
         // ================================================================
         // DEMO LOGIC
         // ================================================================
-        let demoBalance = 300, demoFloating = 0, freeTradesLeft = 3, demoRunning = false, demoPrice = 0, demoTrade = null, demoInterval = null, demoTradeCounter = 0;
+            let demoBalance = 300, demoFloating = 0, freeTradesLeft = 3, demoRunning = false, demoPrice = 0, demoTrade = null, demoInterval = null, demoTradeCounter = 0;
+
+        // 🆕 Persistent free trades tracking (date-based reset)
+        function loadFreeTradesFromStorage() {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const storedDate = localStorage.getItem('freeTradesDate');
+                const storedUsed = parseInt(localStorage.getItem('freeTradesUsed') || '0');
+
+                if (storedDate !== today) {
+                    localStorage.setItem('freeTradesDate', today);
+                    localStorage.setItem('freeTradesUsed', '0');
+                    return freeTradesLimit;
+                }
+                return Math.max(0, freeTradesLimit - storedUsed);
+            } catch (e) {
+                console.error('loadFreeTradesFromStorage error:', e);
+                return freeTradesLimit;
+            }
+        }
+
+        function incrementFreeTradesUsed() {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const storedDate = localStorage.getItem('freeTradesDate');
+                let used = parseInt(localStorage.getItem('freeTradesUsed') || '0');
+
+                if (storedDate !== today) {
+                    used = 0;
+                    localStorage.setItem('freeTradesDate', today);
+                }
+                used++;
+                localStorage.setItem('freeTradesUsed', String(used));
+                console.log('📊 Free trades used today:', used);
+            } catch (e) {
+                console.error('incrementFreeTradesUsed error:', e);
+            }
+        }
 
         async function getDemoPrice() {
             try {
@@ -1206,7 +1261,7 @@
             setTimeout(() => { if (demoRunning && freeTradesLeft > 0 && !demoTrade) openDemoTrade(); }, 3000);
         }
 
-        function openDemoTrade() {
+                function openDemoTrade() {
             if (demoTrade || freeTradesLeft <= 0) return;
             demoTradeCounter++;
             const type = Math.random() > 0.5 ? 'BUY' : 'SELL';
@@ -1218,6 +1273,9 @@
             freeTradesLeft--;
             document.getElementById('freeTradesLeft').innerText = freeTradesLeft;
             document.getElementById('demoStatus').innerText = '🟢 Trade Open: ' + type;
+
+            // 🆕 Persist usage
+            incrementFreeTradesUsed();
         }
 
         function closeDemoTrade() {
@@ -1383,8 +1441,14 @@
             loadActiveAlert();
             setInterval(loadActiveAlert, 15000);
 
-            // 4. Load settings FIRST
+                       // 4. Load settings FIRST
             await loadDynamicSettings();
+
+            // 🆕 Restore free trades counter from localStorage
+            freeTradesLeft = loadFreeTradesFromStorage();
+            const ftEl = document.getElementById('freeTradesLeft');
+            if (ftEl) ftEl.innerText = freeTradesLeft;
+            console.log('📊 Free trades remaining today:', freeTradesLeft);
 
             // 5. Then load real stats (settings ready)
             loadRealStats();

@@ -26,10 +26,23 @@
         #publicityBanner.style-red { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; }
         #publicityBanner.style-blue { background: linear-gradient(135deg, #60a5fa, #3b82f6); color: #ffffff; }
         #publicityBanner .pb-content { position: relative; padding: 12px 50px 12px 20px; text-align: center; }
+
+        #publicityBanner .pb-content {
+            word-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.5;
+            white-space: normal;
+        }
+
         #publicityBanner .pb-close { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); background: rgba(0, 0, 0, 0.2); border: none; color: inherit; font-size: 1.2rem; font-weight: 700; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; line-height: 1; padding: 0; }
         #publicityBanner .pb-close:hover { background: rgba(0, 0, 0, 0.4); transform: translateY(-50%) rotate(90deg) scale(1.1); }
         #publicityBanner.pb-scrolling .pb-content { padding: 12px 0; white-space: nowrap; overflow: hidden; text-align: left; }
-        #publicityBanner.pb-scrolling .pb-scroll-text { display: inline-block; animation: pbMarquee 25s linear infinite; padding-left: 100%; }
+               #publicityBanner.pb-scrolling .pb-scroll-text {
+            display: inline-block;
+            animation: pbMarquee var(--marquee-duration, 30s) linear infinite;
+            padding-left: 100%;
+            padding-right: 50px;
+        }
         @keyframes pbMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         #publicityBanner.pb-slide .pb-content { animation: pbSlideIn 0.8s ease-out; }
         @keyframes pbSlideIn { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
@@ -394,7 +407,7 @@
             }
         }
 
-        function showBanner(banner) {
+                function showBanner(banner) {
             const el = document.getElementById('publicityBanner');
             if (!el) return;
 
@@ -412,6 +425,12 @@
                 : '';
 
             if (banner.style === 'scrolling') {
+                // 🆕 Dynamic duration based on text length
+                const msgLength = (banner.message || '').length;
+                const duration = Math.max(25, Math.ceil(msgLength / 4));
+                el.style.setProperty('--marquee-duration', duration + 's');
+                console.log('📢 Banner scrolling — length:', msgLength, 'duration:', duration + 's');
+
                 innerHTML = `<div class="pb-content"><span class="pb-scroll-text">${banner.message}</span>${closeBtn}</div>`;
             } else {
                 innerHTML = `<div class="pb-content">${banner.message}${closeBtn}</div>`;
