@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Trade History | Nexi Rocket-XauPo</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Q3P4njkz/Chat-GPT-Image-Sep-1-2026-10-26-24-AM.png" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; }
+
+        /* NAVBAR */
+        .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
+        .logo span { color: #fff; }
+        .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .user-info { display: flex; align-items: center; gap: 10px; color: #94a3b8; font-size: 0.9rem; }
+        .user-info strong { color: #d4af37; }
+        .btn-nav { background: #334155; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-nav:hover { background: #475569; }
+        .btn-gold { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; }
+        .btn-gold:hover { transform: translateY(-2px); }
+        .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+        .btn-logout:hover { background: #dc2626; }
+
+        /* CONTAINER */
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+
+        /* PAGE HEADER */
+        .page-header { text-align: center; margin-bottom: 30px; }
+        .page-header h1 { color: #d4af37; font-size: 2rem; margin-bottom: 8px; }
+        .page-header p { color: #94a3b8; font-size: 0.9rem; }
+
+        /* FILTER CARD */
+        .filter-card { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .filter-card h2 { color: #d4af37; font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .quick-presets { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+        .preset-btn { padding: 8px 16px; background: #1e293b; border: 1px solid #334155; color: #94a3b8; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
+        .preset-btn:hover { border-color: #d4af37; color: #d4af37; }
+        .preset-btn.active { background: linear-gradient(135deg, #d4af37, #f0d060); color: #111827; border-color: #d4af37; }
+        .date-range { display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 15px; align-items: end; }
+        .date-range .form-group { display: flex; flex-direction: column; }
+        .date-range label { color: #94a3b8; font-size: 0.78rem; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        .date-range input { padding: 12px 16px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; font-family: inherit; }
+        .date-range input:focus { border-color: #d4af37; }
+        .btn-apply { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-apply:hover { transform: translateY(-2px); }
+        .btn-clear { background: #334155; color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-clear:hover { background: #475569; }
+
+        /* STATS SUMMARY */
+        .stats-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .summary-card { background: linear-gradient(135deg, #111827, #0f1729); border: 1px solid #334155; border-radius: 12px; padding: 20px; text-align: center; }
+        .summary-card .icon { font-size: 1.6rem; margin-bottom: 8px; }
+        .summary-card .label { color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .summary-card .value { font-size: 1.6rem; font-weight: 900; color: #d4af37; }
+        .summary-card .value.green { color: #10b981; }
+        .summary-card .value.red { color: #ef4444; }
+        .summary-card .value.blue { color: #60a5fa; }
+
+        /* SECTION */
+        .section { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .section h2 { color: #d4af37; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .section h2 .count-badge { background: #334155; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+
+        /* TABLE */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #1e293b; color: #d4af37; padding: 12px; text-align: center; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; }
+        tr:hover td { background: rgba(212, 175, 55, 0.05); }
+        .buy { color: #10b981; font-weight: 700; }
+        .sell { color: #ef4444; font-weight: 700; }
+        .green { color: #10b981 !important; }
+        .red { color: #ef4444 !important; }
+        .gold { color: #d4af37 !important; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; display: inline-block; }
+        .badge.win { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge.loss { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge.active-trade { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+        .badge.manual { background: rgba(96, 165, 250, 0.2); color: #60a5fa; font-size: 0.65rem; margin-left: 6px; }
+
+        /* EMPTY / LOADING */
+        .empty-state { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; }
+        .empty-state i { font-size: 2.5rem; display: block; margin-bottom: 15px; color: #334155; }
+        .loading-state { text-align: center; padding: 40px; color: #d4af37; font-size: 0.9rem; }
+
+        /* LOADING SCREEN */
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0e17; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 9999; }
+        .loading-screen .spinner { font-size: 3rem; color: #d4af37; animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+        /* DISCLAIMER FOOTER */
+        .footer-disclaimer { max-width: 900px; margin: 30px auto 20px; padding: 18px; background: #0f1729; border-left: 4px solid #ef4444; border-radius: 8px; font-size: 0.78rem; line-height: 1.6; color: #cbd5e1; }
+        .footer-disclaimer strong { color: #ef4444; }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 20px; }
+            .date-range { grid-template-columns: 1fr; }
+            .btn-apply, .btn-clear { width: 100%; justify-content: center; }
+            .container { padding: 20px 12px; }
+            .section { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+        <p style="color:#94a3b8; margin-top:20px;">Loading your trades...</p>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="logo">🚀 Nexi<span> Rocket-XauPo</span></a>
+        <div class="nav-right">
+            <div class="user-info">
+                <span>👤 <strong id="navUserName">User</strong></span>
+            </div>
+            <a href="dashboard.html" class="btn-nav"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="trade-history.html" class="btn-nav btn-gold"><i class="fas fa-history"></i> Trade History</a>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </nav>
+
+    <div class="container" id="mainContainer" style="display: none;">
+
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1>📜 Trade History</h1>
+            <p>Aap ki tamam trades — active aur closed — ek jagah</p>
+        </div>
+
+        <!-- FILTER CARD -->
+        <div class="filter-card">
+            <h2><i class="fas fa-filter"></i> Filter by Date</h2>
+
+            <div class="quick-presets">
+                <button class="preset-btn" data-preset="today" onclick="applyPreset('today')">📅 Today</button>
+                <button class="preset-btn active" data-preset="7days" onclick="applyPreset('7days')">📆 Last 7 Days</button>
+                <button class="preset-btn" data-preset="30days" onclick="applyPreset('30days')">🗓️ Last 30 Days</button>
+                <button class="preset-btn" data-preset="thisMonth" onclick="applyPreset('thisMonth')">📋 This Month</button>
+                <button class="preset-btn" data-preset="all" onclick="applyPreset('all')">🌐 All Time</button>
+            </div>
+
+            <div class="date-range">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" id="filterFrom" />
+                </div>
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" id="filterTo" />
+                </div>
+                <button class="btn-apply" onclick="applyCustomFilter()">
+                    <i class="fas fa-search"></i> Apply Filter
+                </button>
+                <button class="btn-clear" onclick="clearFilter()">
+                    <i class="fas fa-times"></i> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- STATS SUMMARY -->
+        <div class="stats-summary" id="statsSummary">
+            <div class="summary-card">
+                <div class="icon">📊</div>
+                <div class="label">Total Trades</div>
+                <div class="value" id="statTotalTrades">0</div>
+            </div>
+            <div class="summary-card">
+                <div class="icon">✅</div>
+                <div class="label">Wins</div>
+                <div class="value green" id="statWins">0</div>
+            </div>
+            <div class="summary-card">
+                <div class="icon">❌</div>
+                <div class="label">Losses</div>
+                <div class="value red" id="statLosses">0</div>
+            </div>
+            <div class="summary-card">
+                <div class="icon">🎯</div>
+                <div class="label">Win Rate</div>
+                <div class="value" id="statWinRate">0%</div>
+            </div>
+            <div class="summary-card">
+                <div class="icon">💰</div>
+                <div class="label">Total P/L</div>
+                <div class="value" id="statTotalPL">$0.00</div>
+            </div>
+        </div>
+
+        <!-- ACTIVE TRADES SECTION -->
+        <div class="section">
+            <h2>
+                <span>⚡ Active Trades</span>
+                <span class="count-badge" id="activeCount">0</span>
+            </h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date & Time</th>
+                            <th>Product</th>
+                            <th>Type</th>
+                            <th>Entry</th>
+                            <th>Current/Exit</th>
+                            <th>P/L</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activeTradesBody">
+                        <tr><td colspan="8" class="loading-state">⏳ Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CLOSED TRADES SECTION -->
+        <div class="section">
+            <h2>
+                <span>✅ Closed Trades</span>
+                <span class="count-badge" id="closedCount">0</span>
+            </h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date & Time</th>
+                            <th>Product</th>
+                            <th>Type</th>
+                            <th>Entry</th>
+                            <th>Exit</th>
+                            <th>P/L</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="closedTradesBody">
+                        <tr><td colspan="8" class="loading-state">⏳ Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DISCLAIMER -->
+        <div class="footer-disclaimer">
+            <strong>⚠️ Risk Disclaimer:</strong> Trading gold (XAUUSD) and other financial instruments involves substantial risk. Past performance does not guarantee future results. All signals and analysis provided by Nexi XauPo are for educational purposes only and do not constitute financial advice.
+        </div>
+
+    </div>
+
+    <!-- Supabase CDN + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="env-config.js"></script>
+    <script src="supabase-config.js"></script>
+
+        <script>
+        // ============================================================
+        // TRADE HISTORY PAGE — v1
+        // ============================================================
+        let currentUser = null;
+        let allTrades = [];        // active + closed combined
+        let currentFilter = { from: null, to: null, preset: '7days' };
+
+        const PRODUCT_INFO = {
+            'XAUUSD': { icon: '🥇', name: 'Gold' },
+            'BTCUSD': { icon: '₿', name: 'Bitcoin' },
+            'XAGUSD': { icon: '🥈', name: 'Silver' },
+            'ETHUSD': { icon: 'Ξ', name: 'Ethereum' },
+            'EURUSD': { icon: '💶', name: 'EUR/USD' },
+            'GBPUSD': { icon: '💷', name: 'GBP/USD' },
+            'USDJPY': { icon: '💴', name: 'USD/JPY' },
+            'AUDUSD': { icon: '🇦🇺', name: 'AUD/USD' }
+        };
+
+        // ============================================================
+        // Helpers — Date
+        // ============================================================
+        function getLocalDateStr(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getDayRangeISO(dateStr) {
+            // Returns { startISO, endISO } for a local day "YYYY-MM-DD"
+            const [y, m, d] = dateStr.split('-').map(Number);
+            const start = new Date(y, m - 1, d, 0, 0, 0, 0);
+            const end = new Date(y, m - 1, d, 23, 59, 59, 999);
+            return { startISO: start.toISOString(), endISO: end.toISOString() };
+        }
+
+        function formatDateTime(iso) {
+            if (!iso) return '--';
+            if (typeof formatTradeTime === 'function') {
+                return formatTradeTime(iso);
+            }
+            return new Date(iso).toLocaleString();
+        }
+
+        // ============================================================
+        // Load — Session + User + Trades
+        // ============================================================
+        window.addEventListener('load', async () => {
+            console.log('✅ trade-history.html loaded');
+
+            const authSession = await getCurrentSession();
+            if (!authSession || !authSession.user) {
+                alert('❌ Please login first!');
+                window.location.replace('signin.html');
+                return;
+            }
+
+            const authUserId = authSession.user.id;
+
+            try {
+                const sb = initSupabase();
+                if (!sb) throw new Error('Supabase init failed');
+
+                const { data: user, error } = await sb
+                    .from('users')
+                    .select('*')
+                    .eq('id', authUserId)
+                    .maybeSingle();
+
+                if (error) throw error;
+                if (!user) {
+                    alert('❌ User record not found!');
+                    await signOutUser();
+                    window.location.replace('signin.html');
+                    return;
+                }
+
+                if (user.status !== 'active') {
+                    alert('⚠️ Account status: ' + user.status);
+                    window.location.replace(user.status === 'pending' ? 'signin.html' : 'renewal.html');
+                    return;
+                }
+
+                currentUser = user;
+                document.getElementById('navUserName').innerText = user.name;
+
+                // Set default filter to Last 7 Days
+                setDefaultFilter();
+
+                // Load all trades
+                await loadAllTrades();
+                renderAll();
+
+                // Show UI
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+
+                // Session timeout (B6)
+                initSessionTimeout(async function() {
+                    try { await signOutUser(); } catch(e) { console.error(e); }
+                    localStorage.removeItem('nexiCurrentUser');
+                    alert('⏰ Session expired — 30 minutes of inactivity.\n\nPlease login again.');
+                    window.location.replace('signin.html');
+                }, 'signin.html');
+
+            } catch (err) {
+                console.error('trade-history load error:', err);
+                alert('❌ Error loading: ' + err.message);
+                window.location.replace('signin.html');
+            }
+        });
+
+        // ============================================================
+        // Set Default Filter (Last 7 Days)
+        // ============================================================
+        function setDefaultFilter() {
+            const today = new Date();
+            const past = new Date();
+            past.setDate(past.getDate() - 6);
+
+            document.getElementById('filterFrom').value = getLocalDateStr(past);
+            document.getElementById('filterTo').value = getLocalDateStr(today);
+
+            currentFilter.preset = '7days';
+            currentFilter.from = getLocalDateStr(past);
+            currentFilter.to = getLocalDateStr(today);
+        }
+
+        // ============================================================
+        // Load All Trades (Own + Manual)
+        // ============================================================
+        async function loadAllTrades() {
+            try {
+                const sb = initSupabase();
+
+                // 1. Own trades
+                const { data: ownTrades, error: ownErr } = await sb
+                    .from('trades')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (ownErr) throw ownErr;
+
+                // 2. Manual/admin trades (user_id is null)
+                const { data: manualTrades, error: manualErr } = await sb
+                    .from('trades')
+                    .select('*')
+                    .eq('is_manual', true)
+                    .is('user_id', null)
+                    .order('created_at', { ascending: false });
+
+                if (manualErr) console.warn('Manual trades fetch error:', manualErr);
+
+                // Combine & deduplicate
+                const combined = [...(ownTrades || []), ...(manualTrades || [])];
+                const seen = new Set();
+                allTrades = combined.filter(t => {
+                    if (seen.has(t.id)) return false;
+                    seen.add(t.id);
+                    return true;
+                });
+
+                console.log('✅ Loaded trades:', allTrades.length, 
+                            '(own:', (ownTrades||[]).length, ', manual:', (manualTrades||[]).length, ')');
+
+            } catch (err) {
+                console.error('loadAllTrades error:', err);
+                throw err;
+            }
+        }
+
+        // ============================================================
+        // Filter Trades by Date Range
+        // ============================================================
+        function getFilteredTrades() {
+            if (!currentFilter.from || !currentFilter.to) return allTrades;
+
+            const fromISO = getDayRangeISO(currentFilter.from).startISO;
+            const toISO = getDayRangeISO(currentFilter.to).endISO;
+
+            return allTrades.filter(t => {
+                if (!t.created_at) return false;
+                return t.created_at >= fromISO && t.created_at <= toISO;
+            });
+        }
+
+        // ============================================================
+        // Presets
+        // ============================================================
+        function applyPreset(preset) {
+            currentFilter.preset = preset;
+
+            // Update active button
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.preset === preset);
+            });
+
+            const today = new Date();
+            let fromDate, toDate;
+
+            if (preset === 'today') {
+                fromDate = new Date(today);
+                toDate = new Date(today);
+            } else if (preset === '7days') {
+                fromDate = new Date(today);
+                fromDate.setDate(fromDate.getDate() - 6);
+                toDate = new Date(today);
+            } else if (preset === '30days') {
+                fromDate = new Date(today);
+                fromDate.setDate(fromDate.getDate() - 29);
+                toDate = new Date(today);
+            } else if (preset === 'thisMonth') {
+                fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                toDate = new Date(today);
+            } else if (preset === 'all') {
+                // Find earliest trade
+                if (allTrades.length > 0) {
+                    const earliest = allTrades.reduce((min, t) => {
+                        const d = new Date(t.created_at);
+                        return d < min ? d : min;
+                    }, new Date());
+                    fromDate = earliest;
+                } else {
+                    fromDate = new Date(today);
+                }
+                toDate = new Date(today);
+            }
+
+            document.getElementById('filterFrom').value = getLocalDateStr(fromDate);
+            document.getElementById('filterTo').value = getLocalDateStr(toDate);
+
+            currentFilter.from = getLocalDateStr(fromDate);
+            currentFilter.to = getLocalDateStr(toDate);
+
+            renderAll();
+        }
+
+        function applyCustomFilter() {
+            const fromVal = document.getElementById('filterFrom').value;
+            const toVal = document.getElementById('filterTo').value;
+
+            if (!fromVal || !toVal) {
+                alert('❌ Please select both From and To dates.');
+                return;
+            }
+
+            if (fromVal > toVal) {
+                alert('❌ From date must be before To date.');
+                return;
+            }
+
+            currentFilter.from = fromVal;
+            currentFilter.to = toVal;
+            currentFilter.preset = 'custom';
+
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+
+            renderAll();
+        }
+
+        function clearFilter() {
+            setDefaultFilter();
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.preset === '7days');
+            });
+            renderAll();
+        }
+
+        // ============================================================
+        // Render All — Summary + Active + Closed
+        // ============================================================
+        function renderAll() {
+            const filtered = getFilteredTrades();
+            renderSummary(filtered);
+            renderActiveTrades(filtered);
+            renderClosedTrades(filtered);
+        }
+
+        function renderSummary(trades) {
+            const active = trades.filter(t => t.exit === null || t.exit === undefined);
+            const closed = trades.filter(t => t.exit !== null && t.exit !== undefined);
+
+            const wins = closed.filter(t => parseFloat(t.profit) >= 0);
+            const losses = closed.filter(t => parseFloat(t.profit) < 0);
+
+            const totalPL = closed.reduce((sum, t) => sum + (parseFloat(t.profit) || 0), 0);
+            const winRate = closed.length > 0 ? ((wins.length / closed.length) * 100).toFixed(1) : '0.0';
+
+            document.getElementById('statTotalTrades').innerText = trades.length;
+            document.getElementById('statWins').innerText = wins.length;
+            document.getElementById('statLosses').innerText = losses.length;
+            document.getElementById('statWinRate').innerText = winRate + '%';
+            document.getElementById('statTotalPL').innerText = (totalPL >= 0 ? '+' : '') + '$' + totalPL.toFixed(2);
+
+            const plEl = document.getElementById('statTotalPL');
+            plEl.className = 'value ' + (totalPL >= 0 ? 'green' : 'red');
+        }
+
+        function renderActiveTrades(trades) {
+            const tbody = document.getElementById('activeTradesBody');
+            const active = trades.filter(t => t.exit === null || t.exit === undefined);
+
+            document.getElementById('activeCount').innerText = active.length;
+
+            if (active.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-inbox"></i>No active trades in this date range</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = active.map((t, i) => {
+                const info = PRODUCT_INFO[t.product] || { icon: '📊', name: t.product };
+                const manualBadge = t.is_manual ? '<span class="badge manual">MANUAL</span>' : '';
+                const dt = formatDateTime(t.created_at);
+                return `<tr>
+                    <td>#${i + 1}</td>
+                    <td style="font-size:0.78rem;color:#94a3b8;">${dt}</td>
+                    <td style="font-size:0.82rem;">${info.icon} ${info.name}${manualBadge}</td>
+                    <td class="${(t.type||'').toLowerCase() === 'buy' ? 'buy' : 'sell'}">${(t.type||'').toUpperCase()}</td>
+                    <td>$${parseFloat(t.entry || 0).toFixed(2)}</td>
+                    <td style="color:#94a3b8;">Live</td>
+                    <td style="color:#fbbf24;">--</td>
+                    <td><span class="badge active-trade">⏳ OPEN</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function renderClosedTrades(trades) {
+            const tbody = document.getElementById('closedTradesBody');
+            const closed = trades.filter(t => t.exit !== null && t.exit !== undefined);
+
+            document.getElementById('closedCount').innerText = closed.length;
+
+            if (closed.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-inbox"></i>No closed trades in this date range</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = closed.map((t, i) => {
+                const info = PRODUCT_INFO[t.product] || { icon: '📊', name: t.product };
+                const manualBadge = t.is_manual ? '<span class="badge manual">MANUAL</span>' : '';
+                const dt = formatDateTime(t.created_at);
+                const profit = parseFloat(t.profit) || 0;
+                const isWin = profit >= 0;
+                const resultBadge = isWin
+                    ? '<span class="badge win">✅ WIN</span>'
+                    : '<span class="badge loss">❌ LOSS</span>';
+
+                return `<tr>
+                    <td>#${i + 1}</td>
+                    <td style="font-size:0.78rem;color:#94a3b8;">${dt}</td>
+                    <td style="font-size:0.82rem;">${info.icon} ${info.name}${manualBadge}</td>
+                    <td class="${(t.type||'').toLowerCase() === 'buy' ? 'buy' : 'sell'}">${(t.type||'').toUpperCase()}</td>
+                    <td>$${parseFloat(t.entry || 0).toFixed(2)}</td>
+                    <td>$${parseFloat(t.exit || 0).toFixed(2)}</td>
+                    <td class="${isWin ? 'green' : 'red'}" style="font-weight:700;">${isWin ? '+' : ''}$${profit.toFixed(2)}</td>
+                    <td>${resultBadge}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        // ============================================================
+        // Logout
+        // ============================================================
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    destroySessionTimeout();
+                    await signOutUser();
+                } catch (err) {
+                    console.error('signOut error:', err);
+                }
+                localStorage.removeItem('nexiCurrentUser');
+                window.location.replace('index.html');
+            }
+        }
+
+        // ============================================================
+        // Auto-apply on date change
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const fromEl = document.getElementById('filterFrom');
+            const toEl = document.getElementById('filterTo');
+            if (fromEl) fromEl.addEventListener('change', () => { currentFilter.preset = 'custom'; document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active')); });
+            if (toEl) toEl.addEventListener('change', () => { currentFilter.preset = 'custom'; document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active')); });
+        });
+    </script>
+</body>
+</html>
