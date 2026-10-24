@@ -277,9 +277,6 @@
     </div>
 
     <script>
-        // ================================================================
-        //  CHECK LOGIN + EXPIRY
-        // ================================================================
         window.addEventListener('load', () => {
             const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
             if (!user) {
@@ -288,21 +285,15 @@
                 return;
             }
 
-            // Show previous expiry
             document.getElementById('prevExpiry').innerText = user.subscriptionEnd;
 
-            // Check if actually expired
             const today = new Date().toISOString().split('T')[0];
             if (user.subscriptionEnd >= today) {
-                // Not expired → redirect to dashboard
                 alert('✅ Your subscription is still active!');
                 window.location.href = 'dashboard.html';
             }
         });
 
-        // ================================================================
-        //  HANDLE RENEWAL
-        // ================================================================
         function handleRenewal(event) {
             event.preventDefault();
             const messageBox = document.getElementById('messageBox');
@@ -344,7 +335,7 @@
                 payments.push(renewalData);
                 localStorage.setItem('nexiPendingPayments', JSON.stringify(payments));
 
-                showMessage('✅ Renewal submitted!<br>Admin will verify within 5-30 minutes.<br>You will receive an email confirmation.', 'success');
+                showMessage('✅ Renewal submitted!<br>Admin will verify within 5-30 minutes.<br>You will be redirected...', 'success');
 
                 setTimeout(() => {
                     localStorage.removeItem('nexiCurrentUser');

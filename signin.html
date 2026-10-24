@@ -117,6 +117,12 @@
             color: #ef4444;
             display: block;
         }
+        .message.warning {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid #fbbf24;
+            color: #fbbf24;
+            display: block;
+        }
         .message.success {
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid #10b981;
@@ -216,10 +222,28 @@
                 return;
             }
 
+            // Save user session FIRST
             localStorage.setItem('nexiCurrentUser', JSON.stringify(user));
+
+            // Check subscription expiry
+            const today = new Date().toISOString().split('T')[0];
+
+            if (user.subscriptionEnd < today) {
+                // EXPIRED → Go to renewal page
+                messageBox.className = 'message warning';
+                messageBox.innerHTML = '⚠️ Your subscription has expired!<br>Redirecting to renewal page...';
+                setTimeout(() => {
+                    window.location.href = 'renewal.html';
+                }, 2000);
+                return;
+            }
+
+            // ACTIVE → Go to dashboard
             messageBox.className = 'message success';
             messageBox.innerHTML = '✅ Login successful!<br>Welcome back, ' + user.fullName + '!';
-            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
         }
 
         window.addEventListener('load', () => {
