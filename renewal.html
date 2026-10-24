@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Renew Subscription | NexiRocket-XAU</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #0a0e17; color: #f8fafc; min-height: 100vh; }
+
+        .navbar {
+            background: #111827;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #d4af37;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-decoration: none;
+        }
+        .logo span { color: #fff; }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 8px 22px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .container { max-width: 700px; margin: 0 auto; padding: 30px 20px; }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #7f1d1d, #450a0a);
+            border: 2px solid #ef4444;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .alert-banner i { font-size: 2rem; color: #ef4444; }
+        .alert-banner h3 { color: #ef4444; font-size: 1.2rem; margin-bottom: 5px; }
+        .alert-banner p { color: #fca5a5; font-size: 0.9rem; }
+
+        .form-card {
+            background: #111827;
+            border: 2px solid #334155;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .form-card h2 {
+            color: #d4af37;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .form-card .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            background: #1e293b;
+            border-left: 4px solid #d4af37;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .info-box p { color: #cbd5e1; font-size: 0.9rem; line-height: 1.6; }
+        .info-box strong { color: #d4af37; }
+
+        .binance-box {
+            background: #0f1729;
+            border: 2px dashed #d4af37;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .binance-box h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        .binance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e293b;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .binance-row .label { color: #94a3b8; font-size: 0.8rem; }
+        .binance-row .value { color: #fff; font-weight: 700; font-family: monospace; font-size: 1rem; }
+        .binance-row .value.green { color: #10b981; }
+        .copy-btn {
+            background: #d4af37;
+            color: #111827;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 13px 16px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .form-group input:focus { border-color: #d4af37; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #d4af37, #f0d060);
+            color: #111827;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-submit:hover { transform: translateY(-2px); }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9rem;
+        }
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            display: block;
+        }
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            display: block;
+        }
+
+        .logout-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .logout-link a { color: #ef4444; text-decoration: none; font-weight: 700; }
+
+        .expiry-info {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .expiry-info .label { color: #94a3b8; font-size: 0.8rem; }
+        .expiry-info .value { color: #ef4444; font-size: 1.3rem; font-weight: 900; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
+        <a href="signin.html" class="btn-outline">Sign In</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="alert-banner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>
+                <h3>Subscription Expired!</h3>
+                <p>Your subscription has expired. Renew to continue using the AI trading robot.</p>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>🔄 Renew Subscription</h2>
+            <p class="subtitle">Pay $5 to extend for 1 more month</p>
+
+            <div class="expiry-info">
+                <div class="label">Your Previous Expiry</div>
+                <div class="value" id="prevExpiry">--</div>
+            </div>
+
+            <div class="info-box">
+                <p>
+                    <strong>Amount:</strong> $5.00 (Regular Monthly)<br>
+                    <strong>Method:</strong> Binance Pay<br>
+                    <strong>Duration:</strong> 30 Days Extension
+                </p>
+            </div>
+
+            <div class="binance-box">
+                <h3>📋 Binance Payment Info</h3>
+                <div class="binance-row">
+                    <div>
+                        <div class="label">Binance UID</div>
+                        <div class="value">968525536</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('968525536')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="binance-row">
+                    <div>
+                        <div class="label">Binance Nickname</div>
+                        <div class="value">NexiProduct</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('NexiProduct')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="binance-row">
+                    <div>
+                        <div class="label">Amount</div>
+                        <div class="value green">$5.00</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('5')"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+
+            <div class="message" id="messageBox"></div>
+
+            <form onsubmit="handleRenewal(event)">
+                <div class="form-group">
+                    <label>Screenshot (Transfer Proof) *</label>
+                    <input type="file" id="screenshot" accept="image/*" required style="padding: 10px;" />
+                </div>
+
+                <div class="form-group">
+                    <label>Your Binance UID (from which you sent) *</label>
+                    <input type="text" id="payerUID" placeholder="Enter your Binance UID" required />
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Submit Renewal
+                </button>
+            </form>
+
+            <div class="logout-link">
+                Want to switch account? <a href="#" onclick="logout(); return false;">Logout</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ================================================================
+        //  CHECK LOGIN + EXPIRY
+        // ================================================================
+        window.addEventListener('load', () => {
+            const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
+            if (!user) {
+                alert('❌ Please login first!');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            // Show previous expiry
+            document.getElementById('prevExpiry').innerText = user.subscriptionEnd;
+
+            // Check if actually expired
+            const today = new Date().toISOString().split('T')[0];
+            if (user.subscriptionEnd >= today) {
+                // Not expired → redirect to dashboard
+                alert('✅ Your subscription is still active!');
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        // ================================================================
+        //  HANDLE RENEWAL
+        // ================================================================
+        function handleRenewal(event) {
+            event.preventDefault();
+            const messageBox = document.getElementById('messageBox');
+
+            const screenshot = document.getElementById('screenshot').files[0];
+            const payerUID = document.getElementById('payerUID').value.trim();
+
+            if (!screenshot) {
+                showMessage('❌ Please upload screenshot!', 'error');
+                return;
+            }
+            if (!payerUID) {
+                showMessage('❌ Please enter Binance UID!', 'error');
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const renewalData = {
+                    id: 'renewal_' + Date.now(),
+                    userId: user.id,
+                    fullName: user.fullName,
+                    email: user.email,
+                    phone: user.phone,
+                    password: user.password,
+                    startingCapital: user.startingCapital,
+                    screenshot: e.target.result,
+                    payerUID: payerUID,
+                    amount: 5.00,
+                    paymentDate: new Date().toISOString(),
+                    status: 'pending',
+                    type: 'renewal',
+                    previousExpiry: user.subscriptionEnd
+                };
+
+                const payments = JSON.parse(localStorage.getItem('nexiPendingPayments') || '[]');
+                payments.push(renewalData);
+                localStorage.setItem('nexiPendingPayments', JSON.stringify(payments));
+
+                showMessage('✅ Renewal submitted!<br>Admin will verify within 5-30 minutes.<br>You will receive an email confirmation.', 'success');
+
+                setTimeout(() => {
+                    localStorage.removeItem('nexiCurrentUser');
+                    window.location.href = 'index.html';
+                }, 3000);
+            };
+            reader.readAsDataURL(screenshot);
+        }
+
+        function showMessage(text, type) {
+            const box = document.getElementById('messageBox');
+            box.className = 'message ' + type;
+            box.innerHTML = text;
+            box.style.display = 'block';
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Copied: ' + text);
+            });
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                localStorage.removeItem('nexiCurrentUser');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

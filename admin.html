@@ -38,12 +38,23 @@
         .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .badge.pending { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
         .badge.verified { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge.rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
         .badge.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
         .badge.expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge.renewal { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+        .badge.new { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
         .btn-action { padding: 6px 14px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.75rem; margin: 0 2px; }
         .btn-verify { background: #10b981; color: #fff; }
         .btn-reject { background: #ef4444; color: #fff; }
+        .btn-view { background: #60a5fa; color: #fff; }
         .empty-state { text-align: center; padding: 40px; color: #64748b; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+        .modal-content { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; text-align: center; }
+        .modal-content img { width: 100%; border-radius: 10px; margin: 15px 0; }
+        .modal-content h3 { color: #d4af37; margin-bottom: 15px; }
+        .modal-content .close-btn { background: #ef4444; color: #fff; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        .modal-content .details { text-align: left; color: #cbd5e1; font-size: 0.9rem; line-height: 1.8; margin: 15px 0; }
+        .modal-content .details strong { color: #fff; }
     </style>
 </head>
 <body>
@@ -80,8 +91,8 @@
                 <h2>💳 Pending Payments</h2>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>UID</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
-                        <tbody id="paymentsBody"><tr><td colspan="8" class="empty-state">No pending payments</td></tr></tbody>
+                        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>UID</th><th>Amount</th><th>Type</th><th>Proof</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="paymentsBody"><tr><td colspan="10" class="empty-state">No pending payments</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -95,6 +106,15 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal" id="screenshotModal">
+        <div class="modal-content">
+            <h3>📸 Payment Screenshot</h3>
+            <img id="modalScreenshot" src="" alt="Screenshot" />
+            <div class="details" id="modalDetails"></div>
+            <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
     </div>
 
@@ -147,7 +167,10 @@
 
         function renderPayments() {
             const tbody = document.getElementById('paymentsBody');
-            if (allPayments.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No payments</td></tr>'; return; }
+            if (allPayments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No payments</td></tr>';
+                return;
+            }
             tbody.innerHTML = allPayments.map((p, i) => `<tr>
                 <td>#${i + 1}</td>
                 <td>${p.fullName || '--'}</td>
@@ -155,6 +178,8 @@
                 <td style="font-size:0.8rem;">${p.phone || '--'}</td>
                 <td style="font-family:monospace;">${p.payerUID || '--'}</td>
                 <td class="gold">$${(p.amount || 0).toFixed(2)}</td>
+                <td><span class="badge ${p.type === 'renewal' ? 'renewal' : 'new'}">${p.type === 'renewal' ? '🔄 Renewal' : '🆕 New'}</span></td>
+                <td>${p.screenshot ? `<button class="btn-action btn-view" onclick="viewScreenshot(${i})"><i class="fas fa-eye"></i></button>` : '--'}</td>
                 <td><span class="badge ${p.status}">${p.status}</span></td>
                 <td>
                     ${p.status === 'pending' ? `
@@ -165,40 +190,81 @@
             </tr>`).join('');
         }
 
+        function viewScreenshot(index) {
+            const p = allPayments[index];
+            if (!p || !p.screenshot) return;
+            document.getElementById('modalScreenshot').src = p.screenshot;
+            document.getElementById('modalDetails').innerHTML = `
+                <div>👤 <strong>${p.fullName || '--'}</strong></div>
+                <div>📧 ${p.email || '--'}</div>
+                <div>📱 ${p.phone || '--'}</div>
+                <div>💰 Amount: <strong style="color:#10b981;">$${(p.amount || 0).toFixed(2)}</strong></div>
+                <div>🆔 Binance UID: <strong style="color:#d4af37; font-family:monospace;">${p.payerUID || '--'}</strong></div>
+                <div>📅 Date: ${new Date(p.paymentDate).toLocaleString()}</div>
+            `;
+            document.getElementById('screenshotModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('screenshotModal').style.display = 'none';
+        }
+
         function verifyPayment(index) {
             const p = allPayments[index];
-            if (!p || !confirm(`Verify payment for ${p.fullName}?`)) return;
+            if (!p || !confirm(`Verify ${p.type === 'renewal' ? 'RENEWAL' : 'NEW'} payment for ${p.fullName}?\n\nAmount: $${p.amount}`)) return;
+
+            const today = new Date();
+            let newExpiry;
+
+            if (p.type === 'renewal') {
+                const prevExpiry = new Date(p.previousExpiry || today);
+                const startDate = prevExpiry > today ? prevExpiry : today;
+                newExpiry = new Date(startDate);
+                newExpiry.setMonth(newExpiry.getMonth() + 1);
+            } else {
+                newExpiry = new Date(today);
+                newExpiry.setMonth(newExpiry.getMonth() + 1);
+            }
+
             const emailPart = (p.email || 'USER').substring(0, 4).toUpperCase();
             const phonePart = (p.phone || '0000').slice(-4);
             const random = Math.floor(1000 + Math.random() * 9000);
             const secretKey = emailPart + phonePart + random;
-            const today = new Date();
-            const expiry = new Date(); expiry.setMonth(expiry.getMonth() + 1);
 
             const users = JSON.parse(localStorage.getItem('nexiUsers') || '[]');
             const existing = users.find(u => u.email === p.email);
+
             if (existing) {
-                existing.secretKey = secretKey;
-                existing.subscriptionEnd = expiry.toISOString().split('T')[0];
+                existing.subscriptionEnd = newExpiry.toISOString().split('T')[0];
                 existing.status = 'active';
+                if (!existing.secretKey) existing.secretKey = secretKey;
             } else {
                 users.push({
                     id: 'user_' + Date.now(),
-                    fullName: p.fullName, email: p.email, phone: p.phone,
-                    password: p.password || '123456', startingCapital: p.startingCapital || 100,
-                    secretKey, subscriptionStart: today.toISOString().split('T')[0],
-                    subscriptionEnd: expiry.toISOString().split('T')[0], status: 'active'
+                    fullName: p.fullName,
+                    email: p.email,
+                    phone: p.phone,
+                    password: p.password || '123456',
+                    startingCapital: p.startingCapital || 100,
+                    secretKey: secretKey,
+                    subscriptionStart: today.toISOString().split('T')[0],
+                    subscriptionEnd: newExpiry.toISOString().split('T')[0],
+                    status: 'active'
                 });
             }
+
             localStorage.setItem('nexiUsers', JSON.stringify(users));
             p.status = 'verified';
+            p.verifiedAt = new Date().toISOString();
             localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
-            alert(`✅ Verified!\nSecret Key: ${secretKey}`);
+
+            const action = p.type === 'renewal' ? 'RENEWED' : 'VERIFIED';
+            alert(`✅ ${action}!\n\nUser: ${p.fullName}\nNew Expiry: ${newExpiry.toISOString().split('T')[0]}\nSecret Key: ${existing ? existing.secretKey : secretKey}`);
             loadData();
         }
 
         function rejectPayment(index) {
-            if (!confirm('Reject?')) return;
+            if (!confirm('Reject this payment?')) return;
             allPayments[index].status = 'rejected';
             localStorage.setItem('nexiPendingPayments', JSON.stringify(allPayments));
             loadData();
@@ -207,7 +273,10 @@
         function renderUsers() {
             const tbody = document.getElementById('usersBody');
             const today = new Date().toISOString().split('T')[0];
-            if (allUsers.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No users</td></tr>'; return; }
+            if (allUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No users</td></tr>';
+                return;
+            }
             tbody.innerHTML = allUsers.map((u, i) => {
                 const isActive = u.subscriptionEnd >= today;
                 return `<tr>
@@ -230,6 +299,10 @@
             localStorage.setItem('nexiUsers', JSON.stringify(allUsers));
             loadData();
         }
+
+        document.getElementById('screenshotModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
     </script>
 </body>
 </html>

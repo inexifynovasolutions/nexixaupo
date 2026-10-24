@@ -3,201 +3,47 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Dashboard | NexiRocket-XAU Pro Max</title>
+    <title>Dashboard | NexiRocket-XAU</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: #0a0e17; color: #f8fafc; }
-
-        /* NAVBAR */
-        .navbar {
-            background: #111827;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #d4af37;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: #d4af37;
-            text-decoration: none;
-        }
+        .navbar { background: #111827; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 900; color: #d4af37; text-decoration: none; }
         .logo span { color: #fff; }
         .user-info { display: flex; align-items: center; gap: 15px; color: #94a3b8; font-size: 0.9rem; }
         .user-info strong { color: #d4af37; }
-        .btn-logout {
-            background: #ef4444;
-            color: #fff;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* CONTAINER */
+        .btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
-
-        /* WELCOME CARD */
-        .welcome-card {
-            background: linear-gradient(135deg, #1a2332, #0f1729);
-            border: 2px solid #d4af37;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
+        .welcome-card { background: linear-gradient(135deg, #1a2332, #0f1729); border: 2px solid #d4af37; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
         .welcome-card h1 { color: #d4af37; font-size: 1.8rem; margin-bottom: 5px; }
         .welcome-card p { color: #94a3b8; }
-
-        /* STATS */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: #111827;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 15px; text-align: center; }
         .stat-card .label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 5px; }
         .stat-card .value { font-size: 1.5rem; font-weight: 900; color: #d4af37; }
         .stat-card .value.green { color: #10b981; }
-        .stat-card .value.red { color: #ef4444; }
-
-        /* TRADING ROBOT SECTION */
-        .robot-section {
-            background: #111827;
-            border: 2px solid #d4af37;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        .robot-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+        .robot-section { background: #111827; border: 2px solid #d4af37; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .robot-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .robot-header h2 { color: #d4af37; font-size: 1.4rem; }
-        .robot-status {
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
+        .robot-status { padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
         .robot-status.running { background: #10b981; color: #fff; }
         .robot-status.stopped { background: #ef4444; color: #fff; }
-
-        /* BALANCE PANEL */
-        .balance-panel {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .balance-box {
-            background: #0f1729;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid #334155;
-        }
+        .balance-panel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .balance-box { background: #0f1729; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #334155; }
         .balance-box.highlight { border-color: #d4af37; }
         .balance-box .label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; }
-        .balance-box .value { font-size: 1.6rem; font-weight: 900; margin-top: 5px; }
-        .balance-box .value.gold { color: #d4af37; }
-        .balance-box .value.green { color: #10b981; }
-        .balance-box .value.red { color: #ef4444; }
-
-        /* CONTROL PANEL */
-        .control-panel {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .control-panel input {
-            padding: 12px 18px;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            color: #d4af37;
-            font-size: 1rem;
-            font-weight: 700;
-            width: 150px;
-            text-align: center;
-            outline: none;
-        }
-        .btn-start {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: #fff;
-            padding: 12px 35px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .btn-stop {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-            padding: 12px 35px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .balance-box .value { font-size: 1.6rem; font-weight: 900; margin-top: 5px; color: #d4af37; }
+        .control-panel { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .control-panel input { padding: 12px 18px; background: #1e293b; border: 2px solid #334155; border-radius: 10px; color: #d4af37; font-size: 1rem; font-weight: 700; width: 150px; text-align: center; outline: none; }
+        .btn-start { background: linear-gradient(135deg, #10b981, #059669); color: #fff; padding: 12px 35px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .btn-stop { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; padding: 12px 35px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; }
         .btn-start:disabled, .btn-stop:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* S/R PANEL */
-        .sr-panel {
-            display: flex;
-            justify-content: space-between;
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .sr-panel div { font-size: 0.9rem; }
-        .sr-panel span { color: #94a3b8; }
-
-        /* STATS MINI */
-        .mini-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .mini-stat {
-            background: #1e293b;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
+        .sr-panel { display: flex; justify-content: space-between; background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .mini-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+        .mini-stat { background: #1e293b; padding: 10px; border-radius: 8px; text-align: center; }
         .mini-stat .label { color: #94a3b8; font-size: 0.7rem; }
         .mini-stat .value { font-size: 0.95rem; font-weight: 700; color: #d4af37; margin-top: 3px; }
-
-        /* TABLES */
         .table-wrap { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         th { background: #1e293b; color: #d4af37; padding: 10px; text-align: center; }
@@ -208,299 +54,120 @@
         .red { color: #ef4444 !important; }
         .gold { color: #d4af37 !important; }
         .text-muted { color: #94a3b8; }
-
-        /* PROGRESS BAR */
-        .progress-wrap { margin-top: 12px; padding: 8px 12px; background: #0f1729; border-radius: 10px; border: 1px solid #334155; }
-        .progress-track { position: relative; height: 10px; background: #1e293b; border-radius: 10px; margin: 18px 0 10px; }
-        .progress-fill { height: 100%; border-radius: 10px; transition: width 0.3s ease; background: linear-gradient(90deg, #ef4444, #d4af37, #10b981); }
-        .progress-marker { position: absolute; top: -18px; font-size: 9px; transform: translateX(-50%); white-space: nowrap; }
-
-        /* ACCOUNT INFO */
-        .info-card {
-            background: #111827;
-            border: 1px solid #334155;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+        .info-card { background: #111827; border: 1px solid #334155; border-radius: 15px; padding: 20px; }
         .info-card h3 { color: #d4af37; margin-bottom: 15px; font-size: 1.1rem; }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #1e293b;
-        }
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1e293b; }
         .info-row:last-child { border-bottom: none; }
         .info-row .key { color: #94a3b8; }
         .info-row .val { color: #fff; font-weight: 600; }
         .info-row .val.gold { color: #d4af37; }
         .info-row .val.green { color: #10b981; }
         .info-row .val.mono { font-family: monospace; }
-
-        /* ALERTS */
-        .alert-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #111827;
-            border: 4px solid #d4af37;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            z-index: 9999;
-            display: none;
-            min-width: 300px;
-        }
-        .alert-popup h2 { color: #d4af37; font-size: 1.8rem; margin-bottom: 10px; }
-        .alert-popup .btn-close {
-            margin-top: 15px;
-            padding: 10px 30px;
-            background: #d4af37;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .alert-ticker {
-            background: #dc2626;
-            color: white;
-            padding: 8px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            white-space: nowrap;
-            display: none;
-        }
-        .alert-ticker span { display: inline-block; animation: scroll 20s linear infinite; font-weight: 800; }
-        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-
-        @media (max-width: 768px) {
-            .navbar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
-            .balance-panel, .mini-stats { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .user-info { font-size: 0.8rem; }
-        }
+        .progress-wrap { margin-top: 12px; padding: 8px 12px; background: #0f1729; border-radius: 10px; border: 1px solid #334155; }
+        .progress-track { position: relative; height: 10px; background: #1e293b; border-radius: 10px; margin: 18px 0 10px; }
+        .progress-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #ef4444, #d4af37, #10b981); transition: width 0.3s; }
+        @media (max-width: 768px) { .balance-panel, .mini-stats { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar">
         <a href="dashboard.html" class="logo">🚀 Nexi<span>Rocket-XAU</span></a>
         <div class="user-info">
             <span>👤 <strong id="navUserName">User</strong></span>
-            <button class="btn-logout" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </nav>
 
     <div class="container">
 
-        <!-- WELCOME -->
         <div class="welcome-card">
             <h1>Welcome, <span id="welcomeName">Trader</span>! 🎉</h1>
             <p>Your AI trading robot is ready. Start making profits today.</p>
         </div>
 
-        <!-- STATS -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="label">💰 Starting Capital</div>
-                <div class="value" id="statCapital">$0.00</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">📅 Subscription</div>
-                <div class="value green" id="statSubscription">Active</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">📊 Expiry Date</div>
-                <div class="value" id="statExpiry" style="font-size:1.1rem;">--</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">🔑 Status</div>
-                <div class="value green">✅ Verified</div>
-            </div>
+            <div class="stat-card"><div class="label">💰 Capital</div><div class="value" id="statCapital">$0.00</div></div>
+            <div class="stat-card"><div class="label">📅 Subscription</div><div class="value green" id="statSubscription">Active</div></div>
+            <div class="stat-card"><div class="label">📊 Expiry</div><div class="value" id="statExpiry" style="font-size:1.1rem;">--</div></div>
+            <div class="stat-card"><div class="label">🔑 Status</div><div class="value green">✅ Verified</div></div>
         </div>
 
-        <!-- TICKER -->
-        <div class="alert-ticker" id="alertTicker"><span id="alertText"></span></div>
-
-        <!-- POPUP -->
-        <div class="alert-popup" id="alertPopup">
-            <h2 id="popupTitle">WARNING</h2>
-            <p id="popupMessage" style="color:#e2e8f0; margin:10px 0;"></p>
-            <button class="btn-close" onclick="hidePopup()">OK</button>
-        </div>
-
-        <!-- ==================== TRADING ROBOT ==================== -->
         <div class="robot-section">
             <div class="robot-header">
                 <h2>🤖 AI Trading Robot</h2>
                 <span class="robot-status stopped" id="robotStatusBadge">⏹️ STOPPED</span>
             </div>
 
-            <!-- Balance Panel -->
             <div class="balance-panel">
-                <div class="balance-box">
-                    <div class="label">💰 Base Balance</div>
-                    <div class="value gold" id="baseBalance">$0.00</div>
-                </div>
-                <div class="balance-box">
-                    <div class="label">📈 Floating P/L</div>
-                    <div class="value" id="floatingPL">+$0.00</div>
-                </div>
-                <div class="balance-box highlight">
-                    <div class="label">⚡ Effective Balance</div>
-                    <div class="value gold" id="effectiveBalance">$0.00</div>
-                </div>
+                <div class="balance-box"><div class="label">💰 Base Balance</div><div class="value" id="baseBalance">$0.00</div></div>
+                <div class="balance-box"><div class="label">📈 Floating P/L</div><div class="value" id="floatingPL" style="color:#10b981;">+$0.00</div></div>
+                <div class="balance-box highlight"><div class="label">⚡ Effective Balance</div><div class="value" id="effectiveBalance">$0.00</div></div>
             </div>
 
-            <!-- Control Panel -->
             <div class="control-panel">
-                <label style="color:#94a3b8; font-size:0.9rem;">💵 Starting Capital ($):</label>
+                <label style="color:#94a3b8; font-size:0.9rem;">💵 Capital ($):</label>
                 <input type="number" id="capitalInput" value="300" min="100" step="10" />
-                <button class="btn-start" onclick="startRobot()" id="btnStart">
-                    <i class="fas fa-play"></i> START
-                </button>
-                <button class="btn-stop" onclick="stopRobot()" id="btnStop" disabled>
-                    <i class="fas fa-stop"></i> STOP
-                </button>
+                <button class="btn-start" onclick="startRobot()" id="btnStart"><i class="fas fa-play"></i> START</button>
+                <button class="btn-stop" onclick="stopRobot()" id="btnStop" disabled><i class="fas fa-stop"></i> STOP</button>
             </div>
 
-            <!-- S/R Panel -->
             <div class="sr-panel">
                 <div><span>🛡️ Support:</span> <strong style="color:#ef4444;" id="fixedSupport">--</strong></div>
                 <div><span>📊 Price:</span> <strong style="color:#d4af37;" id="livePrice">--</strong></div>
                 <div><span>🚀 Resistance:</span> <strong style="color:#10b981;" id="fixedResistance">--</strong></div>
             </div>
 
-            <!-- Mini Stats -->
             <div class="mini-stats">
-                <div class="mini-stat">
-                    <div class="label">📊 Strategy</div>
-                    <div class="value" id="activeStrategy">--</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="label">🧠 AI Signal</div>
-                    <div class="value" id="aiSignal">--</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="label">📈 RSI</div>
-                    <div class="value" id="rsiDisplay">--</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="label">🎯 Status</div>
-                    <div class="value" id="aiStatus">⏹️ Idle</div>
-                </div>
+                <div class="mini-stat"><div class="label">📊 Strategy</div><div class="value" id="activeStrategy">--</div></div>
+                <div class="mini-stat"><div class="label">🧠 AI Signal</div><div class="value" id="aiSignal">--</div></div>
+                <div class="mini-stat"><div class="label">📈 RSI</div><div class="value" id="rsiDisplay">--</div></div>
+                <div class="mini-stat"><div class="label">🎯 Status</div><div class="value" id="aiStatus">Idle</div></div>
             </div>
 
-            <!-- Live Trade Table -->
             <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">⚡ Current Open Entry</h3>
             <div class="table-wrap">
                 <table>
-                    <thead>
-                        <tr><th>#</th><th>Type</th><th>Entry</th><th>Current</th><th>SL</th><th>TP</th><th>P/L</th></tr>
-                    </thead>
-                    <tbody id="liveTableBody">
-                        <tr><td colspan="7" class="text-muted" style="padding:20px;">⏳ Click START to begin trading</td></tr>
-                    </tbody>
+                    <thead><tr><th>#</th><th>Type</th><th>Entry</th><th>Current</th><th>SL</th><th>TP</th><th>P/L</th></tr></thead>
+                    <tbody id="liveTableBody"><tr><td colspan="7" class="text-muted" style="padding:20px;">⏳ Click START to begin</td></tr></tbody>
                 </table>
             </div>
             <div id="progressContainer"></div>
 
-            <!-- History -->
             <h3 style="color:#d4af37; font-size:1rem; margin:20px 0 10px;">📜 Trade History</h3>
             <div class="table-wrap">
                 <table>
-                    <thead>
-                        <tr><th>#</th><th>Date</th><th>Time</th><th>Type</th><th>Entry</th><th>Exit</th><th>P/L</th><th>Balance</th></tr>
-                    </thead>
-                    <tbody id="historyBody">
-                        <tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr>
-                    </tbody>
+                    <thead><tr><th>#</th><th>Date</th><th>Type</th><th>Entry</th><th>Exit</th><th>P/L</th><th>Balance</th></tr></thead>
+                    <tbody id="historyBody"><tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- ACCOUNT INFO -->
         <div class="info-card">
             <h3>👤 Account Information</h3>
-            <div class="info-row">
-                <span class="key">Full Name</span>
-                <span class="val" id="infoName">--</span>
-            </div>
-            <div class="info-row">
-                <span class="key">Email</span>
-                <span class="val" id="infoEmail">--</span>
-            </div>
-            <div class="info-row">
-                <span class="key">Phone</span>
-                <span class="val" id="infoPhone">--</span>
-            </div>
-            <div class="info-row">
-                <span class="key">Secret Key</span>
-                <span class="val gold mono" id="infoKey">--</span>
-            </div>
-            <div class="info-row">
-                <span class="key">Subscription Start</span>
-                <span class="val" id="infoStart">--</span>
-            </div>
-            <div class="info-row">
-                <span class="key">Subscription End</span>
-                <span class="val green" id="infoEnd">--</span>
-            </div>
+            <div class="info-row"><span class="key">Full Name</span><span class="val" id="infoName">--</span></div>
+            <div class="info-row"><span class="key">Email</span><span class="val" id="infoEmail">--</span></div>
+            <div class="info-row"><span class="key">Phone</span><span class="val" id="infoPhone">--</span></div>
+            <div class="info-row"><span class="key">Secret Key</span><span class="val gold mono" id="infoKey">--</span></div>
+            <div class="info-row"><span class="key">Subscription End</span><span class="val green" id="infoEnd">--</span></div>
         </div>
 
     </div>
 
     <script>
-        // ================================================================
-        //  STATE
-        // ================================================================
-        let baseBalance = 0;
-        let startingCapital = 0;
-        let totalPL = 0;
-        let currentPrice = 0;
-        let isTradeOpen = false;
-        let currentTrade = null;
-        let tradeCounter = 0;
-        let atr = 0;
-        let priceHistory = [];
-        let lastTradeTime = 0;
-        let rangeStartTime = Date.now();
-        let isRobotRunning = false;
-        let robotInterval = null;
-        let tradeHistory = [];
-        let FIXED_SUPPORT = 0;
-        let FIXED_RESISTANCE = 0;
-        let isSupportSet = false;
+        let baseBalance = 0, currentPrice = 0, isTradeOpen = false, currentTrade = null, tradeCounter = 0;
+        let atr = 0, priceHistory = [], lastTradeTime = 0, rangeStartTime = Date.now();
+        let isRobotRunning = false, robotInterval = null, tradeHistory = [];
+        let FIXED_SUPPORT = 0, FIXED_RESISTANCE = 0, isSupportSet = false;
         const MIN_TRADE_INTERVAL = 15000;
-
         const $ = id => document.getElementById(id);
 
-        // ================================================================
-        //  CHECK LOGIN
-        // ================================================================
         window.addEventListener('load', () => {
             const user = JSON.parse(localStorage.getItem('nexiCurrentUser'));
-
-            if (!user) {
-                alert('❌ Please login first!');
-                window.location.href = 'signin.html';
-                return;
-            }
-
+            if (!user) { alert('❌ Please login first!'); window.location.href = 'signin.html'; return; }
             const today = new Date().toISOString().split('T')[0];
-            if (user.subscriptionEnd < today) {
-                alert('⚠️ Subscription expired! Please renew.');
-                localStorage.removeItem('nexiCurrentUser');
-                window.location.href = 'signin.html';
-                return;
-            }
+            if (user.subscriptionEnd < today) { alert('⚠️ Subscription expired! Please renew.'); localStorage.removeItem('nexiCurrentUser'); window.location.href = 'renewal.html'; return; }
 
-            // Display user info
             $('navUserName').innerText = user.fullName;
             $('welcomeName').innerText = user.fullName;
             $('statCapital').innerText = '$' + user.startingCapital.toFixed(2);
@@ -509,317 +176,120 @@
             $('infoEmail').innerText = user.email;
             $('infoPhone').innerText = user.phone;
             $('infoKey').innerText = user.secretKey;
-            $('infoStart').innerText = user.subscriptionStart;
             $('infoEnd').innerText = user.subscriptionEnd;
             $('capitalInput').value = user.startingCapital;
         });
 
-        // ================================================================
-        //  START ROBOT
-        // ================================================================
         function startRobot() {
             const capital = parseFloat($('capitalInput').value);
-
-            if (isNaN(capital) || capital < 100) {
-                alert('❌ Minimum starting capital $100 required!');
-                return;
-            }
-
-            baseBalance = capital;
-            startingCapital = capital;
-            totalPL = 0;
-            isTradeOpen = false;
-            currentTrade = null;
-            tradeCounter = 0;
-            priceHistory = [];
-            lastTradeTime = 0;
-            rangeStartTime = Date.now();
-            isSupportSet = false;
-            tradeHistory = [];
-
-            $('historyBody').innerHTML = '<tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
-
-            updateBalance();
-            updateLiveTable();
-
+            if (isNaN(capital) || capital < 100) { alert('❌ Minimum $100!'); return; }
+            baseBalance = capital; tradeCounter = 0; priceHistory = []; tradeHistory = [];
+            isTradeOpen = false; currentTrade = null; isSupportSet = false;
+            $('historyBody').innerHTML = '<tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
             isRobotRunning = true;
-            $('btnStart').disabled = true;
-            $('btnStop').disabled = false;
+            $('btnStart').disabled = true; $('btnStop').disabled = false;
             $('robotStatusBadge').className = 'robot-status running';
             $('robotStatusBadge').innerHTML = '🟢 RUNNING';
-            $('aiStatus').innerText = '🟢 Running';
             $('capitalInput').disabled = true;
-
-            showTicker(`🚀 Robot started! Capital: $${capital.toFixed(2)}`);
-
             getLivePrice();
             robotInterval = setInterval(getLivePrice, 1000);
         }
 
-        // ================================================================
-        //  STOP ROBOT
-        // ================================================================
         function stopRobot() {
             isRobotRunning = false;
             if (robotInterval) clearInterval(robotInterval);
-
-            if (isTradeOpen && currentTrade) {
-                closeTrade(currentPrice);
-            }
-
-            $('btnStart').disabled = false;
-            $('btnStop').disabled = true;
+            if (isTradeOpen && currentTrade) closeTrade(currentPrice);
+            $('btnStart').disabled = false; $('btnStop').disabled = true;
             $('robotStatusBadge').className = 'robot-status stopped';
             $('robotStatusBadge').innerHTML = '⏹️ STOPPED';
-            $('aiStatus').innerText = '⏹️ Stopped';
             $('capitalInput').disabled = false;
-
-            showTicker('⏹️ Robot stopped!');
         }
 
-        // ================================================================
-        //  LIVE PRICE
-        // ================================================================
         async function getLivePrice() {
             if (!isRobotRunning) return;
-
             try {
                 const resp = await fetch('https://api.gold-api.com/price/XAU');
                 const data = await resp.json();
-                if (data.price) currentPrice = parseFloat(data.price);
-                else currentPrice = 4388 + (Math.random() - 0.5) * 6;
-            } catch (e) {
-                currentPrice = 4388 + (Math.random() - 0.5) * 6;
-            }
-
+                currentPrice = data.price ? parseFloat(data.price) : 4400 + (Math.random() - 0.5) * 6;
+            } catch (e) { currentPrice = 4400 + (Math.random() - 0.5) * 6; }
             $('livePrice').innerText = '$' + currentPrice.toFixed(2);
-
-            if (!isSupportSet && currentPrice > 0) {
-                FIXED_SUPPORT = currentPrice - 5;
-                FIXED_RESISTANCE = currentPrice + 5;
-                isSupportSet = true;
+            if (!isSupportSet) {
+                FIXED_SUPPORT = currentPrice - 5; FIXED_RESISTANCE = currentPrice + 5; isSupportSet = true;
                 $('fixedSupport').innerText = FIXED_SUPPORT.toFixed(2);
                 $('fixedResistance').innerText = FIXED_RESISTANCE.toFixed(2);
             }
-
             priceHistory.push(currentPrice);
             if (priceHistory.length > 20) priceHistory.shift();
-            calculateATR();
-
-            const rsi = calculateRSI();
+            const rsi = 45 + (Math.random() - 0.5) * 30;
             $('rsiDisplay').innerText = rsi.toFixed(1);
-
             analyzeStrategy(rsi);
             updateBalance();
             updateLiveTable();
         }
 
-        function calculateATR() {
-            if (priceHistory.length < 2) return;
-            const prev = priceHistory[priceHistory.length - 2] || priceHistory[0];
-            const volatility = Math.abs(currentPrice - prev);
-            atr = (atr * 0.8) + (volatility * 0.2);
-        }
-
-        function calculateRSI() {
-            const base = 45 + (Math.random() - 0.5) * 30;
-            return Math.min(100, Math.max(0, base));
-        }
-
-        // ================================================================
-        //  STRATEGY ENGINE
-        // ================================================================
         function analyzeStrategy(rsi) {
             if (!isRobotRunning || !isSupportSet) return;
+            if (isTradeOpen) { checkTradeClose(); return; }
+            if (Date.now() - lastTradeTime < MIN_TRADE_INTERVAL) return;
 
-            if (isTradeOpen) {
-                checkTradeClose();
-                return;
-            }
+            if (currentPrice > FIXED_RESISTANCE && rsi > 45) { $('activeStrategy').innerText = 'Breakout BUY'; openTrade('BUY', currentPrice); return; }
+            if (currentPrice < FIXED_SUPPORT && rsi < 55) { $('activeStrategy').innerText = 'Breakdown SELL'; openTrade('SELL', currentPrice); return; }
+            if (currentPrice < FIXED_SUPPORT + 1.5 && rsi < 40) { $('activeStrategy').innerText = 'Bounce BUY'; openTrade('BUY', currentPrice); return; }
+            if (currentPrice > FIXED_RESISTANCE - 1.5 && rsi > 60) { $('activeStrategy').innerText = 'Bounce SELL'; openTrade('SELL', currentPrice); return; }
 
-            if (Date.now() - lastTradeTime < MIN_TRADE_INTERVAL) {
-                $('aiStatus').innerText = '⏳ Cooling Down...';
-                return;
-            }
-
-            // 1. Breakout BUY
-            if (currentPrice > FIXED_RESISTANCE && rsi > 45) {
-                $('activeStrategy').innerText = 'Breakout BUY';
-                openTrade('BUY', currentPrice);
-                return;
-            }
-
-            // 2. Breakdown SELL
-            if (currentPrice < FIXED_SUPPORT && rsi < 55) {
-                $('activeStrategy').innerText = 'Breakdown SELL';
-                openTrade('SELL', currentPrice);
-                return;
-            }
-
-            // 3. Bounce BUY
-            if (currentPrice < FIXED_SUPPORT + 1.5 && rsi < 40) {
-                $('activeStrategy').innerText = 'Bounce BUY';
-                openTrade('BUY', currentPrice);
-                return;
-            }
-
-            // 4. Bounce SELL
-            if (currentPrice > FIXED_RESISTANCE - 1.5 && rsi > 60) {
-                $('activeStrategy').innerText = 'Bounce SELL';
-                openTrade('SELL', currentPrice);
-                return;
-            }
-
-            // 5. Range-Bound
             const elapsed = (Date.now() - rangeStartTime) / 1000;
             if (elapsed > 90 && !isTradeOpen) {
                 const middle = (FIXED_SUPPORT + FIXED_RESISTANCE) / 2;
-                if (currentPrice < middle && rsi < 50) {
-                    $('activeStrategy').innerText = 'Range BUY';
-                    openTrade('BUY', currentPrice);
-                    rangeStartTime = Date.now();
-                    return;
-                } else if (currentPrice > middle && rsi > 50) {
-                    $('activeStrategy').innerText = 'Range SELL';
-                    openTrade('SELL', currentPrice);
-                    rangeStartTime = Date.now();
-                    return;
-                }
+                if (currentPrice < middle && rsi < 50) { $('activeStrategy').innerText = 'Range BUY'; openTrade('BUY', currentPrice); rangeStartTime = Date.now(); return; }
+                if (currentPrice > middle && rsi > 50) { $('activeStrategy').innerText = 'Range SELL'; openTrade('SELL', currentPrice); rangeStartTime = Date.now(); return; }
             }
 
-            $('activeStrategy').innerText = 'Waiting';
-            $('aiSignal').innerText = 'Waiting';
-            $('aiStatus').innerText = '⏳ Waiting';
+            $('activeStrategy').innerText = 'Waiting'; $('aiSignal').innerText = 'Waiting'; $('aiStatus').innerText = '⏳ Waiting';
         }
 
-        // ================================================================
-        //  OPEN TRADE
-        // ================================================================
         function openTrade(type, price) {
-            if (isTradeOpen || !isRobotRunning) return;
-
-            isTradeOpen = true;
-            tradeCounter++;
-            lastTradeTime = Date.now();
-            rangeStartTime = Date.now();
-
+            if (isTradeOpen) return;
+            isTradeOpen = true; tradeCounter++; lastTradeTime = Date.now(); rangeStartTime = Date.now();
             let sl, tp;
-            const volMultiplier = Math.max(0.5, Math.min(2, atr / 1.5));
-
-            if (type === 'BUY') {
-                sl = price - (0.003 * price * volMultiplier);
-                tp = price + (0.008 * price * volMultiplier);
-            } else {
-                sl = price + (0.003 * price * volMultiplier);
-                tp = price - (0.008 * price * volMultiplier);
-            }
-
-            currentTrade = {
-                id: tradeCounter,
-                type: type,
-                entry: price,
-                sl: sl,
-                tp: tp,
-                openTime: new Date()
-            };
-
+            if (type === 'BUY') { sl = price * 0.997; tp = price * 1.008; }
+            else { sl = price * 1.003; tp = price * 0.992; }
+            currentTrade = { id: tradeCounter, type, entry: price, sl, tp };
             $('aiStatus').innerText = '🟢 Trade Open: ' + type;
             $('aiSignal').innerText = type + ' Signal';
-            playSound('entry');
-            showTicker(`🚀 ${type} ENTRY @ $${price.toFixed(2)} | SL: $${sl.toFixed(2)} | TP: $${tp.toFixed(2)}`);
-
-            updateBalance();
-            updateLiveTable();
+            updateBalance(); updateLiveTable();
         }
 
-        // ================================================================
-        //  CHECK CLOSE
-        // ================================================================
         function checkTradeClose() {
             if (!currentTrade) return;
-
             let hit = false;
-            if (currentTrade.type === 'BUY') {
-                if (currentPrice >= currentTrade.tp || currentPrice <= currentTrade.sl) hit = true;
-            } else {
-                if (currentPrice <= currentTrade.tp || currentPrice >= currentTrade.sl) hit = true;
-            }
-
+            if (currentTrade.type === 'BUY') { if (currentPrice >= currentTrade.tp || currentPrice <= currentTrade.sl) hit = true; }
+            else { if (currentPrice <= currentTrade.tp || currentPrice >= currentTrade.sl) hit = true; }
             if (hit) closeTrade(currentPrice);
         }
 
-        // ================================================================
-        //  CLOSE TRADE
-        // ================================================================
         function closeTrade(exitPrice) {
-            if (!currentTrade) return;
-
             const lotSize = 0.01;
-            let profit = 0;
-            if (currentTrade.type === 'BUY') {
-                profit = (exitPrice - currentTrade.entry) * lotSize * 100;
-            } else {
-                profit = (currentTrade.entry - exitPrice) * lotSize * 100;
-            }
-
+            let profit = currentTrade.type === 'BUY' ? (exitPrice - currentTrade.entry) * lotSize * 100 : (currentTrade.entry - exitPrice) * lotSize * 100;
             baseBalance += profit;
-            totalPL += profit;
-
-            const now = new Date();
-            tradeHistory.push({
-                id: currentTrade.id,
-                type: currentTrade.type,
-                entry: currentTrade.entry,
-                exit: exitPrice,
-                profit: profit,
-                balance: baseBalance,
-                date: now.toISOString().split('T')[0],
-                time: now.toTimeString().slice(0, 8)
-            });
-
+            tradeHistory.push({ id: currentTrade.id, type: currentTrade.type, entry: currentTrade.entry, exit: exitPrice, profit, balance: baseBalance, date: new Date().toISOString().split('T')[0] });
             renderHistory();
-
-            if (profit >= 0) {
-                showPopup('🎯 TP HIT!', `Profit: +$${profit.toFixed(2)}<br>Balance: $${baseBalance.toFixed(2)}`);
-                playSound('profit');
-            } else {
-                showPopup('🛑 SL HIT!', `Loss: -$${Math.abs(profit).toFixed(2)}<br>Balance: $${baseBalance.toFixed(2)}`);
-                playSound('loss');
-            }
-
-            isTradeOpen = false;
-            currentTrade = null;
+            alert((profit >= 0 ? '🎯 Profit: +$' : '🛑 Loss: -$') + Math.abs(profit).toFixed(2) + '\nBalance: $' + baseBalance.toFixed(2));
+            isTradeOpen = false; currentTrade = null;
             $('aiStatus').innerText = '⏳ Idle';
-
-            updateBalance();
-            updateLiveTable();
+            updateBalance(); updateLiveTable();
         }
 
-        // ================================================================
-        //  UPDATE BALANCE
-        // ================================================================
         function updateBalance() {
             let floatingPL = 0;
             if (isTradeOpen && currentTrade) {
-                const lotSize = 0.01;
-                if (currentTrade.type === 'BUY') {
-                    floatingPL = (currentPrice - currentTrade.entry) * lotSize * 100;
-                } else {
-                    floatingPL = (currentTrade.entry - currentPrice) * lotSize * 100;
-                }
+                floatingPL = currentTrade.type === 'BUY' ? (currentPrice - currentTrade.entry) * 0.01 * 100 : (currentTrade.entry - currentPrice) * 0.01 * 100;
             }
-
-            const effectiveBalance = baseBalance + floatingPL;
-
             $('baseBalance').innerText = '$' + baseBalance.toFixed(2);
             $('floatingPL').innerText = (floatingPL >= 0 ? '+' : '') + '$' + floatingPL.toFixed(2);
-            $('floatingPL').style.color = floatingPL > 0.01 ? '#10b981' : (floatingPL < -0.01 ? '#ef4444' : '#d4af37');
-            $('effectiveBalance').innerText = '$' + effectiveBalance.toFixed(2);
+            $('floatingPL').style.color = floatingPL >= 0 ? '#10b981' : '#ef4444';
+            $('effectiveBalance').innerText = '$' + (baseBalance + floatingPL).toFixed(2);
         }
 
-        // ================================================================
-        //  UPDATE LIVE TABLE
-        // ================================================================
         function updateLiveTable() {
             const tbody = $('liveTableBody');
             if (!isTradeOpen || !currentTrade) {
@@ -827,117 +297,39 @@
                 $('progressContainer').innerHTML = '';
                 return;
             }
-
-            const lotSize = 0.01;
-            let floatingPL = 0;
-            if (currentTrade.type === 'BUY') {
-                floatingPL = (currentPrice - currentTrade.entry) * lotSize * 100;
-            } else {
-                floatingPL = (currentTrade.entry - currentPrice) * lotSize * 100;
-            }
-
+            const floatingPL = currentTrade.type === 'BUY' ? (currentPrice - currentTrade.entry) * 0.01 * 100 : (currentTrade.entry - currentPrice) * 0.01 * 100;
             const isProfit = floatingPL >= 0;
-            tbody.innerHTML = `
-                <tr style="border-left:4px solid ${isProfit ? '#10b981' : '#ef4444'};">
-                    <td><strong>#${currentTrade.id}</strong></td>
-                    <td class="${currentTrade.type === 'BUY' ? 'buy' : 'sell'}">${currentTrade.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</td>
-                    <td>$${currentTrade.entry.toFixed(2)}</td>
-                    <td style="font-weight:bold;color:${isProfit ? '#10b981' : '#ef4444'};">$${currentPrice.toFixed(2)}</td>
-                    <td>$${currentTrade.sl.toFixed(2)}</td>
-                    <td>$${currentTrade.tp.toFixed(2)}</td>
-                    <td style="font-weight:bold;color:${isProfit ? '#10b981' : '#ef4444'};">${floatingPL >= 0 ? '+' : ''}$${floatingPL.toFixed(2)}</td>
-                </tr>
-            `;
-
-            // Progress Bar
-            const min = Math.min(currentTrade.sl, currentTrade.tp);
-            const max = Math.max(currentTrade.sl, currentTrade.tp);
-            const range = max - min;
-            let currentPos = ((currentPrice - min) / range) * 100;
-            currentPos = Math.max(0, Math.min(100, currentPos));
-
-            $('progressContainer').innerHTML = `
-                <div class="progress-wrap">
-                    <div class="progress-track">
-                        <div class="progress-fill" style="width:${currentPos}%;"></div>
-                        <div class="progress-marker" style="left:0%;color:#ef4444;">SL $${currentTrade.sl.toFixed(2)}</div>
-                        <div class="progress-marker" style="left:${currentPos}%;color:#fff;top:-22px;">🔴 $${currentPrice.toFixed(2)}</div>
-                        <div class="progress-marker" style="left:100%;color:#10b981;">TP $${currentTrade.tp.toFixed(2)}</div>
-                    </div>
-                </div>
-            `;
+            tbody.innerHTML = `<tr>
+                <td>#${currentTrade.id}</td>
+                <td class="${currentTrade.type === 'BUY' ? 'buy' : 'sell'}">${currentTrade.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</td>
+                <td>$${currentTrade.entry.toFixed(2)}</td>
+                <td style="font-weight:bold;color:${isProfit ? '#10b981' : '#ef4444'};">$${currentPrice.toFixed(2)}</td>
+                <td>$${currentTrade.sl.toFixed(2)}</td>
+                <td>$${currentTrade.tp.toFixed(2)}</td>
+                <td style="font-weight:bold;color:${isProfit ? '#10b981' : '#ef4444'};">${floatingPL >= 0 ? '+' : ''}$${floatingPL.toFixed(2)}</td>
+            </tr>`;
+            const min = Math.min(currentTrade.sl, currentTrade.tp), max = Math.max(currentTrade.sl, currentTrade.tp);
+            let pos = ((currentPrice - min) / (max - min)) * 100;
+            pos = Math.max(0, Math.min(100, pos));
+            $('progressContainer').innerHTML = `<div class="progress-wrap"><div class="progress-track"><div class="progress-fill" style="width:${pos}%;"></div></div></div>`;
         }
 
-        // ================================================================
-        //  RENDER HISTORY
-        // ================================================================
         function renderHistory() {
             const tbody = $('historyBody');
-            if (tradeHistory.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-muted" style="padding:20px;">No trades yet.</td></tr>';
-                return;
-            }
-
-            const sorted = [...tradeHistory].reverse();
-            tbody.innerHTML = sorted.map(t => `
-                <tr>
-                    <td>#${t.id}</td>
-                    <td style="font-size:0.8rem;color:#94a3b8;">${t.date}</td>
-                    <td style="font-size:0.8rem;color:#94a3b8;">${t.time}</td>
-                    <td class="${t.type === 'BUY' ? 'buy' : 'sell'}">${t.type === 'BUY' ? '🟢 BUY' : '🔴 SELL'}</td>
-                    <td>$${t.entry.toFixed(2)}</td>
-                    <td>$${t.exit.toFixed(2)}</td>
-                    <td class="${t.profit >= 0 ? 'green' : 'red'}">${t.profit >= 0 ? '+' : ''}$${t.profit.toFixed(2)}</td>
-                    <td class="gold">$${t.balance.toFixed(2)}</td>
-                </tr>
-            `).join('');
+            if (tradeHistory.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="padding:20px;">No trades yet.</td></tr>'; return; }
+            tbody.innerHTML = [...tradeHistory].reverse().map(t => `<tr>
+                <td>#${t.id}</td>
+                <td style="font-size:0.8rem;color:#94a3b8;">${t.date}</td>
+                <td class="${t.type === 'BUY' ? 'buy' : 'sell'}">${t.type}</td>
+                <td>$${t.entry.toFixed(2)}</td>
+                <td>$${t.exit.toFixed(2)}</td>
+                <td class="${t.profit >= 0 ? 'green' : 'red'}">${t.profit >= 0 ? '+' : ''}$${t.profit.toFixed(2)}</td>
+                <td class="gold">$${t.balance.toFixed(2)}</td>
+            </tr>`).join('');
         }
 
-        // ================================================================
-        //  SOUNDS
-        // ================================================================
-        function playSound(type) {
-            try {
-                const ctx = new(window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                gain.gain.value = 0.15;
-                if (type === 'entry') { osc.frequency.value = 880; osc.type = 'sine'; osc.start(); osc.stop(ctx.currentTime + 0.5); }
-                else if (type === 'profit') { osc.frequency.value = 1200; osc.type = 'triangle'; osc.start(); osc.stop(ctx.currentTime + 0.6); }
-                else { osc.frequency.value = 300; osc.type = 'sawtooth'; osc.start(); osc.stop(ctx.currentTime + 0.8); }
-            } catch (e) {}
-        }
-
-        // ================================================================
-        //  ALERTS
-        // ================================================================
-        function showTicker(text) {
-            const el = $('alertTicker');
-            $('alertText').innerText = text;
-            el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 15000);
-        }
-
-        function showPopup(title, msg) {
-            $('popupTitle').innerHTML = title;
-            $('popupMessage').innerHTML = msg;
-            $('alertPopup').style.display = 'block';
-        }
-
-        function hidePopup() {
-            $('alertPopup').style.display = 'none';
-        }
-
-        // ================================================================
-        //  LOGOUT
-        // ================================================================
         function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('nexiCurrentUser');
-                window.location.href = 'index.html';
-            }
+            if (confirm('Logout?')) { localStorage.removeItem('nexiCurrentUser'); window.location.href = 'index.html'; }
         }
     </script>
 </body>

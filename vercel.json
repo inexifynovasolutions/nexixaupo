@@ -5,6 +5,7 @@
     { "source": "/register", "destination": "/register.html" },
     { "source": "/signin", "destination": "/signin.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
-    { "source": "/admin", "destination": "/admin.html" }
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/renewal", "destination": "/renewal.html" }
   ]
 }
